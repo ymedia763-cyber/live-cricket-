@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NEXUS LIVE · Pure Custom Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #07090f;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 560px;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 32px;
+            background: #0a0e18;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
+        .video-stage {
+            position: relative;
+            background: #000;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+        }
+
+        #youtube-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;  /* YouTube UI never appears */
+        }
+
+        /* Transparent overlay to catch all clicks */
+        .click-catcher {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        /* Custom Controls - Clean, compact, no blur */
+        .custom-controls-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 80%, transparent 100%);
+            padding: 12px 16px 16px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+            transition: opacity 0.25s ease;
+            opacity: 1;
+        }
+
+        .controls-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ctrl-btn {
+            background: rgba(0,0,0,0.65);
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s, background 0.1s;
+        }
+
+        .ctrl-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #f1f5f9;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.92);
+            background: rgba(59,130,246,0.8);
+        }
+
+        .live-badge {
+            background: #e50914;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: white;
+            text-transform: uppercase;
+            margin-left: 4px;
+        }
+
+        .controls-right {
+            display: flex;
+            gap: 12px;
+        }
+
+        .hide-controls {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Loading overlay - clean */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #03060c;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 25;
+            gap: 12px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(37,99,235,0.3);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text {
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Chat panel */
+        .interaction-panel {
+            padding: 14px 16px 20px;
+            background: #0a0e18;
+            border-top: 1px solid #1e2438;
+        }
+        .viewer-stats {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #11161f;
+            border-radius: 50px;
+            padding: 6px 14px;
+            width: fit-content;
+            margin-bottom: 16px;
+        }
+        .eye-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #94a3b8;
+        }
+        .viewer-count {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+        .live-viewers {
+            font-size: 0.7rem;
+            color: #7e8ba3;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .chat-header h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e6;
+        }
+        .chat-messages {
+            background: #0f131f;
+            border-radius: 20px;
+            height: 240px;
+            overflow-y: auto;
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .message-bubble {
+            background: #1a1f2e;
+            padding: 6px 12px;
+            border-radius: 24px;
+            max-width: 90%;
+            width: fit-content;
+            font-size: 0.8rem;
+            color: #eef2ff;
+            border-left: 2px solid #3b82f6;
+        }
+        .message-bubble strong {
+            color: #60a5fa;
+            font-weight: 600;
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: #0f131f;
+            border-radius: 40px;
+            padding: 4px 4px 4px 16px;
+            border: 1px solid #2a2f42;
+        }
+        .chat-input-area input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px 0;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .send-btn {
+            background: #2563eb;
+            border: none;
+            border-radius: 32px;
+            padding: 6px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .send-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: white;
+        }
+        .send-btn:active {
+            background: #1d4ed8;
+            transform: scale(0.96);
+        }
+
+        @media (max-width: 480px) {
+            .ctrl-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+            .live-badge {
+                font-size: 9px;
+                padding: 3px 8px;
+            }
+            .custom-controls-overlay {
+                padding: 10px 12px 14px 12px;
+            }
+            .chat-messages {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="video-stage" id="videoStage">
+        <div id="youtube-player"></div>
+        <!-- Click catcher prevents any YouTube UI -->
+        <div class="click-catcher" id="clickCatcher"></div>
+        <div class="custom-controls-overlay" id="customControls">
+            <div class="controls-left">
+                <button class="ctrl-btn" id="playPauseBtn">
+                    <svg viewBox="0 0 24 24" id="playIconSvg"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg>
+                    <svg viewBox="0 0 24 24" id="pauseIconSvg" style="display: none;"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg>
+                </button>
+                <button class="ctrl-btn" id="muteBtn">
+                    <svg viewBox="0 0 24 24" id="volumeIcon" fill="none" stroke="currentColor"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+                    <svg viewBox="0 0 24 24" id="mutedIcon" style="display: none;" fill="none" stroke="currentColor"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/><line x1="18" y1="6" x2="22" y2="10"/><line x1="22" y1="6" x2="18" y2="10"/></svg>
+                </button>
+                <div class="live-badge">LIVE</div>
+            </div>
+            <div class="controls-right">
+                <button class="ctrl-btn" id="fullscreenBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <div class="loading-text">BUFFERING HIGH QUALITY ...</div>
+        </div>
+    </div>
+
+    <div class="interaction-panel">
+        <div class="viewer-stats">
+            <span class="eye-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="viewer-count" id="viewerCountDisplay">0</span>
+            <span class="live-viewers">watching now</span>
+        </div>
+        <div class="chat-header"><h4>GLOBAL CHAT</h4><span style="font-size: 9px; color:#5b6e8c;">realtime</span></div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Type message ..." autocomplete="off">
+            <button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, push, set, onChildAdded, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA",
+        authDomain: "chat-283ed.firebaseapp.com",
+        databaseURL: "https://chat-283ed-default-rtdb.firebaseio.com",
+        projectId: "chat-283ed",
+        storageBucket: "chat-283ed.firebasestorage.app",
+        messagingSenderId: "669885432854",
+        appId: "1:669885432854:web:ba6185cdbbcc6f485ba137"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const streamUrlRef = ref(db, 'liveStream/url');
+    const chatRef = ref(db, 'chat/messages');
+    const viewersRef = ref(db, 'activeViewers');
+
+    function extractVideoId(url) {
+        if (!url) return null;
+        let cleanUrl = url.split('?')[0];
+        let match = cleanUrl.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/);
+        if (match) return match[1];
+        match = cleanUrl.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+        if (match) return match[1];
+        match = cleanUrl.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+        if (match) return match[1];
+        match = cleanUrl.match(/embed\/([a-zA-Z0-9_-]{11})/);
+        if (match) return match[1];
+        return null;
+    }
+
+    let player = null;
+    let isPlaying = true;
+    let isMuted = false;
+    let currentVideoId = "";
+    let controlsTimeout = null;
+    const controlsDiv = document.getElementById('customControls');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const videoStage = document.getElementById('videoStage');
+    const clickCatcher = document.getElementById('clickCatcher');
+    const playIcon = document.getElementById('playIconSvg');
+    const pauseIcon = document.getElementById('pauseIconSvg');
+    const volumeIcon = document.getElementById('volumeIcon');
+    const mutedIcon = document.getElementById('mutedIcon');
+
+    function showLoading(show) { loadingOverlay.style.display = show ? 'flex' : 'none'; }
+    function resetControlsTimer() {
+        if (controlsTimeout) clearTimeout(controlsTimeout);
+        controlsDiv.classList.remove('hide-controls');
+        controlsTimeout = setTimeout(() => controlsDiv.classList.add('hide-controls'), 3500);
+    }
+    function updatePlayPauseUI() {
+        if (isPlaying) { playIcon.style.display = 'none'; pauseIcon.style.display = 'block'; }
+        else { playIcon.style.display = 'block'; pauseIcon.style.display = 'none'; }
+    }
+    function updateMuteUI() {
+        if (isMuted) { volumeIcon.style.display = 'none'; mutedIcon.style.display = 'block'; }
+        else { volumeIcon.style.display = 'block'; mutedIcon.style.display = 'none'; }
+    }
+    function setHighQuality() {
+        if (player && player.setPlaybackQuality) {
+            try { player.setPlaybackQuality('hd1080'); } catch(e) {}
+        }
+    }
+    function loadVideo(link) {
+        const vid = extractVideoId(link);
+        if (!vid) return;
+        if (player && player.loadVideoById && vid !== currentVideoId) {
+            currentVideoId = vid;
+            player.loadVideoById({ videoId: vid, startSeconds: 0, suggestedQuality: 'hd1080' });
+            showLoading(true);
+            setTimeout(setHighQuality, 2000);
+        }
+    }
+    function initPlayer(initialUrl) {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+        window.onYouTubeIframeAPIReady = () => {
+            const videoId = extractVideoId(initialUrl) || "dQw4w9WgXcQ";
+            currentVideoId = videoId;
+            player = new YT.Player('youtube-player', {
+                videoId: videoId,
+                playerVars: { 
+                    controls: 0, modestbranding: 1, disablekb: 1, rel: 0, iv_load_policy: 3, 
+                    autoplay: 1, playsinline: 1, mute: 0, quality: 'hd1080'
+                },
+                events: {
+                    onReady: (event) => {
+                        showLoading(false);
+                        isPlaying = true;
+                        updatePlayPauseUI();
+                        event.target.playVideo();
+                        setHighQuality();
+                        resetControlsTimer();
+                    },
+                    onStateChange: (e) => {
+                        const state = e.data;
+                        if (state === 3) showLoading(true);
+                        else if (state === 1) { showLoading(false); isPlaying = true; updatePlayPauseUI(); setHighQuality(); }
+                        else if (state === 2) { isPlaying = false; updatePlayPauseUI(); showLoading(false); }
+                        else if (state === -1) showLoading(true);
+                        resetControlsTimer();
+                    },
+                    onError: () => showLoading(false)
+                }
+            });
+        };
+    }
+
+    onValue(streamUrlRef, (snapshot) => {
+        const url = snapshot.val();
+        if (url) {
+            if (!player) initPlayer(url);
+            else loadVideo(url);
+        }
+    });
+
+    // Chat
+    const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
+    const chatContainer = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendChatBtn');
+    function appendMessage(user, text) {
+        const div = document.createElement('div');
+        div.className = 'message-bubble';
+        div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`;
+        chatContainer.appendChild(div);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m;}); }
+    onChildAdded(chatRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) appendMessage(data.username, data.text);
+    });
+    function sendMessage() {
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+        const newMsgRef = push(chatRef);
+        set(newMsgRef, { username: username, text: msg, timestamp: serverTimestamp() });
+        chatInput.value = '';
+    }
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+    // Live viewers presence
+    const viewerId = Math.random().toString(36).substring(2) + Date.now();
+    const myViewerRef = ref(db, `activeViewers/${viewerId}`);
+    onDisconnect(myViewerRef).remove();
+    set(myViewerRef, { timestamp: serverTimestamp() });
+    onValue(ref(db, 'activeViewers'), (snap) => {
+        const viewers = snap.val() || {};
+        const count = Object.keys(viewers).length;
+        document.getElementById('viewerCountDisplay').innerText = count;
+    });
+
+    // Controls event handlers
+    playPauseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!player) return;
+        if (isPlaying) { player.pauseVideo(); isPlaying = false; }
+        else { player.playVideo(); isPlaying = true; }
+        updatePlayPauseUI();
+        resetControlsTimer();
+    });
+    muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!player) return;
+        if (isMuted) { player.unMute(); isMuted = false; }
+        else { player.mute(); isMuted = true; }
+        updateMuteUI();
+        resetControlsTimer();
+    });
+    fullscreenBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const elem = videoStage;
+        if (!document.fullscreenElement) {
+            if (elem.requestFullscreen) await elem.requestFullscreen();
+            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+            try { if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape'); } catch(err) {}
+        } else {
+            await document.exitFullscreen();
+            try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch(e) {}
+        }
+        resetControlsTimer();
+    });
+    clickCatcher.addEventListener('click', (e) => { e.stopPropagation(); resetControlsTimer(); });
+    videoStage.addEventListener('click', (e) => { if (e.target === clickCatcher || e.target === videoStage) resetControlsTimer(); });
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch(e) {} }
+        resetControlsTimer();
+    });
+
+    updateMuteUI();
+    updatePlayPauseUI();
+    showLoading(true);
+</script>
+</body>
+</html>
