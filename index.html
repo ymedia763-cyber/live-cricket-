@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NEXUS LIVE · Stream Pro</title>
+    <title>NEXUS LIVE · M3U8 Stream Player</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: #07090f;
+            background: #0a0c12;
             font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
             display: flex;
             justify-content: center;
@@ -26,66 +26,13 @@
             max-width: 560px;
             width: 100%;
             margin: 0 auto;
-            border-radius: 32px;
+            border-radius: 28px;
             background: #0a0e18;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
 
-        /* Social bar moved ABOVE the video player */
-        .social-bar-outer {
-            background: #0a0e18;
-            padding: 12px 16px 8px 16px;
-            display: flex;
-            justify-content: center;
-            gap: 28px;
-            border-bottom: 1px solid #1e2438;
-        }
-
-        .social-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: transform 0.1s ease, opacity 0.2s;
-            padding: 6px 14px;
-            border-radius: 50px;
-            background: rgba(20, 26, 40, 0.7);
-            backdrop-filter: blur(2px);
-        }
-
-        .social-item:active {
-            transform: scale(0.94);
-            background: rgba(59,130,246,0.5);
-        }
-
-        /* All icons pure white */
-        .social-item svg {
-            width: 26px;
-            height: 26px;
-            fill: white;
-            stroke: white;
-            stroke-width: 1.2;
-        }
-
-        /* Fix youtube icon fill to white */
-        .social-item .youtube-icon path:first-child,
-        .social-item .youtube-icon path:last-child {
-            fill: white !important;
-            stroke: none;
-        }
-
-        .social-item span {
-            font-size: 10px;
-            font-weight: 600;
-            color: white;
-            letter-spacing: 0.3px;
-            background: rgba(0,0,0,0.4);
-            padding: 2px 8px;
-            border-radius: 30px;
-        }
-
+        /* Video Stage */
         .video-stage {
             position: relative;
             background: #000;
@@ -94,24 +41,24 @@
             overflow: hidden;
         }
 
-        #youtube-player {
+        #videoPlayer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            transition: transform 0.2s ease;
+            object-fit: contain;
+            background: #000;
         }
 
         /* Custom Controls Overlay */
-        .custom-controls-overlay {
+        .custom-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 80%, transparent 100%);
-            padding: 12px 16px 16px 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 80%, transparent 100%);
+            padding: 12px 16px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -123,15 +70,15 @@
         .controls-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .ctrl-btn {
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.65);
             border: none;
-            padding: 6px;
+            padding: 8px;
             cursor: pointer;
-            border-radius: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -139,8 +86,8 @@
         }
 
         .ctrl-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             stroke: #f1f5f9;
             stroke-width: 1.8;
             fill: none;
@@ -148,16 +95,15 @@
 
         .ctrl-btn:active {
             transform: scale(0.92);
-            background: rgba(59,130,246,0.9);
+            background: #3b82f6;
         }
 
         .live-badge {
             background: #e50914;
             padding: 4px 10px;
             border-radius: 30px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.5px;
             color: white;
             text-transform: uppercase;
             margin-left: 4px;
@@ -173,7 +119,7 @@
             pointer-events: none;
         }
 
-        /* Loading overlay (original) */
+        /* Loading Overlay */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -188,67 +134,31 @@
             z-index: 25;
             gap: 12px;
         }
+
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(37,99,235,0.3);
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(37,99,235,0.2);
             border-top: 3px solid #3b82f6;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
+
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .loading-text {
             color: #9ca3af;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
         }
 
-        /* AD CUSTOM OVERLAY - no buffering screen, shows "Ads keeping please wait" */
-        .ad-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(6px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 27;
-            gap: 16px;
-            font-family: monospace;
-        }
-        .ad-icon {
-            font-size: 48px;
-            animation: pulse 1.2s infinite;
-        }
-        .ad-message {
-            color: #ffd966;
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            background: #000000aa;
-            padding: 8px 20px;
-            border-radius: 60px;
-            border-left: 3px solid #ffcc00;
-        }
-        .ad-sub {
-            color: #aaa;
-            font-size: 0.75rem;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.6; transform: scale(0.95);}
-            100% { opacity: 1; transform: scale(1.05);}
-        }
-
-        /* Chat panel */
-        .interaction-panel {
+        /* Chat Panel */
+        .chat-panel {
             padding: 14px 16px 20px;
             background: #0a0e18;
             border-top: 1px solid #1e2438;
         }
+
         .viewer-stats {
             display: flex;
             align-items: center;
@@ -259,30 +169,36 @@
             width: fit-content;
             margin-bottom: 16px;
         }
+
         .eye-icon svg {
             width: 16px;
             height: 16px;
             stroke: #94a3b8;
         }
+
         .viewer-count {
             font-weight: 700;
             font-size: 0.9rem;
             color: #e2e8f0;
         }
+
         .live-viewers {
             font-size: 0.7rem;
             color: #7e8ba3;
         }
+
         .chat-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
         }
+
         .chat-header h4 {
             font-size: 0.85rem;
             font-weight: 600;
             color: #cbd5e6;
         }
+
         .chat-messages {
             background: #0f131f;
             border-radius: 20px;
@@ -294,9 +210,10 @@
             gap: 8px;
             margin-bottom: 10px;
         }
+
         .message-bubble {
             background: #1a1f2e;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 24px;
             max-width: 90%;
             width: fit-content;
@@ -304,12 +221,14 @@
             color: #eef2ff;
             border-left: 2px solid #3b82f6;
         }
+
         .message-bubble strong {
             color: #60a5fa;
             font-weight: 600;
             margin-right: 6px;
             font-size: 0.8rem;
         }
+
         .chat-input-area {
             display: flex;
             gap: 8px;
@@ -319,6 +238,7 @@
             padding: 4px 4px 4px 16px;
             border: 1px solid #2a2f42;
         }
+
         .chat-input-area input {
             flex: 1;
             background: transparent;
@@ -328,6 +248,7 @@
             font-size: 0.85rem;
             outline: none;
         }
+
         .send-btn {
             background: #2563eb;
             border: none;
@@ -341,47 +262,29 @@
             gap: 6px;
             cursor: pointer;
         }
+
         .send-btn svg {
             width: 14px;
             height: 14px;
             stroke: white;
         }
+
         .send-btn:active {
             background: #1d4ed8;
             transform: scale(0.96);
         }
 
-        /* Fullscreen robust: video fills screen perfectly on rotate */
-        .video-stage:fullscreen {
-            width: 100vw;
-            height: 100vh;
-            background: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-stage:fullscreen #youtube-player {
-            width: 100%;
-            height: 100%;
-            transform: none !important;
-            object-fit: cover;
-        }
-        /* ensure iframe covers full area in fullscreen */
-        .video-stage:fullscreen #youtube-player iframe {
-            width: 100% !important;
-            height: 100% !important;
-        }
         @media (max-width: 480px) {
-            .social-item svg {
-                width: 22px;
-                height: 22px;
-            }
-            .social-item span {
-                font-size: 8px;
-            }
             .ctrl-btn svg {
-                width: 18px;
-                height: 18px;
+                width: 20px;
+                height: 20px;
+            }
+            .live-badge {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+            .custom-controls {
+                padding: 10px 12px 14px;
             }
             .chat-messages {
                 height: 200px;
@@ -391,86 +294,68 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- SOCIAL BAR - NOW ABOVE VIDEO PLAYER, outside video-stage, all white icons -->
-    <div class="social-bar-outer">
-        <div class="social-item" id="youtubeSocialBtn">
-            <svg class="youtube-icon" viewBox="0 0 24 24" width="24" height="24">
-                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" />
-                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
-            </svg>
-            <span>Subscribe</span>
-        </div>
-        <div class="social-item" id="tiktokSocialBtn">
-            <svg viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1.2">
-                <path d="M19.59 6.69a4.1 4.1 0 0 1-3.3-1.7 4.1 4.1 0 0 1-.7-2.2h-2.5v11.5a2.5 2.5 0 0 1-2.5 2.5 2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5c.3 0 .6.1.9.2v-2.8a5 5 0 0 0-4.9 4.9 5 5 0 0 0 5 5 5 5 0 0 0 5-5V8.3a6.8 6.8 0 0 0 4 1.3v-2.5a4.1 4.1 0 0 1-2.8-.4z" />
-            </svg>
-            <span>Follow</span>
-        </div>
-        <div class="social-item" id="whatsappSocialBtn">
-            <svg viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1.2">
-                <path d="M21.5 12a9.5 9.5 0 0 1-9.5 9.5c-1.7 0-3.3-.4-4.7-1.2l-5.3 1.5 1.5-5.2c-.8-1.4-1.2-3-1.2-4.7a9.5 9.5 0 0 1 9.5-9.5 9.5 9.5 0 0 1 9.5 9.5z" />
-                <path d="M8.5 9.5c.2-.5.5-1 .9-1.3.3-.3.7-.4 1-.1.3.2.6.6.8 1 .4.7.7 1.4.9 2.1.1.4 0 .8-.3 1.1-.2.3-.5.5-.7.8-.2.2-.2.5-.1.7.3.6.8 1.1 1.3 1.5.3.2.7.3 1 .1.3-.2.5-.5.8-.7.3-.2.7-.2 1-.1.6.2 1.2.6 1.6 1 .3.3.4.7.2 1-.3.5-.7.9-1.2 1.1-.5.2-1 .2-1.5 0a7.5 7.5 0 0 1-3.2-2.4c-.7-.9-1.1-2-1.2-3.1-.1-.6 0-1.2.2-1.7z" />
-            </svg>
-            <span>WhatsApp</span>
-        </div>
-    </div>
-
     <div class="video-stage" id="videoStage">
-        <div id="youtube-player"></div>
-        
-        <!-- Custom Controls -->
-        <div class="custom-controls-overlay" id="customControls">
+        <video id="videoPlayer" playsinline></video>
+        <div class="custom-controls" id="customControls">
             <div class="controls-left">
                 <button class="ctrl-btn" id="playPauseBtn">
-                    <svg viewBox="0 0 24 24" id="playIconSvg"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg>
-                    <svg viewBox="0 0 24 24" id="pauseIconSvg" style="display: none;"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg>
+                    <svg viewBox="0 0 24 24" id="playIconSvg">
+                        <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
+                    </svg>
+                    <svg viewBox="0 0 24 24" id="pauseIconSvg" style="display: none;">
+                        <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
+                        <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+                    </svg>
                 </button>
                 <button class="ctrl-btn" id="muteBtn">
-                    <svg viewBox="0 0 24 24" id="volumeIcon" fill="none" stroke="currentColor"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
-                    <svg viewBox="0 0 24 24" id="mutedIcon" style="display: none;" fill="none" stroke="currentColor"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/><line x1="18" y1="6" x2="22" y2="10"/><line x1="22" y1="6" x2="18" y2="10"/></svg>
+                    <svg viewBox="0 0 24 24" id="volumeIcon" fill="none" stroke="currentColor">
+                        <path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/>
+                        <path d="M16 8a5 5 0 0 1 0 8"/>
+                        <path d="M19 5a9 9 0 0 1 0 14"/>
+                    </svg>
+                    <svg viewBox="0 0 24 24" id="mutedIcon" style="display: none;" fill="none" stroke="currentColor">
+                        <path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/>
+                        <line x1="18" y1="6" x2="22" y2="10"/>
+                        <line x1="22" y1="6" x2="18" y2="10"/>
+                    </svg>
                 </button>
                 <div class="live-badge">LIVE</div>
             </div>
             <div class="controls-right">
                 <button class="ctrl-btn" id="fullscreenBtn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor"/>
+                    </svg>
                 </button>
             </div>
         </div>
-
-        <!-- Loading overlay -->
         <div class="loading-overlay" id="loadingOverlay">
             <div class="spinner"></div>
-            <div class="loading-text">LOADING FAST STREAM ...</div>
-        </div>
-
-        <!-- AD CUSTOM OVERLAY: no buffering screen, shows "Ads keeping please wait" -->
-        <div id="adOverlay" class="ad-overlay" style="display: none;">
-            <div class="ad-icon">📺</div>
-            <div class="ad-message">Ads keeping please wait ...</div>
-            <div class="ad-sub">skipping automatically</div>
+            <div class="loading-text">BUFFERING STREAM ...</div>
         </div>
     </div>
 
-    <div class="interaction-panel">
+    <div class="chat-panel">
         <div class="viewer-stats">
             <span class="eye-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
             <span class="viewer-count" id="viewerCountDisplay">0</span>
             <span class="live-viewers">watching now</span>
         </div>
-        <div class="chat-header"><h4>GLOBAL CHAT</h4><span style="font-size: 9px; color:#5b6e8c;">realtime</span></div>
+        <div class="chat-header"><h4>LIVE CHAT</h4><span style="font-size: 9px; color:#5b6e8c;">realtime</span></div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Type message ..." autocomplete="off">
+            <input type="text" id="chatInput" placeholder="Type your message ..." autocomplete="off">
             <button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, set, onChildAdded, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA",
         authDomain: "chat-283ed.firebaseapp.com",
@@ -487,192 +372,162 @@
     const chatRef = ref(db, 'chat/messages');
     const viewersRef = ref(db, 'activeViewers');
 
-    function extractVideoId(url) {
-        if (!url) return null;
-        let cleanUrl = url.split('?')[0];
-        let match = cleanUrl.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/);
-        if (match) return match[1];
-        match = cleanUrl.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
-        if (match) return match[1];
-        match = cleanUrl.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
-        if (match) return match[1];
-        match = cleanUrl.match(/embed\/([a-zA-Z0-9_-]{11})/);
-        if (match) return match[1];
-        return null;
-    }
-
-    let player = null;
-    let isPlaying = true;
-    let isMuted = false;
-    let currentVideoId = "";
-    let controlsTimeout = null;
-    const controlsDiv = document.getElementById('customControls');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const adOverlay = document.getElementById('adOverlay');
+    // DOM Elements
+    const video = document.getElementById('videoPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     const videoStage = document.getElementById('videoStage');
+    const customControls = document.getElementById('customControls');
+    const loadingOverlay = document.getElementById('loadingOverlay');
     const playIcon = document.getElementById('playIconSvg');
     const pauseIcon = document.getElementById('pauseIconSvg');
     const volumeIcon = document.getElementById('volumeIcon');
     const mutedIcon = document.getElementById('mutedIcon');
 
-    // AD detection using timestamp monitor (reliable for all ads)
-    let adDetectionInterval = null;
-    let lastCurrentTime = 0;
-    let stuckCounter = 0;
-    let isAdShowing = false;
+    let hls = null;
+    let isPlaying = true;
+    let isMuted = false;
+    let controlsTimeout = null;
+    let currentStreamUrl = "";
 
-    function stopAdDetection() {
-        if (adDetectionInterval) clearInterval(adDetectionInterval);
-        adDetectionInterval = null;
-    }
-
-    function startAdDetection() {
-        if (adDetectionInterval) stopAdDetection();
-        if (!player || typeof player.getCurrentTime !== 'function') return;
-        lastCurrentTime = player.getCurrentTime();
-        stuckCounter = 0;
-        adDetectionInterval = setInterval(() => {
-            if (!player) return;
-            try {
-                const state = player.getPlayerState ? player.getPlayerState() : null;
-                // Only detect when video is playing (state = 1)
-                if (state === YT.PlayerState.PLAYING) {
-                    const current = player.getCurrentTime();
-                    const duration = player.getDuration();
-                    if (duration > 0 && current === lastCurrentTime && stuckCounter < 3) {
-                        stuckCounter++;
-                        if (stuckCounter >= 2) {
-                            // AD detected: time not moving while playing
-                            if (!isAdShowing) {
-                                isAdShowing = true;
-                                adOverlay.style.display = 'flex';
-                                loadingOverlay.style.display = 'none'; // hide buffering completely
-                            }
-                        }
-                    } else if (current !== lastCurrentTime) {
-                        // time moved: ad finished or normal playback
-                        if (isAdShowing) {
-                            isAdShowing = false;
-                            adOverlay.style.display = 'none';
-                            // restore loading only if needed later
-                        }
-                        stuckCounter = 0;
-                    }
-                    lastCurrentTime = current;
-                } else {
-                    // if paused or buffering, reset ad flag
-                    if (isAdShowing) {
-                        isAdShowing = false;
-                        adOverlay.style.display = 'none';
-                    }
-                    stuckCounter = 0;
-                }
-            } catch(e) {}
-        }, 800);
-    }
-
+    // Helper Functions
     function showLoading(show) {
-        if (isAdShowing) return; // never show buffering while ad overlay active
         loadingOverlay.style.display = show ? 'flex' : 'none';
     }
 
     function resetControlsTimer() {
         if (controlsTimeout) clearTimeout(controlsTimeout);
-        controlsDiv.classList.remove('hide-controls');
-        controlsTimeout = setTimeout(() => controlsDiv.classList.add('hide-controls'), 3500);
+        customControls.classList.remove('hide-controls');
+        controlsTimeout = setTimeout(() => {
+            customControls.classList.add('hide-controls');
+        }, 3500);
     }
+
     function updatePlayPauseUI() {
-        if (isPlaying) { playIcon.style.display = 'none'; pauseIcon.style.display = 'block'; }
-        else { playIcon.style.display = 'block'; pauseIcon.style.display = 'none'; }
-    }
-    function updateMuteUI() {
-        if (isMuted) { volumeIcon.style.display = 'none'; mutedIcon.style.display = 'block'; }
-        else { volumeIcon.style.display = 'block'; mutedIcon.style.display = 'none'; }
-    }
-    function setHighQuality() {
-        if (player && player.setPlaybackQuality) {
-            try { player.setPlaybackQuality('hd1080'); } catch(e) {}
-        }
-    }
-    
-    function loadVideo(link) {
-        const vid = extractVideoId(link);
-        if (!vid) return;
-        if (player && player.loadVideoById && vid !== currentVideoId) {
-            currentVideoId = vid;
-            player.loadVideoById({ videoId: vid, startSeconds: 0, suggestedQuality: 'hd1080' });
-            showLoading(true);
-            if (isAdShowing) { adOverlay.style.display = 'none'; isAdShowing=false; }
-            stopAdDetection();
-            setTimeout(() => { setHighQuality(); startAdDetection(); }, 1500);
+        if (isPlaying) {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        } else {
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
         }
     }
 
-    function initPlayer(initialUrl) {
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.head.appendChild(tag);
-        window.onYouTubeIframeAPIReady = () => {
-            const videoId = extractVideoId(initialUrl) || "dQw4w9WgXcQ";
-            currentVideoId = videoId;
-            player = new YT.Player('youtube-player', {
-                videoId: videoId,
-                playerVars: { 
-                    controls: 0, modestbranding: 1, disablekb: 1, rel: 0, iv_load_policy: 3, 
-                    autoplay: 1, playsinline: 1, mute: 0, quality: 'hd1080'
+    function updateMuteUI() {
+        if (isMuted) {
+            volumeIcon.style.display = 'none';
+            mutedIcon.style.display = 'block';
+        } else {
+            volumeIcon.style.display = 'block';
+            mutedIcon.style.display = 'none';
+        }
+    }
+
+    // Initialize HLS.js for M3U8 streaming
+    function initHLS(url) {
+        if (hls) {
+            hls.destroy();
+        }
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // For Safari (native HLS support)
+            video.src = url;
+            video.addEventListener('loadedmetadata', () => {
+                video.play();
+                showLoading(false);
+            });
+        } else if (Hls.isSupported()) {
+            hls = new Hls({
+                maxBufferLength: 20,
+                backBufferLength: 2,
+                maxBufferSize: 0,
+                lowLatencyMode: true,
+                enableWorker: true,
+                manifestLoadPolicy: {
+                    default: {
+                        maxTimeToFirstByteMs: 10000,
+                        maxLoadTimeMs: 20000,
+                        timeoutRetry: { maxNumRetry: 2, retryDelayMs: 0, maxRetryDelayMs: 0 },
+                        errorRetry: { maxNumRetry: 2, retryDelayMs: 1000, maxRetryDelayMs: 8000 }
+                    }
                 },
-                events: {
-                    onReady: (event) => {
-                        showLoading(false);
-                        isPlaying = true;
-                        updatePlayPauseUI();
-                        event.target.playVideo();
-                        setHighQuality();
-                        resetControlsTimer();
-                        startAdDetection();
-                    },
-                    onStateChange: (e) => {
-                        const state = e.data;
-                        if (state === 3) { // buffering
-                            if (!isAdShowing) showLoading(true);
-                        } else if (state === 1) { // playing
-                            showLoading(false);
-                            isPlaying = true;
-                            updatePlayPauseUI();
-                            setHighQuality();
-                            // when playing again, ad detection will handle ad overlay
-                        } else if (state === 2) {
-                            isPlaying = false;
-                            updatePlayPauseUI();
-                            showLoading(false);
-                        } else if (state === -1) {
-                            if (!isAdShowing) showLoading(true);
-                        }
-                        resetControlsTimer();
-                    },
-                    onError: () => { showLoading(false); }
+                playlistLoadPolicy: {
+                    default: {
+                        maxTimeToFirstByteMs: 10000,
+                        maxLoadTimeMs: 20000,
+                        timeoutRetry: { maxNumRetry: 2, retryDelayMs: 0, maxRetryDelayMs: 0 },
+                        errorRetry: { maxNumRetry: 2, retryDelayMs: 1000, maxRetryDelayMs: 8000 }
+                    }
+                },
+                fragLoadPolicy: {
+                    default: {
+                        maxTimeToFirstByteMs: 10000,
+                        maxLoadTimeMs: 20000,
+                        timeoutRetry: { maxNumRetry: 4, retryDelayMs: 0, maxRetryDelayMs: 0 },
+                        errorRetry: { maxNumRetry: 4, retryDelayMs: 1000, maxRetryDelayMs: 8000 }
+                    }
                 }
             });
-        };
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+                hls.loadSource(url);
+                showLoading(false);
+            });
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                video.play().catch(e => console.log("Auto-play prevented:", e));
+            });
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    switch (data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            initHLS(url);
+                            break;
+                    }
+                }
+            });
+        } else {
+            console.error("HLS is not supported in this browser.");
+            showLoading(false);
+        }
+        currentStreamUrl = url;
     }
 
-    // Firebase stream
+    // Load or reload stream
+    function loadStream(url) {
+        if (!url || url === currentStreamUrl) return;
+        showLoading(true);
+        initHLS(url);
+    }
+
+    // Firebase Listener for Stream URL
     onValue(streamUrlRef, (snapshot) => {
         const url = snapshot.val();
-        if (url) {
-            if (!player) initPlayer(url);
-            else loadVideo(url);
+        if (url && url !== currentStreamUrl) {
+            loadStream(url);
         }
     });
 
-    // Chat functionality
+    // Chat Functionality
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
     const chatContainer = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendChatBtn');
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
     function appendMessage(user, text) {
         const div = document.createElement('div');
         div.className = 'message-bubble';
@@ -680,11 +535,12 @@
         chatContainer.appendChild(div);
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m;}); }
+
     onChildAdded(chatRef, (snapshot) => {
         const data = snapshot.val();
         if (data) appendMessage(data.username, data.text);
     });
+
     function sendMessage() {
         const msg = chatInput.value.trim();
         if (!msg) return;
@@ -692,10 +548,11 @@
         set(newMsgRef, { username: username, text: msg, timestamp: serverTimestamp() });
         chatInput.value = '';
     }
+
     sendBtn.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-    // Active viewers
+    // Live Viewer Count (Presence)
     const viewerId = Math.random().toString(36).substring(2) + Date.now();
     const myViewerRef = ref(db, `activeViewers/${viewerId}`);
     onDisconnect(myViewerRef).remove();
@@ -706,50 +563,85 @@
         document.getElementById('viewerCountDisplay').innerText = count;
     });
 
-    // Controls
+    // Custom Control Event Listeners
     playPauseBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!player) return;
-        if (isPlaying) { player.pauseVideo(); isPlaying = false; }
-        else { player.playVideo(); isPlaying = true; }
+        if (!video) return;
+        if (isPlaying) {
+            video.pause();
+            isPlaying = false;
+        } else {
+            video.play();
+            isPlaying = true;
+        }
         updatePlayPauseUI();
         resetControlsTimer();
     });
+
     muteBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!player) return;
-        if (isMuted) { player.unMute(); isMuted = false; }
-        else { player.mute(); isMuted = true; }
+        if (!video) return;
+        if (isMuted) {
+            video.muted = false;
+            isMuted = false;
+        } else {
+            video.muted = true;
+            isMuted = true;
+        }
         updateMuteUI();
         resetControlsTimer();
     });
+
     fullscreenBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
         const elem = videoStage;
         if (!document.fullscreenElement) {
-            await elem.requestFullscreen();
+            if (elem.requestFullscreen) {
+                await elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+            // Lock orientation to landscape for 90-degree rotation on mobile
             try {
-                if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape');
-            } catch(err) { console.log("orientation lock", err); }
+                if (screen.orientation && screen.orientation.lock) {
+                    await screen.orientation.lock('landscape');
+                }
+            } catch(err) {
+                console.log("Orientation lock not supported:", err);
+            }
         } else {
             await document.exitFullscreen();
-            try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch(e) {}
+            try {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            } catch(e) {}
         }
         resetControlsTimer();
     });
-    videoStage.addEventListener('click', (e) => { resetControlsTimer(); });
-    
-    // Social links (white icons now above)
-    document.getElementById('youtubeSocialBtn').addEventListener('click', () => {
-        window.open('https://youtube.com/@yasiriqbal_01?si=jJhGfxyJEmo1jDBX', '_blank');
-    });
-    document.getElementById('tiktokSocialBtn').addEventListener('click', () => {
-        window.open('https://vm.tiktok.com/ZS9L9DsymEuah-z2qv4/', '_blank');
-    });
-    document.getElementById('whatsappSocialBtn').addEventListener('click', () => {
-        window.open('https://whatsapp.com/channel/0029VbCEdrq0bIdoR2SJiW1S', '_blank');
+
+    video.addEventListener('play', () => {
+        isPlaying = true;
+        updatePlayPauseUI();
+        resetControlsTimer();
     });
 
+    video.addEventListener('pause', () => {
+        isPlaying = false;
+        updatePlayPauseUI();
+        resetControlsTimer();
+    });
+
+    video.addEventListener('volumechange', () => {
+        isMuted = video.muted;
+        updateMuteUI();
+    });
+
+    videoStage.addEventListener('click', (e) => {
+        resetControlsTimer();
+    });
+
+    // Initial UI State
     updateMuteUI();
     updatePlayPauseUI();
     showLoading(true);
