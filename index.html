@@ -461,6 +461,7 @@
         }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 <div class="app-container">
@@ -617,10 +618,19 @@
             hls.destroy();
         }
 
-        // Set video attributes for autoplay - unmuted
-        video.muted = false;
+        // Set video attributes for autoplay - start muted to ensure autoplay works
+        video.muted = true;
         video.autoplay = true;
         video.playsInline = true;
+
+        // Try to unmute after successful autoplay
+        setTimeout(() => {
+            if (video.paused === false) {
+                video.muted = false;
+                isMuted = false;
+                updateMuteUI();
+            }
+        }, 1000);
 
         if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // For Safari (native HLS support)
@@ -766,11 +776,13 @@
         }
     });
 
-    // Chat Functionality
+    // Chat Functionality with Auto-Delete after 24 hours
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
     const chatContainer = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendChatBtn');
+
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m) {
@@ -781,26 +793,84 @@
         });
     }
 
-    function appendMessage(user, text) {
+    function appendMessage(user, text, msgId, timestamp) {
         const div = document.createElement('div');
         div.className = 'message-bubble';
+        div.setAttribute('data-msg-id', msgId);
+        div.setAttribute('data-timestamp', timestamp);
         div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`;
         chatContainer.appendChild(div);
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
+    // Function to check and delete old messages (older than 24 hours)
+    function cleanupOldMessages() {
+        const now = Date.now();
+        const messages = chatContainer.querySelectorAll('.message-bubble');
+
+        messages.forEach(msg => {
+            const timestamp = parseInt(msg.getAttribute('data-timestamp')) || 0;
+            if (now - timestamp > TWENTY_FOUR_HOURS) {
+                msg.remove();
+            }
+        });
+    }
+
+    // Run cleanup every hour
+    setInterval(cleanupOldMessages, 60 * 60 * 1000);
+
     onChildAdded(chatRef, (snapshot) => {
         const data = snapshot.val();
-        if (data) appendMessage(data.username, data.text);
+        if (!data) return;
+
+        // Check if message is older than 24 hours
+        const msgTimestamp = data.timestamp || Date.now();
+        const now = Date.now();
+
+        if (now - msgTimestamp > TWENTY_FOUR_HOURS) {
+            // Delete old message from database
+            const msgRef = ref(db, `chat/messages/${snapshot.key}`);
+            set(msgRef, null);
+            return;
+        }
+
+        appendMessage(data.username, data.text, snapshot.key, msgTimestamp);
     });
 
     function sendMessage() {
         const msg = chatInput.value.trim();
         if (!msg) return;
         const newMsgRef = push(chatRef);
-            set(newMsgRef, { username: username, text: msg, timestamp: serverTimestamp() });
+        set(newMsgRef, { 
+            username: username, 
+            text: msg, 
+            timestamp: serverTimestamp() 
+        });
         chatInput.value = '';
     }
+
+    // Also clean up old messages in database periodically
+    function cleanupDatabaseMessages() {
+        const now = Date.now();
+        onValue(chatRef, (snapshot) => {
+            const messages = snapshot.val();
+            if (!messages) return;
+
+            Object.keys(messages).forEach(key => {
+                const msg = messages[key];
+                const msgTimestamp = msg.timestamp || 0;
+                if (now - msgTimestamp > TWENTY_FOUR_HOURS) {
+                    const msgRef = ref(db, `chat/messages/${key}`);
+                    set(msgRef, null);
+                }
+            });
+        }, { onlyOnce: true });
+    }
+
+    // Run database cleanup every 6 hours
+    setInterval(cleanupDatabaseMessages, 6 * 60 * 60 * 1000);
+    // Also run once on load
+    setTimeout(cleanupDatabaseMessages, 5000);
 
     sendBtn.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
@@ -816,76 +886,127 @@
         document.getElementById('viewerCountDisplay').innerText = count;
     });
 
-    // Custom Control Event Listeners
-    playPauseBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!video) return;
-        if (isPlaying) {
-            video.pause();
-            isPlaying = false;
+    // Controls visibility state
+    let controlsVisible = false;
+    let controlsClickTimer = null;
+
+    // Improved controls toggle function
+    function toggleControls(show) {
+        if (show) {
+            customControls.classList.remove('hide-controls');
+            controlsVisible = true;
+            // Auto hide after 4 seconds if not clicked again
+            if (controlsTimeout) clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => {
+                if (!controlsClickTimer) { // Only hide if not currently clicking a control
+                    customControls.classList.add('hide-controls');
+                    controlsVisible = false;
+                }
+            }, 4000);
         } else {
-            video.play().then(() => {
-                isPlaying = true;
-            }).catch(err => {
-                console.log("Play failed:", err);
-            });
+            customControls.classList.add('hide-controls');
+            controlsVisible = false;
         }
-        updatePlayPauseUI();
+    }
+
+    // Video stage click handler - first click shows controls, second click hides
+    videoStage.addEventListener('click', (e) => {
+        // If clicking on a control button, let it handle the click
+        if (e.target.closest('.ctrl-btn')) return;
+
+        if (!controlsVisible) {
+            toggleControls(true);
+        } else {
+            toggleControls(false);
+        }
+    });
+
+    // Custom Control Event Listeners - show controls on first click, action on second
+    function handleControlClick(e, action) {
+        e.stopPropagation();
+
+        if (!controlsVisible) {
+            // First click - just show controls
+            toggleControls(true);
+            return;
+        }
+
+        // Second click - perform the action
+        controlsClickTimer = setTimeout(() => {
+            controlsClickTimer = null;
+        }, 100);
+
+        action();
         resetControlsTimer();
+    }
+
+    playPauseBtn.addEventListener('click', (e) => {
+        handleControlClick(e, () => {
+            if (!video) return;
+            if (isPlaying) {
+                video.pause();
+                isPlaying = false;
+            } else {
+                video.play().then(() => {
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log("Play failed:", err);
+                });
+            }
+            updatePlayPauseUI();
+        });
     });
 
     muteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!video) return;
-        if (isMuted) {
-            video.muted = false;
-            isMuted = false;
-        } else {
-            video.muted = true;
-            isMuted = true;
-        }
-        updateMuteUI();
-        resetControlsTimer();
+        handleControlClick(e, () => {
+            if (!video) return;
+            if (isMuted) {
+                video.muted = false;
+                isMuted = false;
+            } else {
+                video.muted = true;
+                isMuted = true;
+            }
+            updateMuteUI();
+        });
     });
 
     fullscreenBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const elem = videoStage;
-        if (!document.fullscreenElement) {
-            if (elem.requestFullscreen) {
-                await elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            }
-            try {
-                if (screen.orientation && screen.orientation.lock) {
-                    await screen.orientation.lock('landscape');
+        handleControlClick(e, async () => {
+            const elem = videoStage;
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    await elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
                 }
-            } catch(err) {
-                console.log("Orientation lock not supported:", err);
-            }
-        } else {
-            await document.exitFullscreen();
-            try {
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
+                try {
+                    if (screen.orientation && screen.orientation.lock) {
+                        await screen.orientation.lock('landscape');
+                    }
+                } catch(err) {
+                    console.log("Orientation lock not supported:", err);
                 }
-            } catch(e) {}
-        }
-        resetControlsTimer();
+            } else {
+                await document.exitFullscreen();
+                try {
+                    if (screen.orientation && screen.orientation.unlock) {
+                        screen.orientation.unlock();
+                    }
+                } catch(e) {}
+            }
+        });
     });
 
     video.addEventListener('play', () => {
         isPlaying = true;
         updatePlayPauseUI();
-        resetControlsTimer();
         showLoading(false);
     });
 
     video.addEventListener('pause', () => {
         isPlaying = false;
         updatePlayPauseUI();
-        resetControlsTimer();
     });
 
     video.addEventListener('volumechange', () => {
@@ -907,16 +1028,24 @@
         }
     });
 
-    videoStage.addEventListener('click', (e) => {
-        resetControlsTimer();
-    });
-
-    // Initial UI State - Unmuted
-    video.muted = false;
-    isMuted = false;
+    // Initial UI State - Start with controls hidden
+    video.muted = true; // Start muted for autoplay
+    isMuted = true;
+    controlsVisible = false;
+    customControls.classList.add('hide-controls');
     updateMuteUI();
     updatePlayPauseUI();
     showLoading(true);
+
+    // Try to unmute after user interaction
+    document.addEventListener('click', function unmuteOnInteraction() {
+        if (video.muted && isPlaying) {
+            video.muted = false;
+            isMuted = false;
+            updateMuteUI();
+        }
+        document.removeEventListener('click', unmuteOnInteraction);
+    }, { once: true });
 </script>
 </body>
 </html>
