@@ -618,42 +618,27 @@
             hls.destroy();
         }
 
-        // Set video attributes for autoplay - start muted to ensure autoplay works
-        video.muted = true;
+        // Set video attributes for autoplay - unmuted (normal behavior)
+        video.muted = false;
         video.autoplay = true;
         video.playsInline = true;
-
-        // Try to unmute after successful autoplay
-        setTimeout(() => {
-            if (video.paused === false) {
-                video.muted = false;
-                isMuted = false;
-                updateMuteUI();
-            }
-        }, 1000);
 
         if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // For Safari (native HLS support)
             video.src = url;
             video.load();
 
-            // Force play on loadedmetadata with retry logic
-            const attemptPlay = () => {
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        showLoading(false);
-                        isPlaying = true;
-                        updatePlayPauseUI();
-                    }).catch(error => {
-                        console.log("Auto-play prevented, retrying...", error);
-                        setTimeout(attemptPlay, 500);
-                    });
-                }
-            };
-
-            video.addEventListener('loadedmetadata', attemptPlay);
-            video.addEventListener('canplay', attemptPlay);
+            // Force play immediately for Safari
+            video.play().then(() => {
+                showLoading(false);
+                isPlaying = true;
+                updatePlayPauseUI();
+                video.muted = false;
+            }).catch(error => {
+                console.log("Auto-play prevented:", error);
+                isPlaying = false;
+                updatePlayPauseUI();
+            });
 
         } else if (Hls.isSupported()) {
             hls = new Hls({
@@ -700,29 +685,17 @@
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 showLoading(false);
-                // Force autoplay with retry logic
-                const attemptPlay = () => {
-                    if (retryCount >= maxRetries) {
-                        console.log("Max retries reached, showing manual play");
-                        isPlaying = false;
-                        updatePlayPauseUI();
-                        return;
-                    }
-
-                    const playPromise = video.play();
-                    if (playPromise !== undefined) {
-                        playPromise.then(() => {
-                            isPlaying = true;
-                            updatePlayPauseUI();
-                            retryCount = 0;
-                        }).catch(error => {
-                            console.log("Auto-play attempt failed, retrying...", error);
-                            retryCount++;
-                            setTimeout(attemptPlay, 800);
-                        });
-                    }
-                };
-                attemptPlay();
+                // Attempt autoplay immediately
+                video.play().then(() => {
+                    isPlaying = true;
+                    updatePlayPauseUI();
+                    video.muted = false;
+                    retryCount = 0;
+                }).catch(error => {
+                    console.log("Auto-play prevented:", error);
+                    isPlaying = false;
+                    updatePlayPauseUI();
+                });
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -943,30 +916,26 @@
     playPauseBtn.addEventListener('click', (e) => {
         handleControlClick(e, () => {
             if (!video) return;
-            if (isPlaying) {
-                video.pause();
-                isPlaying = false;
-            } else {
+            if (video.paused) {
                 video.play().then(() => {
                     isPlaying = true;
+                    updatePlayPauseUI();
                 }).catch(err => {
                     console.log("Play failed:", err);
                 });
+            } else {
+                video.pause();
+                isPlaying = false;
+                updatePlayPauseUI();
             }
-            updatePlayPauseUI();
         });
     });
 
     muteBtn.addEventListener('click', (e) => {
         handleControlClick(e, () => {
             if (!video) return;
-            if (isMuted) {
-                video.muted = false;
-                isMuted = false;
-            } else {
-                video.muted = true;
-                isMuted = true;
-            }
+            video.muted = !video.muted;
+            isMuted = video.muted;
             updateMuteUI();
         });
     });
@@ -1028,24 +997,14 @@
         }
     });
 
-    // Initial UI State - Start with controls hidden
-    video.muted = true; // Start muted for autoplay
-    isMuted = true;
+    // Initial UI State - Normal unmuted autoplay
+    video.muted = false;
+    isMuted = false;
     controlsVisible = false;
     customControls.classList.add('hide-controls');
     updateMuteUI();
     updatePlayPauseUI();
     showLoading(true);
-
-    // Try to unmute after user interaction
-    document.addEventListener('click', function unmuteOnInteraction() {
-        if (video.muted && isPlaying) {
-            video.muted = false;
-            isMuted = false;
-            updateMuteUI();
-        }
-        document.removeEventListener('click', unmuteOnInteraction);
-    }, { once: true });
 </script>
 </body>
 </html>
