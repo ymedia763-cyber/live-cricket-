@@ -430,6 +430,71 @@
             background: rgba(59, 130, 246, 0.5);
         }
 
+        /* Center Play Button Overlay */
+        .center-play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 30;
+            cursor: pointer;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .center-play-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .center-play-btn {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: playPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes playPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 0 0 60px rgba(59, 130, 246, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .center-play-btn:hover {
+            transform: scale(1.12);
+            background: linear-gradient(135deg, rgba(29, 78, 216, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .center-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .center-play-btn svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+            margin-left: 4px;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+        }
+
         @media (max-width: 480px) {
             .ctrl-btn {
                 padding: 5px;
@@ -507,6 +572,13 @@
                 <div class="dot"></div>
             </div>
         </div>
+        <div class="center-play-overlay hidden" id="centerPlayOverlay">
+            <div class="center-play-btn" id="centerPlayBtn">
+                <svg viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+            </div>
+        </div>
     </div>
 
     <div class="chat-panel">
@@ -554,6 +626,8 @@
     const videoStage = document.getElementById('videoStage');
     const customControls = document.getElementById('customControls');
     const loadingOverlay = document.getElementById('loadingOverlay');
+    const centerPlayOverlay = document.getElementById('centerPlayOverlay');
+    const centerPlayBtn = document.getElementById('centerPlayBtn');
     const playIcon = document.getElementById('playIconSvg');
     const pauseIcon = document.getElementById('pauseIconSvg');
     const volumeIcon = document.getElementById('volumeIcon');
@@ -572,6 +646,7 @@
     function showLoading(show) {
         if (show) {
             loadingOverlay.style.display = 'flex';
+            centerPlayOverlay.classList.add('hidden');
             // Remove initial-loading class after first load
             if (!isInitialLoad) {
                 loadingOverlay.classList.remove('initial-loading');
@@ -582,6 +657,14 @@
                 isInitialLoad = false;
             }
         }
+    }
+
+    function showCenterPlayButton() {
+        centerPlayOverlay.classList.remove('hidden');
+    }
+
+    function hideCenterPlayButton() {
+        centerPlayOverlay.classList.add('hidden');
     }
 
     function resetControlsTimer() {
@@ -628,17 +711,9 @@
             video.src = url;
             video.load();
 
-            // Force play immediately for Safari
-            video.play().then(() => {
-                showLoading(false);
-                isPlaying = true;
-                updatePlayPauseUI();
-                video.muted = false;
-            }).catch(error => {
-                console.log("Auto-play prevented:", error);
-                isPlaying = false;
-                updatePlayPauseUI();
-            });
+            // Stream loaded, show center play button for user to start
+            showLoading(false);
+            showCenterPlayButton();
 
         } else if (Hls.isSupported()) {
             hls = new Hls({
@@ -685,17 +760,8 @@
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 showLoading(false);
-                // Attempt autoplay immediately
-                video.play().then(() => {
-                    isPlaying = true;
-                    updatePlayPauseUI();
-                    video.muted = false;
-                    retryCount = 0;
-                }).catch(error => {
-                    console.log("Auto-play prevented:", error);
-                    isPlaying = false;
-                    updatePlayPauseUI();
-                });
+                // Stream ready, show center play button for user to start
+                showCenterPlayButton();
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -967,10 +1033,31 @@
         });
     });
 
+    // Center play button click handler
+    centerPlayBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideCenterPlayButton();
+        video.play().then(() => {
+            isPlaying = true;
+            updatePlayPauseUI();
+            toggleControls(true);
+        }).catch(err => {
+            console.log("Play failed:", err);
+            showCenterPlayButton();
+        });
+    });
+
+    centerPlayOverlay.addEventListener('click', (e) => {
+        if (e.target === centerPlayOverlay || e.target === centerPlayBtn) {
+            centerPlayBtn.click();
+        }
+    });
+
     video.addEventListener('play', () => {
         isPlaying = true;
         updatePlayPauseUI();
         showLoading(false);
+        hideCenterPlayButton();
     });
 
     video.addEventListener('pause', () => {
@@ -997,7 +1084,7 @@
         }
     });
 
-    // Initial UI State - Normal unmuted autoplay
+    // Initial UI State - Show loading first, then center play button
     video.muted = false;
     isMuted = false;
     controlsVisible = false;
