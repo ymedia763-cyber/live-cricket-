@@ -592,6 +592,116 @@
             border-color: rgba(100, 255, 150, 0.5);
         }
 
+        /* Upcoming Stream Overlay */
+        .upcoming-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 35;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .upcoming-overlay.active {
+            display: flex;
+        }
+
+        .upcoming-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px) brightness(0.4);
+            transform: scale(1.1);
+        }
+
+        .upcoming-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .live-in-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 20px rgba(251, 191, 36, 0.5);
+            animation: labelPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes labelPulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .countdown-box {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 14px 18px;
+            min-width: 70px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .countdown-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+            font-family: 'Inter', system-ui, monospace;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .countdown-suffix {
+            font-size: 0.7rem;
+            color: #fbbf24;
+            font-weight: 600;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .countdown-item.hidden {
+            display: none !important;
+        }
+
+        .upcoming-title {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .countdown-value { font-size: 1.5rem; }
+            .countdown-item { padding: 10px 12px; min-width: 55px; }
+            .live-in-label { font-size: 0.9rem; letter-spacing: 2px; }
+            .countdown-box { gap: 8px; }
+        }
+
         @media (max-width: 480px) {
             .social-bar {
                 gap: 10px;
@@ -606,6 +716,116 @@
                 width: 18px;
                 height: 18px;
             }
+        }
+
+        /* Upcoming Stream Overlay */
+        .upcoming-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 35;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .upcoming-overlay.active {
+            display: flex;
+        }
+
+        .upcoming-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px) brightness(0.4);
+            transform: scale(1.1);
+        }
+
+        .upcoming-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .live-in-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 20px rgba(251, 191, 36, 0.5);
+            animation: labelPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes labelPulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .countdown-box {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 14px 18px;
+            min-width: 70px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .countdown-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+            font-family: 'Inter', system-ui, monospace;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .countdown-suffix {
+            font-size: 0.7rem;
+            color: #fbbf24;
+            font-weight: 600;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .countdown-item.hidden {
+            display: none !important;
+        }
+
+        .upcoming-title {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .countdown-value { font-size: 1.5rem; }
+            .countdown-item { padding: 10px 12px; min-width: 55px; }
+            .live-in-label { font-size: 0.9rem; letter-spacing: 2px; }
+            .countdown-box { gap: 8px; }
         }
 
         @media (max-width: 480px) {
@@ -707,7 +927,33 @@
                 <div class="dot"></div>
             </div>
         </div>
-        <div class="center-play-overlay hidden" id="centerPlayOverlay">
+        <!-- Upcoming Stream Overlay -->
+        <div class="upcoming-overlay" id="upcomingOverlay">
+            <div class="upcoming-bg" id="upcomingBg"></div>
+            <div class="upcoming-content">
+                <div class="live-in-label">LIVE in</div>
+                <div class="countdown-box" id="countdownBox">
+                    <div class="countdown-item" id="dayBox">
+                        <div class="countdown-value" id="cdDays">00</div>
+                        <span class="countdown-suffix" id="daySuffix">Days</span>
+                    </div>
+                    <div class="countdown-item" id="hourBox">
+                        <div class="countdown-value" id="cdHours">00</div>
+                        <span class="countdown-suffix">Hours</span>
+                    </div>
+                    <div class="countdown-item" id="minBox">
+                        <div class="countdown-value" id="cdMinutes">00</div>
+                        <span class="countdown-suffix">Mins</span>
+                    </div>
+                    <div class="countdown-item" id="secBox">
+                        <div class="countdown-value" id="cdSeconds">00</div>
+                        <span class="countdown-suffix">Secs</span>
+                    </div>
+                </div>
+                <div class="upcoming-title" id="upcomingTitle">Next match coming soon</div>
+            </div>
+        </div>
+                <div class="center-play-overlay hidden" id="centerPlayOverlay">
             <div class="center-play-btn" id="centerPlayBtn">
                 <svg viewBox="0 0 24 24">
                     <polygon points="5 3 19 12 5 21 5 3"/>
@@ -767,6 +1013,19 @@
     const pauseIcon = document.getElementById('pauseIconSvg');
     const volumeIcon = document.getElementById('volumeIcon');
     const mutedIcon = document.getElementById('mutedIcon');
+
+    // Upcoming Stream Elements
+    const upcomingOverlay = document.getElementById('upcomingOverlay');
+    const upcomingBg = document.getElementById('upcomingBg');
+    const cdDays = document.getElementById('cdDays');
+    const cdHours = document.getElementById('cdHours');
+    const cdMinutes = document.getElementById('cdMinutes');
+    const cdSeconds = document.getElementById('cdSeconds');
+    const upcomingTitle = document.getElementById('upcomingTitle');
+
+    const nextStreamRef = ref(db, 'nextStream');
+    let countdownInterval = null;
+    let nextStreamTime = null;
 
     let hls = null;
     let isPlaying = true;
@@ -941,6 +1200,85 @@
         retryCount = 0;
         initHLS(url);
     }
+
+
+    // Upcoming Stream Countdown Logic
+    const dayBox = document.getElementById('dayBox');
+    const hourBox = document.getElementById('hourBox');
+    const minBox = document.getElementById('minBox');
+    const secBox = document.getElementById('secBox');
+    const daySuffix = document.getElementById('daySuffix');
+
+    function updateCountdown() {
+        if (!nextStreamTime) return;
+        const now = new Date().getTime();
+        const distance = nextStreamTime - now;
+
+        if (distance <= 0) {
+            // Time reached, hide overlay and show stream
+            hideUpcomingOverlay();
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Show/hide days box based on value
+        if (days > 0) {
+            dayBox.classList.remove('hidden');
+            cdDays.innerText = String(days).padStart(2, '0');
+            // Singular or plural
+            daySuffix.innerText = days === 1 ? 'Day' : 'Days';
+        } else {
+            dayBox.classList.add('hidden');
+        }
+
+        cdHours.innerText = String(hours).padStart(2, '0');
+        cdMinutes.innerText = String(minutes).padStart(2, '0');
+        cdSeconds.innerText = String(seconds).padStart(2, '0');
+    }
+
+    function showUpcomingOverlay(thumbnail) {
+        upcomingOverlay.classList.add('active');
+        centerPlayOverlay.classList.add('hidden');
+        customControls.classList.add('hide-controls');
+        if (thumbnail) {
+            upcomingBg.style.backgroundImage = `url(${thumbnail})`;
+        }
+        if (!countdownInterval) {
+            countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+        }
+    }
+
+    function hideUpcomingOverlay() {
+        upcomingOverlay.classList.remove('active');
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+    }
+
+    // Listen for next stream schedule
+    onValue(nextStreamRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.time) {
+            const streamDate = new Date(data.time).getTime();
+            const now = new Date().getTime();
+
+            if (streamDate > now) {
+                nextStreamTime = streamDate;
+                showUpcomingOverlay(data.thumbnail);
+                if (data.thumbnail) upcomingBg.style.backgroundImage = `url(${data.thumbnail})`;
+            } else {
+                hideUpcomingOverlay();
+            }
+        } else {
+            hideUpcomingOverlay();
+        }
+    });
 
     // Firebase Listener for Stream URL
     onValue(streamUrlRef, (snapshot) => {
