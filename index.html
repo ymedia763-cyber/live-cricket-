@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Live cricket</title>
+    <title>Live Cricket Stream</title>
     <style>
         * {
             margin: 0;
@@ -51,7 +51,6 @@
             50% { box-shadow: 0 0 80px rgba(59, 130, 246, 0.25), 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
         }
 
-        /* Video Stage */
         .video-stage {
             position: relative;
             background: linear-gradient(145deg, #000 0%, #0a0e18 100%);
@@ -72,7 +71,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* Custom Controls Overlay - Simplified & Smaller */
         .custom-controls {
             position: absolute;
             bottom: 0;
@@ -144,14 +142,8 @@
         }
 
         @keyframes livePulse {
-            0%, 100% { 
-                box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
-                transform: scale(1);
-            }
-            50% { 
-                box-shadow: 0 0 25px rgba(229, 9, 20, 0.8);
-                transform: scale(1.02);
-            }
+            0%, 100% { box-shadow: 0 0 15px rgba(229, 9, 20, 0.5); transform: scale(1); }
+            50% { box-shadow: 0 0 25px rgba(229, 9, 20, 0.8); transform: scale(1.02); }
         }
 
         .controls-right {
@@ -165,7 +157,6 @@
             transform: translateY(20px);
         }
 
-        /* Enhanced Loading Overlay with Three Dots - Transparent Background */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -224,18 +215,10 @@
         .dot:nth-child(3) { animation-delay: 0s; }
 
         @keyframes dotBounce {
-            0%, 80%, 100% { 
-                transform: scale(0.6);
-                opacity: 0.5;
-            }
-            40% { 
-                transform: scale(1);
-                opacity: 1;
-                box-shadow: 0 0 30px rgba(59, 130, 246, 0.9);
-            }
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; box-shadow: 0 0 30px rgba(59, 130, 246, 0.9); }
         }
 
-        /* Chat Panel */
         .chat-panel {
             padding: 14px 16px 20px;
             background: rgba(10, 14, 24, 0.8);
@@ -325,14 +308,8 @@
         }
 
         @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .message-bubble:hover {
@@ -413,7 +390,6 @@
             box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
         }
 
-        /* Scrollbar Styling */
         .chat-messages::-webkit-scrollbar {
             width: 6px;
         }
@@ -427,11 +403,6 @@
             border-radius: 10px;
         }
 
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: rgba(59, 130, 246, 0.5);
-        }
-
-        /* Center Play Button Overlay */
         .center-play-overlay {
             position: absolute;
             top: 0;
@@ -468,24 +439,14 @@
         }
 
         @keyframes playPulse {
-            0%, 100% { 
-                transform: scale(1);
-                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
-            }
-            50% { 
-                transform: scale(1.08);
-                box-shadow: 0 0 60px rgba(59, 130, 246, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4);
-            }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4); }
+            50% { transform: scale(1.08); box-shadow: 0 0 60px rgba(59, 130, 246, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4); }
         }
 
         .center-play-btn:hover {
             transform: scale(1.12);
             background: linear-gradient(135deg, rgba(29, 78, 216, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
             border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .center-play-btn:active {
-            transform: scale(0.95);
         }
 
         .center-play-btn svg {
@@ -496,7 +457,6 @@
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
         }
 
-        /* Social Media Bar Above Video */
         .social-bar {
             display: flex;
             justify-content: center;
@@ -557,42 +517,10 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
-        .social-btn:active {
-            transform: scale(0.95) translateY(0);
-        }
+        .youtube-btn { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); border-color: rgba(255, 0, 0, 0.3); }
+        .tiktok-btn { background: linear-gradient(135deg, #161823 0%, #000000 100%); border-color: rgba(255, 255, 255, 0.15); }
+        .whatsapp-btn { background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-color: rgba(37, 211, 102, 0.3); }
 
-        .youtube-btn {
-            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
-            border-color: rgba(255, 0, 0, 0.3);
-        }
-
-        .youtube-btn:hover {
-            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.4);
-            border-color: rgba(255, 100, 100, 0.5);
-        }
-
-        .tiktok-btn {
-            background: linear-gradient(135deg, #161823 0%, #000000 100%);
-            border-color: rgba(255, 255, 255, 0.15);
-            position: relative;
-        }
-
-        .tiktok-btn:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .whatsapp-btn {
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-            border-color: rgba(37, 211, 102, 0.3);
-        }
-
-        .whatsapp-btn:hover {
-            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
-            border-color: rgba(100, 255, 150, 0.5);
-        }
-
-        /* Upcoming Stream Overlay */
         .upcoming-overlay {
             position: absolute;
             top: 0;
@@ -607,9 +535,7 @@
             overflow: hidden;
         }
 
-        .upcoming-overlay.active {
-            display: flex;
-        }
+        .upcoming-overlay.active { display: flex; }
 
         .upcoming-bg {
             position: absolute;
@@ -620,7 +546,6 @@
             background-size: cover;
             background-position: center;
             filter: blur(3px) brightness(0.35);
-            transform: scale(1.1);
         }
 
         .upcoming-content {
@@ -643,7 +568,6 @@
             letter-spacing: 3px;
             text-shadow: 0 2px 15px rgba(251, 191, 36, 0.5);
             animation: labelPulse 2s ease-in-out infinite;
-            margin-bottom: 4px;
         }
 
         @keyframes labelPulse {
@@ -654,232 +578,78 @@
         .countdown-box {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-bottom: 4px;
+            margin-top: 5px;
         }
 
         .countdown-item {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 10px 14px;
-            min-width: 55px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .countdown-value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1;
-            font-family: 'Inter', system-ui, monospace;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-
-        .countdown-item.hidden {
-            display: none !important;
-        }
-
-        /* Teams VS Section */
-        .teams-vs {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            margin-top: 8px;
-        }
-
-        .team-logo-wrap {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
-            background: rgba(0, 0, 0, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .team-logo-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .vs-text {
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: #fbbf24;
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
-            letter-spacing: 1px;
-        }
-
-        .match-time-text {
-            font-size: 0.9rem;
-            color: #e2e8f0;
-            font-weight: 600;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-            margin-top: 4px;
-        }
-
-        @media (max-width: 480px) {
-            .countdown-value { font-size: 1.4rem; }
-            .countdown-item { padding: 8px 10px; min-width: 45px; }
-            .team-logo-wrap { width: 48px; height: 48px; }
-            .vs-text { font-size: 1rem; }
-            .match-time-text { font-size: 0.8rem; }
-            .live-in-label { font-size: 0.8rem; letter-spacing: 2px; }
-        }
-
-        .upcoming-title {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            max-width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.4;
-        }
-
-        @media (max-width: 480px) {
-            .countdown-value { font-size: 1.5rem; }
-            .countdown-item { padding: 10px 12px; min-width: 55px; }
-            .live-in-label { font-size: 0.9rem; letter-spacing: 2px; }
-            .countdown-box { gap: 8px; }
-        }
-
-        @media (max-width: 480px) {
-            .social-bar {
-                gap: 10px;
-                padding: 10px 8px;
-            }
-            .social-btn {
-                padding: 6px 12px;
-                font-size: 0.75rem;
-                gap: 6px;
-            }
-            .social-btn svg {
-                width: 18px;
-                height: 18px;
-            }
-        }
-
-        /* Upcoming Stream Overlay */
-        .upcoming-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 35;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .upcoming-overlay.active {
-            display: flex;
-        }
-
-        .upcoming-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            filter: blur(3px) brightness(0.35);
-            transform: scale(1.1);
-        }
-
-        .upcoming-content {
-            position: relative;
-            z-index: 2;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 8px 12px;
+            min-width: 70px;
             text-align: center;
-            padding: 12px 16px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease;
         }
-
-        .live-in-label {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #fbbf24;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 2px 15px rgba(251, 191, 36, 0.5);
-            animation: labelPulse 2s ease-in-out infinite;
-            margin-bottom: 4px;
-        }
-
-        @keyframes labelPulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        .countdown-box {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 4px;
-        }
-
-        .countdown-item {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 10px 14px;
-            min-width: 55px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        .countdown-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(59, 130, 246, 0.5);
         }
 
         .countdown-value {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 800;
             color: white;
-            line-height: 1;
+            line-height: 1.2;
             font-family: 'Inter', system-ui, monospace;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+        }
+        
+        .countdown-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-top: 4px;
+            background: rgba(0,0,0,0.4);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            backdrop-filter: blur(2px);
         }
 
-        .countdown-item.hidden {
-            display: none !important;
-        }
-
-        /* Teams VS Section */
         .teams-vs {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 16px;
-            margin-top: 8px;
+            gap: 24px;
+            margin-top: 12px;
+            background: rgba(0,0,0,0.3);
+            padding: 12px 20px;
+            border-radius: 60px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,215,0,0.3);
         }
 
         .team-logo-wrap {
-            width: 56px;
-            height: 56px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
-            background: rgba(0, 0, 0, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 3px solid rgba(255, 215, 0, 0.7);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
+        .team-logo-wrap:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.7);
+            border-color: #ffd700;
+        }
         .team-logo-wrap img {
             width: 100%;
             height: 100%;
@@ -887,11 +657,28 @@
         }
 
         .vs-text {
-            font-size: 1.2rem;
+            font-size: 1.6rem;
             font-weight: 900;
-            color: #fbbf24;
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
-            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fbbf24, #ff8c00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            letter-spacing: 2px;
+            font-style: italic;
+            position: relative;
+        }
+        .vs-text::before {
+            content: "⚡";
+            font-size: 1rem;
+            margin-right: 6px;
+            opacity: 0.8;
+        }
+        .vs-text::after {
+            content: "⚡";
+            font-size: 1rem;
+            margin-left: 6px;
+            opacity: 0.8;
         }
 
         .match-time-text {
@@ -899,187 +686,93 @@
             color: #e2e8f0;
             font-weight: 600;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-            margin-top: 4px;
-        }
-
-        @media (max-width: 480px) {
-            .countdown-value { font-size: 1.4rem; }
-            .countdown-item { padding: 8px 10px; min-width: 45px; }
-            .team-logo-wrap { width: 48px; height: 48px; }
-            .vs-text { font-size: 1rem; }
-            .match-time-text { font-size: 0.8rem; }
-            .live-in-label { font-size: 0.8rem; letter-spacing: 2px; }
-        }
-
-        .upcoming-title {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            max-width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.4;
+            margin-top: 6px;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: inline-block;
         }
 
         @media (max-width: 480px) {
             .countdown-value { font-size: 1.5rem; }
-            .countdown-item { padding: 10px 12px; min-width: 55px; }
-            .live-in-label { font-size: 0.9rem; letter-spacing: 2px; }
-            .countdown-box { gap: 8px; }
+            .countdown-item { padding: 6px 8px; min-width: 55px; }
+            .team-logo-wrap { width: 60px; height: 60px; }
+            .vs-text { font-size: 1.3rem; }
+            .teams-vs { gap: 16px; padding: 8px 16px; }
+            .countdown-label { font-size: 0.6rem; }
         }
-
-        @media (max-width: 480px) {
-            .ctrl-btn {
-                padding: 5px;
-            }
-            .ctrl-btn svg {
-                width: 16px;
-                height: 16px;
-            }
-            .live-badge {
-                font-size: 9px;
-                padding: 2px 8px;
-            }
-            .custom-controls {
-                padding: 8px 10px 10px;
-            }
-            .chat-messages {
-                height: 200px;
-            }
-            .dot {
-                width: 10px;
-                height: 10px;
-            }
-            .controls-left {
-                gap: 8px;
-            }
-            .controls-right {
-                gap: 6px;
-            }
+        @media (max-width: 380px) {
+            .team-logo-wrap { width: 50px; height: 50px; }
+            .vs-text { font-size: 1.1rem; }
         }
     </style>
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
 <div class="app-container">
-    <!-- Social Media Bar -->
     <div class="social-bar">
         <a href="https://youtube.com/@yasiriqbal_01?si=jJhGfxyJEmo1jDBX" target="_blank" class="social-btn youtube-btn">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             <span>YouTube</span>
         </a>
         <a href="https://vm.tiktok.com/ZS9L9DsymEuah-z2qv4/" target="_blank" class="social-btn tiktok-btn">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
             <span>TikTok</span>
         </a>
         <a href="https://whatsapp.com/channel/0029VbCEdrq0bIdoR2SJiW1S" target="_blank" class="social-btn whatsapp-btn">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             <span>WhatsApp</span>
         </a>
     </div>
 
     <div class="video-stage" id="videoStage">
-        <video id="videoPlayer" playsinline muted autoplay></video>
-        <div class="custom-controls" id="customControls">
+        <video id="videoPlayer" playsinline preload="auto"></video>
+        <div class="custom-controls hide-controls" id="customControls">
             <div class="controls-left">
                 <button class="ctrl-btn" id="playPauseBtn">
-                    <svg viewBox="0 0 24 24" id="playIconSvg">
-                        <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
-                    </svg>
-                    <svg viewBox="0 0 24 24" id="pauseIconSvg" style="display: none;">
-                        <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
-                        <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" id="playIconSvg"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+                    <svg viewBox="0 0 24 24" id="pauseIconSvg" style="display: none;"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg>
                 </button>
                 <button class="ctrl-btn" id="muteBtn">
-                    <svg viewBox="0 0 24 24" id="volumeIcon" fill="none" stroke="currentColor">
-                        <path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/>
-                        <path d="M16 8a5 5 0 0 1 0 8"/>
-                        <path d="M19 5a9 9 0 0 1 0 14"/>
-                    </svg>
-                    <svg viewBox="0 0 24 24" id="mutedIcon" style="display: none;" fill="none" stroke="currentColor">
-                        <path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/>
-                        <line x1="18" y1="6" x2="22" y2="10"/>
-                        <line x1="22" y1="6" x2="18" y2="10"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" id="volumeIcon" stroke="currentColor"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+                    <svg viewBox="0 0 24 24" id="mutedIcon" style="display: none;" stroke="currentColor"><path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5l-5 4H4a1 1 0 0 0-1 1z"/><line x1="18" y1="6" x2="22" y2="10"/><line x1="22" y1="6" x2="18" y2="10"/></svg>
                 </button>
                 <div class="live-badge">LIVE</div>
             </div>
             <div class="controls-right">
-                <button class="ctrl-btn" id="fullscreenBtn">
-                    <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                    </svg>
-                </button>
+                <button class="ctrl-btn" id="fullscreenBtn"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
             </div>
         </div>
-        <div class="loading-overlay initial-loading" id="loadingOverlay">
-            <div class="three-dots-container">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-        </div>
-        <!-- Upcoming Stream Overlay -->
+        <div class="loading-overlay initial-loading" id="loadingOverlay"><div class="three-dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
         <div class="upcoming-overlay" id="upcomingOverlay">
             <div class="upcoming-bg" id="upcomingBg"></div>
             <div class="upcoming-content">
-                <div class="live-in-label">LIVE in</div>
+                <div class="live-in-label">LIVE IN</div>
                 <div class="countdown-box" id="countdownBox">
-                    <div class="countdown-item" id="dayBox">
-                        <div class="countdown-value" id="cdDays">00</div>
-                    </div>
-                    <div class="countdown-item" id="hourBox">
-                        <div class="countdown-value" id="cdHours">00</div>
-                    </div>
-                    <div class="countdown-item" id="minBox">
-                        <div class="countdown-value" id="cdMinutes">00</div>
-                    </div>
-                    <div class="countdown-item" id="secBox">
-                        <div class="countdown-value" id="cdSeconds">00</div>
-                    </div>
+                    <div class="countdown-item" id="dayBox"><div class="countdown-value" id="cdDays">00</div><div class="countdown-label">D</div></div>
+                    <div class="countdown-item" id="hourBox"><div class="countdown-value" id="cdHours">00</div><div class="countdown-label">H</div></div>
+                    <div class="countdown-item" id="minBox"><div class="countdown-value" id="cdMinutes">00</div><div class="countdown-label">M</div></div>
+                    <div class="countdown-item" id="secBox"><div class="countdown-value" id="cdSeconds">00</div><div class="countdown-label">S</div></div>
                 </div>
-                <!-- Team VS Section -->
                 <div class="teams-vs" id="teamsVs">
-                    <div class="team-logo-wrap">
-                        <img id="teamAImg" src="" alt="Team A">
-                    </div>
+                    <div class="team-logo-wrap"><img id="teamAImg" src="" alt="Team A"></div>
                     <div class="vs-text">V.S</div>
-                    <div class="team-logo-wrap">
-                        <img id="teamBImg" src="" alt="Team B">
-                    </div>
+                    <div class="team-logo-wrap"><img id="teamBImg" src="" alt="Team B"></div>
                 </div>
                 <div class="match-time-text" id="matchTimeText"></div>
             </div>
         </div>
-                <div class="center-play-overlay hidden" id="centerPlayOverlay">
-            <div class="center-play-btn" id="centerPlayBtn">
-                <svg viewBox="0 0 24 24">
-                    <polygon points="5 3 19 12 5 21 5 3"/>
-                </svg>
-            </div>
-        </div>
+        <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
     </div>
 
     <div class="chat-panel">
         <div class="viewer-stats">
-            <span class="eye-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="eye-icon"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
             <span class="viewer-count" id="viewerCountDisplay">0</span>
             <span class="live-viewers">watching now</span>
         </div>
-        <div class="chat-header"><h4>LIVE CHAT</h4><span style="font-size: 9px; color:#5b6e8c; text-transform: uppercase; letter-spacing: 1px;">realtime</span></div>
+        <div class="chat-header"><h4>LIVE CHAT</h4><span style="font-size:9px; color:#5b6e8c;">realtime</span></div>
         <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Type your message ..." autocomplete="off">
-            <button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button>
-        </div>
+        <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type your message ..." autocomplete="off"><button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button></div>
     </div>
 </div>
 
@@ -1088,24 +781,13 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, set, onChildAdded, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA",
-        authDomain: "chat-283ed.firebaseapp.com",
-        databaseURL: "https://chat-283ed-default-rtdb.firebaseio.com",
-        projectId: "chat-283ed",
-        storageBucket: "chat-283ed.firebasestorage.app",
-        messagingSenderId: "669885432854",
-        appId: "1:669885432854:web:ba6185cdbbcc6f485ba137"
-    };
-
+    const firebaseConfig = { apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA", authDomain: "chat-283ed.firebaseapp.com", databaseURL: "https://chat-283ed-default-rtdb.firebaseio.com", projectId: "chat-283ed", storageBucket: "chat-283ed.firebasestorage.app", messagingSenderId: "669885432854", appId: "1:669885432854:web:ba6185cdbbcc6f485ba137" };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const streamUrlRef = ref(db, 'liveStream/url');
     const chatRef = ref(db, 'chat/messages');
-    const viewersRef = ref(db, 'activeViewers');
+    const nextStreamRef = ref(db, 'nextStream');
 
-    // DOM Elements
     const video = document.getElementById('videoPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
@@ -1119,561 +801,199 @@
     const pauseIcon = document.getElementById('pauseIconSvg');
     const volumeIcon = document.getElementById('volumeIcon');
     const mutedIcon = document.getElementById('mutedIcon');
-
-    // Upcoming Stream Elements
     const upcomingOverlay = document.getElementById('upcomingOverlay');
     const upcomingBg = document.getElementById('upcomingBg');
     const cdDays = document.getElementById('cdDays');
     const cdHours = document.getElementById('cdHours');
     const cdMinutes = document.getElementById('cdMinutes');
     const cdSeconds = document.getElementById('cdSeconds');
-    const upcomingTitle = document.getElementById('upcomingTitle');
-
-    const nextStreamRef = ref(db, 'nextStream');
-    let countdownInterval = null;
-    let nextStreamTime = null;
-
-    let hls = null;
-    let isPlaying = true;
-    let isMuted = false; // Start unmuted
-    let controlsTimeout = null;
-    let currentStreamUrl = "";
-    let retryCount = 0;
-    const maxRetries = 5;
-    let isInitialLoad = true;
-
-    // Helper Functions
-    function showLoading(show) {
-        if (show) {
-            loadingOverlay.style.display = 'flex';
-            centerPlayOverlay.classList.add('hidden');
-            // Remove initial-loading class after first load
-            if (!isInitialLoad) {
-                loadingOverlay.classList.remove('initial-loading');
-            }
-        } else {
-            loadingOverlay.style.display = 'none';
-            if (isInitialLoad) {
-                isInitialLoad = false;
-            }
-        }
-    }
-
-    function showCenterPlayButton() {
-        centerPlayOverlay.classList.remove('hidden');
-    }
-
-    function hideCenterPlayButton() {
-        centerPlayOverlay.classList.add('hidden');
-    }
-
-    function resetControlsTimer() {
-        if (controlsTimeout) clearTimeout(controlsTimeout);
-        customControls.classList.remove('hide-controls');
-        controlsTimeout = setTimeout(() => {
-            customControls.classList.add('hide-controls');
-        }, 3500);
-    }
-
-    function updatePlayPauseUI() {
-        if (isPlaying) {
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'block';
-        } else {
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
-        }
-    }
-
-    function updateMuteUI() {
-        if (isMuted) {
-            volumeIcon.style.display = 'none';
-            mutedIcon.style.display = 'block';
-        } else {
-            volumeIcon.style.display = 'block';
-            mutedIcon.style.display = 'none';
-        }
-    }
-
-    // Initialize HLS.js for M3U8 streaming with improved autoplay and low quality start
-    function initHLS(url) {
-        if (hls) {
-            hls.destroy();
-        }
-
-        // Set video attributes for autoplay - unmuted (normal behavior)
-        video.muted = false;
-        video.autoplay = true;
-        video.playsInline = true;
-
-        if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // For Safari (native HLS support)
-            video.src = url;
-            video.load();
-
-            // Stream loaded, show center play button for user to start
-            showLoading(false);
-            showCenterPlayButton();
-
-        } else if (Hls.isSupported()) {
-            hls = new Hls({
-                maxBufferLength: 30,
-                backBufferLength: 5,
-                maxBufferSize: 0,
-                lowLatencyMode: true,
-                enableWorker: true,
-                startLevel: 0, // Start with lowest quality to reduce buffering
-                abrEwmaDefaultEstimate: 500000, // Start with low bandwidth estimate
-                abrBandWidthFactor: 0.8,
-                abrBandWidthUpFactor: 0.9,
-                manifestLoadPolicy: {
-                    default: {
-                        maxTimeToFirstByteMs: 10000,
-                        maxLoadTimeMs: 20000,
-                        timeoutRetry: { maxNumRetry: 3, retryDelayMs: 1000, maxRetryDelayMs: 5000 },
-                        errorRetry: { maxNumRetry: 3, retryDelayMs: 1000, maxRetryDelayMs: 8000 }
-                    }
-                },
-                playlistLoadPolicy: {
-                    default: {
-                        maxTimeToFirstByteMs: 10000,
-                        maxLoadTimeMs: 20000,
-                        timeoutRetry: { maxNumRetry: 3, retryDelayMs: 1000, maxRetryDelayMs: 5000 },
-                        errorRetry: { maxNumRetry: 3, retryDelayMs: 1000, maxRetryDelayMs: 8000 }
-                    }
-                },
-                fragLoadPolicy: {
-                    default: {
-                        maxTimeToFirstByteMs: 10000,
-                        maxLoadTimeMs: 20000,
-                        timeoutRetry: { maxNumRetry: 5, retryDelayMs: 1000, maxRetryDelayMs: 5000 },
-                        errorRetry: { maxNumRetry: 5, retryDelayMs: 1000, maxRetryDelayMs: 8000 }
-                    }
-                }
-            });
-
-            hls.attachMedia(video);
-
-            hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-                hls.loadSource(url);
-            });
-
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                showLoading(false);
-                // Stream ready, show center play button for user to start
-                showCenterPlayButton();
-            });
-
-            hls.on(Hls.Events.ERROR, (event, data) => {
-                console.log("HLS Error:", data);
-                if (data.fatal) {
-                    switch (data.type) {
-                        case Hls.ErrorTypes.NETWORK_ERROR:
-                            console.log("Network error, trying to recover...");
-                            showLoading(true);
-                            hls.startLoad();
-                            break;
-                        case Hls.ErrorTypes.MEDIA_ERROR:
-                            console.log("Media error, trying to recover...");
-                            hls.recoverMediaError();
-                            break;
-                        default:
-                            console.log("Fatal error, reinitializing...");
-                            initHLS(url);
-                            break;
-                    }
-                }
-            });
-
-            // Monitor buffer state for loading indicator
-            hls.on(Hls.Events.FRAG_BUFFERED, () => {
-                if (video.readyState >= 3) {
-                    showLoading(false);
-                }
-            });
-
-        } else {
-            console.error("HLS is not supported in this browser.");
-            showLoading(false);
-        }
-        currentStreamUrl = url;
-    }
-
-    // Load or reload stream
-    function loadStream(url) {
-        if (!url || url === currentStreamUrl) return;
-        showLoading(true);
-        retryCount = 0;
-        initHLS(url);
-    }
-
-
-    // Upcoming Stream Countdown Logic
     const dayBox = document.getElementById('dayBox');
-    const hourBox = document.getElementById('hourBox');
-    const minBox = document.getElementById('minBox');
-    const secBox = document.getElementById('secBox');
     const teamAImg = document.getElementById('teamAImg');
     const teamBImg = document.getElementById('teamBImg');
     const matchTimeText = document.getElementById('matchTimeText');
 
+    let hls = null;
+    let isPlaying = true;
+    let isMuted = false;
+    let controlsTimeout = null;
+    let currentStreamUrl = "";
+    let isInitialLoad = true;
+    let nextStreamTime = null;
+    let countdownInterval = null;
+    let isWaitingForScheduledStream = false; // NEW: blocks stream loading until countdown finishes
+
+    function showLoading(show) {
+        if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); } 
+        else { loadingOverlay.style.display = 'none'; if (isInitialLoad) isInitialLoad = false; }
+    }
+    function showCenterPlayButton() { centerPlayOverlay.classList.remove('hidden'); }
+    function hideCenterPlayButton() { centerPlayOverlay.classList.add('hidden'); }
+    function resetControlsTimer() {
+        if (controlsTimeout) clearTimeout(controlsTimeout);
+        customControls.classList.remove('hide-controls');
+        controlsTimeout = setTimeout(() => customControls.classList.add('hide-controls'), 3500);
+    }
+    function updatePlayPauseUI() { playIcon.style.display = isPlaying ? 'none' : 'block'; pauseIcon.style.display = isPlaying ? 'block' : 'none'; }
+    function updateMuteUI() { volumeIcon.style.display = isMuted ? 'none' : 'block'; mutedIcon.style.display = isMuted ? 'block' : 'none'; }
+    
+    function hideUpcomingOverlay() {
+        upcomingOverlay.classList.remove('active');
+        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+        isWaitingForScheduledStream = false;
+        // After hiding upcoming, try to load stream if available
+        if (currentStreamUrl) {
+            // already have a url? but better to re-trigger from listener
+        } else {
+            // force check stream url again
+            onValue(streamUrlRef, (snap) => {
+                const url = snap.val();
+                if (url && !isWaitingForScheduledStream) loadStream(url);
+            }, { onlyOnce: true });
+        }
+    }
+
+    function initHLS(url) {
+        if (hls) { hls.destroy(); hls = null; }
+        video.muted = false; video.autoplay = false;
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = url; video.load();
+            showLoading(false); showCenterPlayButton();
+        } else if (Hls.isSupported()) {
+            hls = new Hls({ maxBufferLength: 30, backBufferLength: 5, lowLatencyMode: true, enableWorker: true, startLevel: 0 });
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
+            hls.on(Hls.Events.MANIFEST_PARSED, () => { showLoading(false); showCenterPlayButton(); });
+            hls.on(Hls.Events.ERROR, (event, data) => { if (data.fatal) { if (data.type === Hls.ErrorTypes.NETWORK_ERROR) { showLoading(true); hls.startLoad(); } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) { hls.recoverMediaError(); } else { initHLS(url); } } });
+        } else { console.error("HLS not supported"); showLoading(false); }
+        currentStreamUrl = url;
+    }
+    
+    function loadStream(url) {
+        if (!url || url === currentStreamUrl) return;
+        // CRITICAL: If we are waiting for a scheduled stream (future countdown active), DO NOT load
+        if (isWaitingForScheduledStream) {
+            console.log("Scheduled stream active, ignoring stream URL until countdown ends");
+            return;
+        }
+        showLoading(true);
+        initHLS(url);
+    }
+
     function updateCountdown() {
         if (!nextStreamTime) return;
-        const now = new Date().getTime();
+        const now = Date.now();
         const distance = nextStreamTime - now;
-
         if (distance <= 0) {
+            // Countdown finished - hide upcoming and allow stream
             hideUpcomingOverlay();
             return;
         }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        if (days > 0) {
-            dayBox.classList.remove('hidden');
-            cdDays.innerText = String(days).padStart(2, '0');
-        } else {
-            dayBox.classList.add('hidden');
-        }
-
-        cdHours.innerText = String(hours).padStart(2, '0');
-        cdMinutes.innerText = String(minutes).padStart(2, '0');
-        cdSeconds.innerText = String(seconds).padStart(2, '0');
+        const days = Math.floor(distance / 86400000);
+        const hours = Math.floor((distance % 86400000) / 3600000);
+        const minutes = Math.floor((distance % 3600000) / 60000);
+        const seconds = Math.floor((distance % 60000) / 1000);
+        if (days > 0) { dayBox.classList.remove('hidden'); cdDays.innerText = String(days).padStart(2,'0'); } else { dayBox.classList.add('hidden'); }
+        cdHours.innerText = String(hours).padStart(2,'0');
+        cdMinutes.innerText = String(minutes).padStart(2,'0');
+        cdSeconds.innerText = String(seconds).padStart(2,'0');
     }
 
-    function showUpcomingOverlay(thumbnail) {
-        upcomingOverlay.classList.add('active');
-        centerPlayOverlay.classList.add('hidden');
-        customControls.classList.add('hide-controls');
-        if (thumbnail) {
-            upcomingBg.style.backgroundImage = `url(${thumbnail})`;
-        }
-        if (!countdownInterval) {
-            countdownInterval = setInterval(updateCountdown, 1000);
-            updateCountdown();
-        }
-    }
-
-    function hideUpcomingOverlay() {
-        upcomingOverlay.classList.remove('active');
-        if (countdownInterval) {
-            clearInterval(countdownInterval);
-            countdownInterval = null;
-        }
-    }
-
-    // Listen for next stream schedule
+    // Listen for nextStream schedule
     onValue(nextStreamRef, (snapshot) => {
         const data = snapshot.val();
+        const now = Date.now();
+        
         if (data && data.time) {
             const streamDate = new Date(data.time).getTime();
-            const now = new Date().getTime();
-
             if (streamDate > now) {
+                // Future stream: activate upcoming overlay and block stream loading
                 nextStreamTime = streamDate;
-                showUpcomingOverlay(data.thumbnail);
+                isWaitingForScheduledStream = true;
+                upcomingOverlay.classList.add('active');
+                centerPlayOverlay.classList.add('hidden');
+                customControls.classList.add('hide-controls');
                 if (data.thumbnail) upcomingBg.style.backgroundImage = `url(${data.thumbnail})`;
-
-                // Update team logos if provided
-                if (data.teamA && teamAImg) teamAImg.src = data.teamA;
-                if (data.teamB && teamBImg) teamBImg.src = data.teamB;
-                if (data.matchTime && matchTimeText) matchTimeText.innerText = data.matchTime;
+                if (data.teamA) teamAImg.src = data.teamA;
+                if (data.teamB) teamBImg.src = data.teamB;
+                if (data.matchTime) matchTimeText.innerText = data.matchTime;
+                if (!countdownInterval) {
+                    countdownInterval = setInterval(updateCountdown, 1000);
+                    updateCountdown();
+                }
+                // Also, if any stream is currently loaded, destroy it to prevent background playback
+                if (hls) { hls.destroy(); hls = null; }
+                if (video.src) { video.src = ""; video.load(); }
+                currentStreamUrl = "";
+                return;
             } else {
+                // Scheduled time already passed: hide upcoming and allow stream
                 hideUpcomingOverlay();
             }
         } else {
+            // No upcoming stream data: hide overlay and allow normal stream loading
             hideUpcomingOverlay();
         }
     });
 
-    // Firebase Listener for Stream URL
+    // Listen for stream URL only if not waiting for scheduled stream
     onValue(streamUrlRef, (snapshot) => {
         const url = snapshot.val();
-        if (url && url !== currentStreamUrl) {
+        if (url && !isWaitingForScheduledStream && url !== currentStreamUrl) {
             loadStream(url);
         }
     });
 
-    // Chat Functionality with Auto-Delete after 24 hours
+    // CHAT (unchanged)
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
     const chatContainer = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendChatBtn');
-
-    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
+    const TWENTY_FOUR_HOURS = 86400000;
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
     function appendMessage(user, text, msgId, timestamp) {
-        const div = document.createElement('div');
-        div.className = 'message-bubble';
-        div.setAttribute('data-msg-id', msgId);
-        div.setAttribute('data-timestamp', timestamp);
+        const div = document.createElement('div'); div.className = 'message-bubble'; div.setAttribute('data-msg-id', msgId); div.setAttribute('data-timestamp', timestamp);
         div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`;
-        chatContainer.appendChild(div);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-
-    // Function to check and delete old messages (older than 24 hours)
-    function cleanupOldMessages() {
-        const now = Date.now();
-        const messages = chatContainer.querySelectorAll('.message-bubble');
-
-        messages.forEach(msg => {
-            const timestamp = parseInt(msg.getAttribute('data-timestamp')) || 0;
-            if (now - timestamp > TWENTY_FOUR_HOURS) {
-                msg.remove();
-            }
-        });
-    }
-
-    // Run cleanup every hour
-    setInterval(cleanupOldMessages, 60 * 60 * 1000);
-
     onChildAdded(chatRef, (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
-
-        // Check if message is older than 24 hours
-        const msgTimestamp = data.timestamp || Date.now();
-        const now = Date.now();
-
-        if (now - msgTimestamp > TWENTY_FOUR_HOURS) {
-            // Delete old message from database
-            const msgRef = ref(db, `chat/messages/${snapshot.key}`);
-            set(msgRef, null);
-            return;
-        }
-
-        appendMessage(data.username, data.text, snapshot.key, msgTimestamp);
+        const data = snapshot.val(); if (!data) return;
+        if (Date.now() - (data.timestamp || 0) > TWENTY_FOUR_HOURS) { set(ref(db, `chat/messages/${snapshot.key}`), null); return; }
+        appendMessage(data.username, data.text, snapshot.key, data.timestamp || Date.now());
     });
+    function sendMessage() { const msg = chatInput.value.trim(); if (!msg) return; push(chatRef, { username, text: msg, timestamp: serverTimestamp() }); chatInput.value = ''; }
+    sendBtn.addEventListener('click', sendMessage); chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-    function sendMessage() {
-        const msg = chatInput.value.trim();
-        if (!msg) return;
-        const newMsgRef = push(chatRef);
-        set(newMsgRef, { 
-            username: username, 
-            text: msg, 
-            timestamp: serverTimestamp() 
-        });
-        chatInput.value = '';
-    }
-
-    // Also clean up old messages in database periodically
-    function cleanupDatabaseMessages() {
-        const now = Date.now();
-        onValue(chatRef, (snapshot) => {
-            const messages = snapshot.val();
-            if (!messages) return;
-
-            Object.keys(messages).forEach(key => {
-                const msg = messages[key];
-                const msgTimestamp = msg.timestamp || 0;
-                if (now - msgTimestamp > TWENTY_FOUR_HOURS) {
-                    const msgRef = ref(db, `chat/messages/${key}`);
-                    set(msgRef, null);
-                }
-            });
-        }, { onlyOnce: true });
-    }
-
-    // Run database cleanup every 6 hours
-    setInterval(cleanupDatabaseMessages, 6 * 60 * 60 * 1000);
-    // Also run once on load
-    setTimeout(cleanupDatabaseMessages, 5000);
-
-    sendBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-
-    // Live Viewer Count (Presence)
+    // VIEWER COUNT
     const viewerId = Math.random().toString(36).substring(2) + Date.now();
     const myViewerRef = ref(db, `activeViewers/${viewerId}`);
-    onDisconnect(myViewerRef).remove();
-    set(myViewerRef, { timestamp: serverTimestamp() });
-    onValue(ref(db, 'activeViewers'), (snap) => {
-        const viewers = snap.val() || {};
-        const count = Object.keys(viewers).length;
-        document.getElementById('viewerCountDisplay').innerText = count;
-    });
+    onDisconnect(myViewerRef).remove(); set(myViewerRef, { timestamp: serverTimestamp() });
+    onValue(ref(db, 'activeViewers'), (snap) => { document.getElementById('viewerCountDisplay').innerText = Object.keys(snap.val() || {}).length; });
 
-    // Controls visibility state
+    // CONTROLS LOGIC
     let controlsVisible = false;
-    let controlsClickTimer = null;
-
-    // Improved controls toggle function
     function toggleControls(show) {
-        if (show) {
-            customControls.classList.remove('hide-controls');
-            controlsVisible = true;
-            // Auto hide after 4 seconds if not clicked again
-            if (controlsTimeout) clearTimeout(controlsTimeout);
-            controlsTimeout = setTimeout(() => {
-                if (!controlsClickTimer) { // Only hide if not currently clicking a control
-                    customControls.classList.add('hide-controls');
-                    controlsVisible = false;
-                }
-            }, 4000);
-        } else {
-            customControls.classList.add('hide-controls');
-            controlsVisible = false;
-        }
+        if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { if (!controlsVisible) return; customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } 
+        else { customControls.classList.add('hide-controls'); controlsVisible = false; }
     }
+    videoStage.addEventListener('click', (e) => { if (e.target.closest('.ctrl-btn')) return; toggleControls(!controlsVisible); });
+    function handleControlClick(e, action) { e.stopPropagation(); if (!controlsVisible) { toggleControls(true); return; } action(); resetControlsTimer(); }
+    playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { if (video.paused) { video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }).catch(e => console.log); } else { video.pause(); isPlaying = false; updatePlayPauseUI(); } }));
+    muteBtn.addEventListener('click', (e) => handleControlClick(e, () => { video.muted = !video.muted; isMuted = video.muted; updateMuteUI(); }));
+    fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { if (!document.fullscreenElement) { await videoStage.requestFullscreen(); try { screen.orientation?.lock('landscape'); } catch(e){} } else { await document.exitFullscreen(); try { screen.orientation?.unlock(); } catch(e){} } }));
 
-    // Video stage click handler - first click shows controls, second click hides
-    videoStage.addEventListener('click', (e) => {
-        // If clicking on a control button, let it handle the click
-        if (e.target.closest('.ctrl-btn')) return;
-
-        if (!controlsVisible) {
-            toggleControls(true);
-        } else {
-            toggleControls(false);
-        }
-    });
-
-    // Custom Control Event Listeners - show controls on first click, action on second
-    function handleControlClick(e, action) {
-        e.stopPropagation();
-
-        if (!controlsVisible) {
-            // First click - just show controls
-            toggleControls(true);
-            return;
-        }
-
-        // Second click - perform the action
-        controlsClickTimer = setTimeout(() => {
-            controlsClickTimer = null;
-        }, 100);
-
-        action();
-        resetControlsTimer();
-    }
-
-    playPauseBtn.addEventListener('click', (e) => {
-        handleControlClick(e, () => {
-            if (!video) return;
-            if (video.paused) {
-                video.play().then(() => {
-                    isPlaying = true;
-                    updatePlayPauseUI();
-                }).catch(err => {
-                    console.log("Play failed:", err);
-                });
-            } else {
-                video.pause();
-                isPlaying = false;
-                updatePlayPauseUI();
-            }
-        });
-    });
-
-    muteBtn.addEventListener('click', (e) => {
-        handleControlClick(e, () => {
-            if (!video) return;
-            video.muted = !video.muted;
-            isMuted = video.muted;
-            updateMuteUI();
-        });
-    });
-
-    fullscreenBtn.addEventListener('click', async (e) => {
-        handleControlClick(e, async () => {
-            const elem = videoStage;
-            if (!document.fullscreenElement) {
-                if (elem.requestFullscreen) {
-                    await elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                }
-                try {
-                    if (screen.orientation && screen.orientation.lock) {
-                        await screen.orientation.lock('landscape');
-                    }
-                } catch(err) {
-                    console.log("Orientation lock not supported:", err);
-                }
-            } else {
-                await document.exitFullscreen();
-                try {
-                    if (screen.orientation && screen.orientation.unlock) {
-                        screen.orientation.unlock();
-                    }
-                } catch(e) {}
-            }
-        });
-    });
-
-    // Center play button click handler
-    centerPlayBtn.addEventListener('click', (e) => {
+    centerPlayBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
         hideCenterPlayButton();
-        video.play().then(() => {
-            isPlaying = true;
-            updatePlayPauseUI();
-            toggleControls(true);
-        }).catch(err => {
-            console.log("Play failed:", err);
-            showCenterPlayButton();
-        });
+        try { await video.play(); isPlaying = true; updatePlayPauseUI(); toggleControls(true); } catch (err) { console.warn("Play failed:", err); showCenterPlayButton(); if (!currentStreamUrl && !isWaitingForScheduledStream) { onValue(streamUrlRef, (snap) => { if (snap.val()) loadStream(snap.val()); }, { onlyOnce: true }); } }
     });
-
-    centerPlayOverlay.addEventListener('click', (e) => {
-        if (e.target === centerPlayOverlay || e.target === centerPlayBtn) {
-            centerPlayBtn.click();
-        }
-    });
-
-    video.addEventListener('play', () => {
-        isPlaying = true;
-        updatePlayPauseUI();
-        showLoading(false);
-        hideCenterPlayButton();
-    });
-
-    video.addEventListener('pause', () => {
-        isPlaying = false;
-        updatePlayPauseUI();
-    });
-
-    video.addEventListener('volumechange', () => {
-        isMuted = video.muted;
-        updateMuteUI();
-    });
-
-    video.addEventListener('waiting', () => {
-        showLoading(true);
-    });
-
-    video.addEventListener('playing', () => {
-        showLoading(false);
-    });
-
-    video.addEventListener('canplay', () => {
-        if (video.readyState >= 3) {
-            showLoading(false);
-        }
-    });
-
-    // Initial UI State - Show loading first, then center play button
-    video.muted = false;
-    isMuted = false;
-    controlsVisible = false;
-    customControls.classList.add('hide-controls');
-    updateMuteUI();
-    updatePlayPauseUI();
-    showLoading(true);
+    centerPlayOverlay.addEventListener('click', (e) => { if (e.target === centerPlayOverlay || e.target === centerPlayBtn) centerPlayBtn.click(); });
+    video.addEventListener('play', () => { isPlaying = true; updatePlayPauseUI(); hideCenterPlayButton(); showLoading(false); });
+    video.addEventListener('pause', () => { isPlaying = false; updatePlayPauseUI(); });
+    video.addEventListener('volumechange', () => { isMuted = video.muted; updateMuteUI(); });
+    video.addEventListener('waiting', () => showLoading(true));
+    video.addEventListener('playing', () => showLoading(false));
+    video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
+    video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
 </script>
 </body>
 </html>
