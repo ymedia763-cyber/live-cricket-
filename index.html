@@ -820,7 +820,7 @@
     let isInitialLoad = true;
     let nextStreamTime = null;
     let countdownInterval = null;
-    let isWaitingForScheduledStream = false; // NEW: blocks stream loading until countdown finishes
+    let isWaitingForScheduledStream = false;
 
     function showLoading(show) {
         if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); } 
@@ -840,11 +840,9 @@
         upcomingOverlay.classList.remove('active');
         if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
         isWaitingForScheduledStream = false;
-        // After hiding upcoming, try to load stream if available
         if (currentStreamUrl) {
-            // already have a url? but better to re-trigger from listener
+            // already have a url
         } else {
-            // force check stream url again
             onValue(streamUrlRef, (snap) => {
                 const url = snap.val();
                 if (url && !isWaitingForScheduledStream) loadStream(url);
@@ -870,7 +868,6 @@
     
     function loadStream(url) {
         if (!url || url === currentStreamUrl) return;
-        // CRITICAL: If we are waiting for a scheduled stream (future countdown active), DO NOT load
         if (isWaitingForScheduledStream) {
             console.log("Scheduled stream active, ignoring stream URL until countdown ends");
             return;
@@ -884,7 +881,6 @@
         const now = Date.now();
         const distance = nextStreamTime - now;
         if (distance <= 0) {
-            // Countdown finished - hide upcoming and allow stream
             hideUpcomingOverlay();
             return;
         }
@@ -898,7 +894,6 @@
         cdSeconds.innerText = String(seconds).padStart(2,'0');
     }
 
-    // Listen for nextStream schedule
     onValue(nextStreamRef, (snapshot) => {
         const data = snapshot.val();
         const now = Date.now();
@@ -906,7 +901,6 @@
         if (data && data.time) {
             const streamDate = new Date(data.time).getTime();
             if (streamDate > now) {
-                // Future stream: activate upcoming overlay and block stream loading
                 nextStreamTime = streamDate;
                 isWaitingForScheduledStream = true;
                 upcomingOverlay.classList.add('active');
@@ -920,22 +914,18 @@
                     countdownInterval = setInterval(updateCountdown, 1000);
                     updateCountdown();
                 }
-                // Also, if any stream is currently loaded, destroy it to prevent background playback
                 if (hls) { hls.destroy(); hls = null; }
                 if (video.src) { video.src = ""; video.load(); }
                 currentStreamUrl = "";
                 return;
             } else {
-                // Scheduled time already passed: hide upcoming and allow stream
                 hideUpcomingOverlay();
             }
         } else {
-            // No upcoming stream data: hide overlay and allow normal stream loading
             hideUpcomingOverlay();
         }
     });
 
-    // Listen for stream URL only if not waiting for scheduled stream
     onValue(streamUrlRef, (snapshot) => {
         const url = snapshot.val();
         if (url && !isWaitingForScheduledStream && url !== currentStreamUrl) {
@@ -943,7 +933,7 @@
         }
     });
 
-    // CHAT (unchanged)
+    // CHAT
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
     const chatContainer = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
