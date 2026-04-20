@@ -279,10 +279,53 @@
             letter-spacing: 1px;
         }
 
+        .next-match-widget {
+            background: linear-gradient(135deg, #0f131f 0%, #1a1f2e 100%);
+            border-radius: 20px;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,215,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        .next-match-widget.hidden {
+            display: none;
+        }
+        .widget-teams {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .widget-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid gold;
+            object-fit: cover;
+            background: #000;
+        }
+        .widget-vs {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin: 0 4px;
+        }
+        .widget-countdown {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-family: monospace;
+        }
+
         .chat-messages {
             background: linear-gradient(145deg, #0f131f 0%, #151a28 100%);
             border-radius: 20px;
-            height: 240px;
+            height: 220px;
             overflow-y: auto;
             padding: 10px 8px;
             display: flex;
@@ -627,7 +670,6 @@
             border-radius: 20px;
         }
 
-        /* Team logos with glow and click zoom effect */
         .teams-vs {
             display: flex;
             justify-content: center;
@@ -721,12 +763,8 @@
             .social-btn { padding: 4px 10px; font-size: 0.65rem; }
             .social-btn svg { width: 16px; height: 16px; }
             .social-bar { gap: 8px; padding: 8px 8px; }
-        }
-        @media (max-width: 380px) {
-            .team-logo-wrap { width: 42px; height: 42px; }
-            .vs-text { font-size: 0.9rem; }
-            .countdown-item { min-width: 42px; }
-            .countdown-value { font-size: 1.1rem; }
+            .widget-logo { width: 28px; height: 28px; }
+            .widget-countdown { font-size: 0.6rem; padding: 2px 8px; }
         }
     </style>
 </head>
@@ -766,6 +804,7 @@
             </div>
         </div>
         <div class="loading-overlay initial-loading" id="loadingOverlay"><div class="three-dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+        
         <div class="upcoming-overlay" id="upcomingOverlay">
             <div class="upcoming-bg" id="upcomingBg"></div>
             <div class="upcoming-content">
@@ -793,7 +832,20 @@
             <span class="viewer-count" id="viewerCountDisplay">0</span>
             <span class="live-viewers">watching now</span>
         </div>
-        <div class="chat-header"><h4>LIVE CHAT</h4><span style="font-size:9px; color:#5b6e8c;">realtime</span></div>
+        <div class="chat-header">
+            <h4>LIVE CHAT</h4>
+            <span style="font-size:9px; color:#5b6e8c;">realtime</span>
+        </div>
+        
+        <div id="nextMatchWidget" class="next-match-widget hidden">
+            <div class="widget-teams">
+                <img id="widgetTeamA" class="widget-logo" src="" alt="A">
+                <span class="widget-vs">VS</span>
+                <img id="widgetTeamB" class="widget-logo" src="" alt="B">
+            </div>
+            <div class="widget-countdown" id="widgetCountdown">--:--:--</div>
+        </div>
+        
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type your message ..." autocomplete="off"><button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button></div>
     </div>
@@ -810,6 +862,7 @@
     const streamUrlRef = ref(db, 'liveStream/url');
     const chatRef = ref(db, 'chat/messages');
     const nextStreamRef = ref(db, 'nextStream');
+    const forceUpcomingRef = ref(db, 'admin/forceUpcoming');
 
     const video = document.getElementById('videoPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
@@ -837,6 +890,10 @@
     const teamAImg = document.getElementById('teamAImg');
     const teamBImg = document.getElementById('teamBImg');
     const matchTimeText = document.getElementById('matchTimeText');
+    const nextMatchWidget = document.getElementById('nextMatchWidget');
+    const widgetTeamA = document.getElementById('widgetTeamA');
+    const widgetTeamB = document.getElementById('widgetTeamB');
+    const widgetCountdown = document.getElementById('widgetCountdown');
 
     let hls = null;
     let isPlaying = true;
@@ -847,6 +904,7 @@
     let nextStreamTime = null;
     let countdownInterval = null;
     let isWaitingForScheduledStream = false;
+    let nextStreamData = null;
 
     function showLoading(show) {
         if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); } 
@@ -866,13 +924,28 @@
         upcomingOverlay.classList.remove('active');
         if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
         isWaitingForScheduledStream = false;
-        // Try to load stream after countdown finishes
-        onValue(streamUrlRef, (snap) => {
-            const url = snap.val();
-            if (url && !isWaitingForScheduledStream && url !== currentStreamUrl) {
-                loadStream(url);
-            }
-        }, { onlyOnce: true });
+    }
+
+    function showUpcomingOverlayFromData(data) {
+        if (!data || !data.time) return;
+        const streamDate = new Date(data.time).getTime();
+        if (streamDate <= Date.now()) return;
+        nextStreamTime = streamDate;
+        isWaitingForScheduledStream = true;
+        upcomingOverlay.classList.add('active');
+        centerPlayOverlay.classList.add('hidden');
+        customControls.classList.add('hide-controls');
+        nextMatchWidget.classList.add('hidden');
+        if (data.thumbnail) upcomingBg.style.backgroundImage = `url(${data.thumbnail})`;
+        if (data.teamA) teamAImg.src = data.teamA;
+        if (data.teamB) teamBImg.src = data.teamB;
+        if (data.matchTime) matchTimeText.innerText = data.matchTime;
+        if (countdownInterval) clearInterval(countdownInterval);
+        countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+        if (hls) { hls.destroy(); hls = null; }
+        video.src = "";
+        currentStreamUrl = "";
     }
 
     function initHLS(url) {
@@ -897,12 +970,38 @@
     
     function loadStream(url) {
         if (!url || url === currentStreamUrl) return;
-        if (isWaitingForScheduledStream) {
-            console.log("Scheduled stream active, ignoring stream URL until countdown ends");
-            return;
-        }
+        if (isWaitingForScheduledStream) return;
         showLoading(true);
         initHLS(url);
+    }
+
+    function updateWidgetAndCountdown() {
+        if (!nextStreamData || !nextStreamData.time) {
+            nextMatchWidget.classList.add('hidden');
+            return;
+        }
+        const streamDate = new Date(nextStreamData.time).getTime();
+        const now = Date.now();
+        const distance = streamDate - now;
+        
+        if (nextStreamData.teamA) widgetTeamA.src = nextStreamData.teamA;
+        if (nextStreamData.teamB) widgetTeamB.src = nextStreamData.teamB;
+        
+        if (distance > 0) {
+            const hours = Math.floor(distance / 3600000);
+            const minutes = Math.floor((distance % 3600000) / 60000);
+            const seconds = Math.floor((distance % 60000) / 1000);
+            widgetCountdown.innerText = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+        } else {
+            widgetCountdown.innerText = "LIVE NOW";
+        }
+        
+        // Show widget only if not in scheduled mode, stream is playing, and future date exists
+        if (!isWaitingForScheduledStream && currentStreamUrl && !video.paused && video.readyState >= 2 && distance > 0) {
+            nextMatchWidget.classList.remove('hidden');
+        } else {
+            nextMatchWidget.classList.add('hidden');
+        }
     }
 
     function updateCountdown() {
@@ -911,6 +1010,11 @@
         const distance = nextStreamTime - now;
         if (distance <= 0) {
             hideUpcomingOverlay();
+            // After countdown ends, try to load stream again if available
+            onValue(streamUrlRef, (snap) => {
+                const url = snap.val();
+                if (url && !isWaitingForScheduledStream) loadStream(url);
+            }, { onlyOnce: true });
             return;
         }
         const days = Math.floor(distance / 86400000);
@@ -918,7 +1022,6 @@
         const minutes = Math.floor((distance % 3600000) / 60000);
         const seconds = Math.floor((distance % 60000) / 1000);
         
-        // Hide boxes dynamically when value becomes 0
         if (days > 0) { dayBox.classList.remove('hidden'); cdDays.innerText = String(days).padStart(2,'0'); } 
         else { dayBox.classList.add('hidden'); }
         
@@ -928,49 +1031,96 @@
         if (minutes > 0 || hours > 0 || days > 0) { minBox.classList.remove('hidden'); cdMinutes.innerText = String(minutes).padStart(2,'0'); }
         else { minBox.classList.add('hidden'); }
         
-        // Seconds always show until last moment
         secBox.classList.remove('hidden');
         cdSeconds.innerText = String(seconds).padStart(2,'0');
+        
+        updateWidgetAndCountdown();
     }
 
-    onValue(nextStreamRef, (snapshot) => {
-        const data = snapshot.val();
-        const now = Date.now();
-        
-        if (data && data.time) {
-            const streamDate = new Date(data.time).getTime();
-            if (streamDate > now) {
-                nextStreamTime = streamDate;
-                isWaitingForScheduledStream = true;
-                upcomingOverlay.classList.add('active');
-                centerPlayOverlay.classList.add('hidden');
-                customControls.classList.add('hide-controls');
-                if (data.thumbnail) upcomingBg.style.backgroundImage = `url(${data.thumbnail})`;
-                if (data.teamA) teamAImg.src = data.teamA;
-                if (data.teamB) teamBImg.src = data.teamB;
-                if (data.matchTime) matchTimeText.innerText = data.matchTime;
-                if (!countdownInterval) {
-                    countdownInterval = setInterval(updateCountdown, 1000);
-                    updateCountdown();
-                }
-                if (hls) { hls.destroy(); hls = null; }
-                if (video.src) { video.src = ""; video.load(); }
-                currentStreamUrl = "";
-                return;
-            } else {
-                hideUpcomingOverlay();
-            }
-        } else {
-            hideUpcomingOverlay();
+    // Listen for force upcoming from admin
+    onValue(forceUpcomingRef, (snapshot) => {
+        const force = snapshot.val();
+        if (force === true && nextStreamData && nextStreamData.time) {
+            showUpcomingOverlayFromData(nextStreamData);
+            set(forceUpcomingRef, false);
         }
     });
 
+    // Listen for next stream changes
+    onValue(nextStreamRef, (snapshot) => {
+        const data = snapshot.val();
+        nextStreamData = data;
+        if (data && data.time) {
+            const streamDate = new Date(data.time).getTime();
+            const now = Date.now();
+            if (streamDate > now && !isWaitingForScheduledStream) {
+                // Future schedule, but don't auto-show overlay unless no stream is active
+                if (!currentStreamUrl || video.paused || video.ended) {
+                    // No active stream, show upcoming overlay immediately
+                    showUpcomingOverlayFromData(data);
+                } else {
+                    // Stream is playing, just update widget
+                    updateWidgetAndCountdown();
+                }
+            } else if (streamDate <= now && !isWaitingForScheduledStream) {
+                // Past schedule, ignore
+                nextMatchWidget.classList.add('hidden');
+            }
+        } else {
+            nextMatchWidget.classList.add('hidden');
+        }
+    });
+
+    // Listen for stream URL
     onValue(streamUrlRef, (snapshot) => {
         const url = snapshot.val();
         if (url && !isWaitingForScheduledStream && url !== currentStreamUrl) {
-            loadStream(url);
+            // If there is a future schedule and we are showing overlay, don't load
+            if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
+                // Still within schedule period, but we have a stream URL? Admin might have published new stream.
+                // Cancel upcoming overlay and load stream
+                if (isWaitingForScheduledStream) {
+                    hideUpcomingOverlay();
+                }
+                loadStream(url);
+            } else {
+                loadStream(url);
+            }
+        } else if (!url && nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now() && !isWaitingForScheduledStream) {
+            // No stream URL but schedule exists, show upcoming
+            showUpcomingOverlayFromData(nextStreamData);
         }
     });
+
+    // Video events
+    video.addEventListener('play', () => {
+        isPlaying = true;
+        updatePlayPauseUI();
+        hideCenterPlayButton();
+        showLoading(false);
+        updateWidgetAndCountdown();
+    });
+    video.addEventListener('pause', () => {
+        isPlaying = false;
+        updatePlayPauseUI();
+        nextMatchWidget.classList.add('hidden');
+    });
+    video.addEventListener('ended', () => {
+        if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
+            showUpcomingOverlayFromData(nextStreamData);
+        } else {
+            nextMatchWidget.classList.add('hidden');
+        }
+    });
+    video.addEventListener('error', () => {
+        if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
+            showUpcomingOverlayFromData(nextStreamData);
+        }
+    });
+    video.addEventListener('volumechange', () => { isMuted = video.muted; updateMuteUI(); });
+    video.addEventListener('waiting', () => showLoading(true));
+    video.addEventListener('playing', () => showLoading(false));
+    video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
 
     // CHAT
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
@@ -1016,13 +1166,14 @@
         try { await video.play(); isPlaying = true; updatePlayPauseUI(); toggleControls(true); } catch (err) { console.warn("Play failed:", err); showCenterPlayButton(); if (!currentStreamUrl && !isWaitingForScheduledStream) { onValue(streamUrlRef, (snap) => { if (snap.val()) loadStream(snap.val()); }, { onlyOnce: true }); } }
     });
     centerPlayOverlay.addEventListener('click', (e) => { if (e.target === centerPlayOverlay || e.target === centerPlayBtn) centerPlayBtn.click(); });
-    video.addEventListener('play', () => { isPlaying = true; updatePlayPauseUI(); hideCenterPlayButton(); showLoading(false); });
-    video.addEventListener('pause', () => { isPlaying = false; updatePlayPauseUI(); });
-    video.addEventListener('volumechange', () => { isMuted = video.muted; updateMuteUI(); });
-    video.addEventListener('waiting', () => showLoading(true));
-    video.addEventListener('playing', () => showLoading(false));
-    video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
+
     video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
+    
+    setInterval(() => {
+        if (nextStreamData && !isWaitingForScheduledStream && currentStreamUrl && !video.paused && video.readyState >= 2) {
+            updateWidgetAndCountdown();
+        }
+    }, 1000);
 </script>
 </body>
 </html>
