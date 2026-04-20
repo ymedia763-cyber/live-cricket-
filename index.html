@@ -598,6 +598,11 @@
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+        }
+        
+        .countdown-item.hidden {
+            display: none !important;
         }
 
         .countdown-value {
@@ -622,6 +627,7 @@
             border-radius: 20px;
         }
 
+        /* Team logos with glow and click zoom effect */
         .teams-vs {
             display: flex;
             justify-content: center;
@@ -641,9 +647,28 @@
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid rgba(255, 215, 0, 0.7);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
             background: rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            animation: logoGlow 2s ease-in-out infinite;
         }
+        
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); border-color: rgba(255, 215, 0, 0.6); }
+            50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.9); border-color: rgba(255, 215, 0, 0.9); }
+        }
+        
+        .team-logo-wrap:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
+            border-color: #ffd700;
+        }
+        
+        .team-logo-wrap:active {
+            transform: scale(0.98);
+        }
+        
         .team-logo-wrap img {
             width: 100%;
             height: 100%;
@@ -806,6 +831,9 @@
     const cdMinutes = document.getElementById('cdMinutes');
     const cdSeconds = document.getElementById('cdSeconds');
     const dayBox = document.getElementById('dayBox');
+    const hourBox = document.getElementById('hourBox');
+    const minBox = document.getElementById('minBox');
+    const secBox = document.getElementById('secBox');
     const teamAImg = document.getElementById('teamAImg');
     const teamBImg = document.getElementById('teamBImg');
     const matchTimeText = document.getElementById('matchTimeText');
@@ -838,26 +866,30 @@
         upcomingOverlay.classList.remove('active');
         if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
         isWaitingForScheduledStream = false;
-        if (currentStreamUrl) {
-        } else {
-            onValue(streamUrlRef, (snap) => {
-                const url = snap.val();
-                if (url && !isWaitingForScheduledStream) loadStream(url);
-            }, { onlyOnce: true });
-        }
+        // Try to load stream after countdown finishes
+        onValue(streamUrlRef, (snap) => {
+            const url = snap.val();
+            if (url && !isWaitingForScheduledStream && url !== currentStreamUrl) {
+                loadStream(url);
+            }
+        }, { onlyOnce: true });
     }
 
     function initHLS(url) {
         if (hls) { hls.destroy(); hls = null; }
-        video.muted = false; video.autoplay = false;
+        video.muted = false; video.autoplay = true;
         if (video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = url; video.load();
-            showLoading(false); showCenterPlayButton();
+            showLoading(false); 
+            video.play().catch(e => showCenterPlayButton());
         } else if (Hls.isSupported()) {
             hls = new Hls({ maxBufferLength: 30, backBufferLength: 5, lowLatencyMode: true, enableWorker: true, startLevel: 0 });
             hls.attachMedia(video);
             hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
-            hls.on(Hls.Events.MANIFEST_PARSED, () => { showLoading(false); showCenterPlayButton(); });
+            hls.on(Hls.Events.MANIFEST_PARSED, () => { 
+                showLoading(false); 
+                video.play().then(() => hideCenterPlayButton()).catch(() => showCenterPlayButton());
+            });
             hls.on(Hls.Events.ERROR, (event, data) => { if (data.fatal) { if (data.type === Hls.ErrorTypes.NETWORK_ERROR) { showLoading(true); hls.startLoad(); } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) { hls.recoverMediaError(); } else { initHLS(url); } } });
         } else { console.error("HLS not supported"); showLoading(false); }
         currentStreamUrl = url;
@@ -885,9 +917,19 @@
         const hours = Math.floor((distance % 86400000) / 3600000);
         const minutes = Math.floor((distance % 3600000) / 60000);
         const seconds = Math.floor((distance % 60000) / 1000);
-        if (days > 0) { dayBox.classList.remove('hidden'); cdDays.innerText = String(days).padStart(2,'0'); } else { dayBox.classList.add('hidden'); }
-        cdHours.innerText = String(hours).padStart(2,'0');
-        cdMinutes.innerText = String(minutes).padStart(2,'0');
+        
+        // Hide boxes dynamically when value becomes 0
+        if (days > 0) { dayBox.classList.remove('hidden'); cdDays.innerText = String(days).padStart(2,'0'); } 
+        else { dayBox.classList.add('hidden'); }
+        
+        if (hours > 0 || days > 0) { hourBox.classList.remove('hidden'); cdHours.innerText = String(hours).padStart(2,'0'); }
+        else { hourBox.classList.add('hidden'); }
+        
+        if (minutes > 0 || hours > 0 || days > 0) { minBox.classList.remove('hidden'); cdMinutes.innerText = String(minutes).padStart(2,'0'); }
+        else { minBox.classList.add('hidden'); }
+        
+        // Seconds always show until last moment
+        secBox.classList.remove('hidden');
         cdSeconds.innerText = String(seconds).padStart(2,'0');
     }
 
