@@ -71,6 +71,7 @@
             transition: transform 0.3s ease;
         }
 
+        /* Custom Controls */
         .custom-controls {
             position: absolute;
             bottom: 0;
@@ -157,6 +158,7 @@
             transform: translateY(20px);
         }
 
+        /* Loading Overlay */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -219,6 +221,74 @@
             40% { transform: scale(1); opacity: 1; box-shadow: 0 0 30px rgba(59, 130, 246, 0.9); }
         }
 
+        /* Next Match Bar (below video, above chat) */
+        .next-match-bar {
+            background: linear-gradient(135deg, #0f131f 0%, #1a1f2e 100%);
+            padding: 10px 16px;
+            margin: 0;
+            border-top: 1px solid rgba(255,215,0,0.3);
+            border-bottom: 1px solid rgba(255,215,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            animation: barGlowPulse 2s ease-in-out infinite, slideIn 0.5s ease-out;
+        }
+        @keyframes barGlowPulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(255,215,0,0.3); border-color: rgba(255,215,0,0.3); }
+            50% { box-shadow: 0 0 15px rgba(255,215,0,0.6); border-color: rgba(255,215,0,0.7); }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .next-match-bar.hidden {
+            display: none;
+        }
+        .bar-teams {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .bar-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1.5px solid #fbbf24;
+            object-fit: cover;
+            background: #000;
+            box-shadow: 0 0 8px rgba(251,191,36,0.4);
+            transition: transform 0.2s ease;
+        }
+        .bar-logo:hover {
+            transform: scale(1.1);
+        }
+        .bar-vs {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #fbbf24;
+            background: rgba(0,0,0,0.4);
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .bar-countdown {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            background: rgba(0,0,0,0.6);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-family: monospace;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(59,130,246,0.3);
+        }
+        @media (max-width: 480px) {
+            .bar-logo { width: 30px; height: 30px; }
+            .bar-countdown { font-size: 0.7rem; padding: 4px 10px; }
+            .bar-vs { font-size: 0.7rem; }
+        }
+
+        /* Chat Panel */
         .chat-panel {
             padding: 14px 16px 20px;
             background: rgba(10, 14, 24, 0.8);
@@ -277,49 +347,6 @@
             color: #cbd5e6;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-
-        .next-match-widget {
-            background: linear-gradient(135deg, #0f131f 0%, #1a1f2e 100%);
-            border-radius: 20px;
-            padding: 8px 12px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,215,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-        }
-        .next-match-widget.hidden {
-            display: none;
-        }
-        .widget-teams {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .widget-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1px solid gold;
-            object-fit: cover;
-            background: #000;
-        }
-        .widget-vs {
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: #fbbf24;
-            margin: 0 4px;
-        }
-        .widget-countdown {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: white;
-            background: rgba(0,0,0,0.5);
-            padding: 4px 10px;
-            border-radius: 30px;
-            font-family: monospace;
         }
 
         .chat-messages {
@@ -569,6 +596,7 @@
         .tiktok-btn { background: linear-gradient(135deg, #161823 0%, #000000 100%); border-color: rgba(255, 255, 255, 0.15); }
         .whatsapp-btn { background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-color: rgba(37, 211, 102, 0.3); }
 
+        /* Upcoming Overlay (fullscreen) */
         .upcoming-overlay {
             position: absolute;
             top: 0;
@@ -616,7 +644,6 @@
             letter-spacing: 2px;
             text-shadow: 0 1px 10px rgba(251, 191, 36, 0.5);
             animation: labelPulse 2s ease-in-out infinite;
-            margin-top: 0;
         }
 
         @keyframes labelPulse {
@@ -641,7 +668,6 @@
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            transition: all 0.2s ease;
         }
         
         .countdown-item.hidden {
@@ -763,8 +789,6 @@
             .social-btn { padding: 4px 10px; font-size: 0.65rem; }
             .social-btn svg { width: 16px; height: 16px; }
             .social-bar { gap: 8px; padding: 8px 8px; }
-            .widget-logo { width: 28px; height: 28px; }
-            .widget-countdown { font-size: 0.6rem; padding: 2px 8px; }
         }
     </style>
 </head>
@@ -826,6 +850,16 @@
         <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
     </div>
 
+    <!-- Next Match Bar (always visible when schedule exists) -->
+    <div id="nextMatchBar" class="next-match-bar hidden">
+        <div class="bar-teams">
+            <img id="barTeamA" class="bar-logo" src="" alt="Team A">
+            <span class="bar-vs">VS</span>
+            <img id="barTeamB" class="bar-logo" src="" alt="Team B">
+        </div>
+        <div class="bar-countdown" id="barCountdown">--:--:--</div>
+    </div>
+
     <div class="chat-panel">
         <div class="viewer-stats">
             <span class="eye-icon"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
@@ -836,16 +870,6 @@
             <h4>LIVE CHAT</h4>
             <span style="font-size:9px; color:#5b6e8c;">realtime</span>
         </div>
-        
-        <div id="nextMatchWidget" class="next-match-widget hidden">
-            <div class="widget-teams">
-                <img id="widgetTeamA" class="widget-logo" src="" alt="A">
-                <span class="widget-vs">VS</span>
-                <img id="widgetTeamB" class="widget-logo" src="" alt="B">
-            </div>
-            <div class="widget-countdown" id="widgetCountdown">--:--:--</div>
-        </div>
-        
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type your message ..." autocomplete="off"><button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button></div>
     </div>
@@ -890,10 +914,11 @@
     const teamAImg = document.getElementById('teamAImg');
     const teamBImg = document.getElementById('teamBImg');
     const matchTimeText = document.getElementById('matchTimeText');
-    const nextMatchWidget = document.getElementById('nextMatchWidget');
-    const widgetTeamA = document.getElementById('widgetTeamA');
-    const widgetTeamB = document.getElementById('widgetTeamB');
-    const widgetCountdown = document.getElementById('widgetCountdown');
+    // Bar elements
+    const nextMatchBar = document.getElementById('nextMatchBar');
+    const barTeamA = document.getElementById('barTeamA');
+    const barTeamB = document.getElementById('barTeamB');
+    const barCountdown = document.getElementById('barCountdown');
 
     let hls = null;
     let isPlaying = true;
@@ -915,7 +940,9 @@
     function resetControlsTimer() {
         if (controlsTimeout) clearTimeout(controlsTimeout);
         customControls.classList.remove('hide-controls');
-        controlsTimeout = setTimeout(() => customControls.classList.add('hide-controls'), 3500);
+        controlsTimeout = setTimeout(() => {
+            if (!isWaitingForScheduledStream) customControls.classList.add('hide-controls');
+        }, 3500);
     }
     function updatePlayPauseUI() { playIcon.style.display = isPlaying ? 'none' : 'block'; pauseIcon.style.display = isPlaying ? 'block' : 'none'; }
     function updateMuteUI() { volumeIcon.style.display = isMuted ? 'none' : 'block'; mutedIcon.style.display = isMuted ? 'block' : 'none'; }
@@ -924,6 +951,8 @@
         upcomingOverlay.classList.remove('active');
         if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
         isWaitingForScheduledStream = false;
+        // Bar will be shown by updateBarAndCountdown if schedule exists
+        updateBarAndCountdown();
     }
 
     function showUpcomingOverlayFromData(data) {
@@ -935,7 +964,7 @@
         upcomingOverlay.classList.add('active');
         centerPlayOverlay.classList.add('hidden');
         customControls.classList.add('hide-controls');
-        nextMatchWidget.classList.add('hidden');
+        // DO NOT hide nextMatchBar - keep it visible
         if (data.thumbnail) upcomingBg.style.backgroundImage = `url(${data.thumbnail})`;
         if (data.teamA) teamAImg.src = data.teamA;
         if (data.teamB) teamBImg.src = data.teamB;
@@ -975,32 +1004,33 @@
         initHLS(url);
     }
 
-    function updateWidgetAndCountdown() {
+    function updateBarAndCountdown() {
         if (!nextStreamData || !nextStreamData.time) {
-            nextMatchWidget.classList.add('hidden');
+            nextMatchBar.classList.add('hidden');
             return;
         }
         const streamDate = new Date(nextStreamData.time).getTime();
         const now = Date.now();
         const distance = streamDate - now;
         
-        if (nextStreamData.teamA) widgetTeamA.src = nextStreamData.teamA;
-        if (nextStreamData.teamB) widgetTeamB.src = nextStreamData.teamB;
+        if (nextStreamData.teamA) barTeamA.src = nextStreamData.teamA;
+        if (nextStreamData.teamB) barTeamB.src = nextStreamData.teamB;
         
         if (distance > 0) {
             const hours = Math.floor(distance / 3600000);
             const minutes = Math.floor((distance % 3600000) / 60000);
             const seconds = Math.floor((distance % 60000) / 1000);
-            widgetCountdown.innerText = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+            barCountdown.innerText = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
         } else {
-            widgetCountdown.innerText = "LIVE NOW";
+            barCountdown.innerText = "LIVE NOW";
         }
         
-        // Show widget only if not in scheduled mode, stream is playing, and future date exists
-        if (!isWaitingForScheduledStream && currentStreamUrl && !video.paused && video.readyState >= 2 && distance > 0) {
-            nextMatchWidget.classList.remove('hidden');
+        // Bar is always visible if schedule exists and is future (or even if live now)
+        // Except when there is no schedule data
+        if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > now) {
+            nextMatchBar.classList.remove('hidden');
         } else {
-            nextMatchWidget.classList.add('hidden');
+            nextMatchBar.classList.add('hidden');
         }
     }
 
@@ -1010,7 +1040,7 @@
         const distance = nextStreamTime - now;
         if (distance <= 0) {
             hideUpcomingOverlay();
-            // After countdown ends, try to load stream again if available
+            // After countdown ends, try to load stream again
             onValue(streamUrlRef, (snap) => {
                 const url = snap.val();
                 if (url && !isWaitingForScheduledStream) loadStream(url);
@@ -1034,10 +1064,10 @@
         secBox.classList.remove('hidden');
         cdSeconds.innerText = String(seconds).padStart(2,'0');
         
-        updateWidgetAndCountdown();
+        updateBarAndCountdown();
     }
 
-    // Listen for force upcoming from admin
+    // Force upcoming from admin
     onValue(forceUpcomingRef, (snapshot) => {
         const force = snapshot.val();
         if (force === true && nextStreamData && nextStreamData.time) {
@@ -1054,20 +1084,17 @@
             const streamDate = new Date(data.time).getTime();
             const now = Date.now();
             if (streamDate > now && !isWaitingForScheduledStream) {
-                // Future schedule, but don't auto-show overlay unless no stream is active
                 if (!currentStreamUrl || video.paused || video.ended) {
-                    // No active stream, show upcoming overlay immediately
                     showUpcomingOverlayFromData(data);
                 } else {
-                    // Stream is playing, just update widget
-                    updateWidgetAndCountdown();
+                    updateBarAndCountdown();
                 }
             } else if (streamDate <= now && !isWaitingForScheduledStream) {
-                // Past schedule, ignore
-                nextMatchWidget.classList.add('hidden');
+                updateBarAndCountdown(); // still show bar if future? no, past schedule hide bar
+                if (streamDate <= now) nextMatchBar.classList.add('hidden');
             }
         } else {
-            nextMatchWidget.classList.add('hidden');
+            nextMatchBar.classList.add('hidden');
         }
     });
 
@@ -1075,19 +1102,13 @@
     onValue(streamUrlRef, (snapshot) => {
         const url = snapshot.val();
         if (url && !isWaitingForScheduledStream && url !== currentStreamUrl) {
-            // If there is a future schedule and we are showing overlay, don't load
             if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
-                // Still within schedule period, but we have a stream URL? Admin might have published new stream.
-                // Cancel upcoming overlay and load stream
-                if (isWaitingForScheduledStream) {
-                    hideUpcomingOverlay();
-                }
+                if (isWaitingForScheduledStream) hideUpcomingOverlay();
                 loadStream(url);
             } else {
                 loadStream(url);
             }
         } else if (!url && nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now() && !isWaitingForScheduledStream) {
-            // No stream URL but schedule exists, show upcoming
             showUpcomingOverlayFromData(nextStreamData);
         }
     });
@@ -1098,18 +1119,17 @@
         updatePlayPauseUI();
         hideCenterPlayButton();
         showLoading(false);
-        updateWidgetAndCountdown();
+        updateBarAndCountdown();
     });
     video.addEventListener('pause', () => {
         isPlaying = false;
         updatePlayPauseUI();
-        nextMatchWidget.classList.add('hidden');
     });
     video.addEventListener('ended', () => {
         if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
             showUpcomingOverlayFromData(nextStreamData);
         } else {
-            nextMatchWidget.classList.add('hidden');
+            nextMatchBar.classList.add('hidden');
         }
     });
     video.addEventListener('error', () => {
@@ -1148,20 +1168,32 @@
     onDisconnect(myViewerRef).remove(); set(myViewerRef, { timestamp: serverTimestamp() });
     onValue(ref(db, 'activeViewers'), (snap) => { document.getElementById('viewerCountDisplay').innerText = Object.keys(snap.val() || {}).length; });
 
-    // CONTROLS LOGIC
+    // CONTROLS LOGIC - prevent toggle when upcoming overlay is active
     let controlsVisible = false;
     function toggleControls(show) {
+        if (isWaitingForScheduledStream) return; // no controls during upcoming overlay
         if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { if (!controlsVisible) return; customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } 
         else { customControls.classList.add('hide-controls'); controlsVisible = false; }
     }
-    videoStage.addEventListener('click', (e) => { if (e.target.closest('.ctrl-btn')) return; toggleControls(!controlsVisible); });
-    function handleControlClick(e, action) { e.stopPropagation(); if (!controlsVisible) { toggleControls(true); return; } action(); resetControlsTimer(); }
+    videoStage.addEventListener('click', (e) => { 
+        if (e.target.closest('.ctrl-btn')) return;
+        if (isWaitingForScheduledStream) return; // do nothing when overlay active
+        toggleControls(!controlsVisible); 
+    });
+    function handleControlClick(e, action) { 
+        e.stopPropagation(); 
+        if (isWaitingForScheduledStream) return; // no action on controls when overlay active
+        if (!controlsVisible) { toggleControls(true); return; } 
+        action(); 
+        resetControlsTimer(); 
+    }
     playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { if (video.paused) { video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }).catch(e => console.log); } else { video.pause(); isPlaying = false; updatePlayPauseUI(); } }));
     muteBtn.addEventListener('click', (e) => handleControlClick(e, () => { video.muted = !video.muted; isMuted = video.muted; updateMuteUI(); }));
     fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { if (!document.fullscreenElement) { await videoStage.requestFullscreen(); try { screen.orientation?.lock('landscape'); } catch(e){} } else { await document.exitFullscreen(); try { screen.orientation?.unlock(); } catch(e){} } }));
 
     centerPlayBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
+        if (isWaitingForScheduledStream) return;
         hideCenterPlayButton();
         try { await video.play(); isPlaying = true; updatePlayPauseUI(); toggleControls(true); } catch (err) { console.warn("Play failed:", err); showCenterPlayButton(); if (!currentStreamUrl && !isWaitingForScheduledStream) { onValue(streamUrlRef, (snap) => { if (snap.val()) loadStream(snap.val()); }, { onlyOnce: true }); } }
     });
@@ -1169,9 +1201,12 @@
 
     video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
     
+    // Update bar every second
     setInterval(() => {
         if (nextStreamData && !isWaitingForScheduledStream && currentStreamUrl && !video.paused && video.readyState >= 2) {
-            updateWidgetAndCountdown();
+            updateBarAndCountdown();
+        } else if (nextStreamData && nextStreamData.time) {
+            updateBarAndCountdown();
         }
     }, 1000);
 </script>
