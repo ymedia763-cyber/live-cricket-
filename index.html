@@ -263,7 +263,7 @@
         .tiktok-btn { background: #161823; }
         .whatsapp-btn { background: #25d366; }
 
-        /* Carousel Slider - Centered, Snap, 10s auto-slide */
+        /* Carousel Slider - Only one card visible at a time, thin and professional */
         .upcoming-slider-section {
             width: 100%;
             padding: 12px 0;
@@ -275,16 +275,17 @@
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
+            scroll-snap-stop: always;
         }
         .slider-container {
             display: flex;
             gap: 0;
-            padding: 0 5%;
+            padding: 0 20px;
         }
         .slider-card {
-            flex: 0 0 90%;
+            flex: 0 0 calc(100% - 40px);
             scroll-snap-align: center;
-            margin: 0 5%;
+            margin: 0 20px;
             background: linear-gradient(135deg, #0f131f, #1a1f2e);
             border-radius: 60px;
             padding: 8px 16px;
@@ -296,6 +297,7 @@
             transition: all 0.2s ease;
             animation: stableGlow 2s infinite;
             cursor: pointer;
+            flex-wrap: nowrap;
         }
         @keyframes stableGlow {
             0%,100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); border-color: rgba(255,215,0,0.4); }
@@ -309,6 +311,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-shrink: 0;
         }
         .card-logo-small {
             width: 36px;
@@ -332,17 +335,19 @@
             padding: 4px 12px;
             border-radius: 40px;
             font-family: monospace;
+            white-space: nowrap;
         }
         .card-match-time-small {
             font-size: 0.7rem;
             color: #94a3b8;
-            margin-left: 8px;
+            white-space: nowrap;
         }
         @media (max-width: 480px) {
             .card-logo-small { width: 30px; height: 30px; }
             .card-countdown-small { font-size: 0.7rem; padding: 2px 8px; }
             .card-match-time-small { font-size: 0.6rem; }
-            .slider-card { padding: 6px 12px; }
+            .slider-card { padding: 6px 12px; gap: 8px; }
+            .card-left, .card-right { gap: 4px; }
         }
 
         /* Chat Panel - Original Glowing */
@@ -427,7 +432,7 @@
         <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
     </div>
 
-    <!-- Carousel Slider - One card centered at a time -->
+    <!-- Carousel Slider - One card centered, no side cards visible -->
     <div class="upcoming-slider-section" id="sliderSection">
         <div class="slider-container" id="sliderContainer"></div>
     </div>
@@ -557,7 +562,7 @@
         }, 10000); // 10 seconds
     }
 
-    // Render carousel (one card centered)
+    // Render carousel (one card centered, no side cards visible)
     function renderSlider() {
         sliderContainer.innerHTML = '';
         sliderIntervals.forEach(clearInterval);
