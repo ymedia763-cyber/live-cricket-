@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Live Cricket Stream</title>
+    <title>Live Cricket · Multi Stream</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-touch-callout: none;
         }
 
         body {
@@ -37,10 +39,7 @@
             border-radius: 28px;
             background: rgba(10, 14, 24, 0.95);
             overflow: hidden;
-            box-shadow: 
-                0 0 60px rgba(59, 130, 246, 0.15),
-                0 8px 32px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(59, 130, 246, 0.1);
             animation: containerGlow 4s ease-in-out infinite;
@@ -68,10 +67,9 @@
             height: 100%;
             object-fit: contain;
             background: #000;
-            transition: transform 0.3s ease;
         }
 
-        /* Custom Controls */
+        /* Custom Controls - Original Style */
         .custom-controls {
             position: absolute;
             bottom: 0;
@@ -88,77 +86,31 @@
             transform: translateY(0);
         }
 
-        .controls-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .controls-left { display: flex; gap: 10px; }
         .ctrl-btn {
             background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             padding: 7px;
             cursor: pointer;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: 0.2s;
         }
-
-        .ctrl-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: #f1f5f9;
-            stroke-width: 1.8;
-            fill: none;
-            transition: all 0.2s ease;
-            color: #f1f5f9;
-        }
-
-        .ctrl-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.4);
-            transform: scale(1.05);
-        }
-
-        .ctrl-btn:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
+        .ctrl-btn svg { width: 18px; height: 18px; stroke: #f1f5f9; stroke-width: 1.8; fill: none; }
+        .ctrl-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
         .live-badge {
-            background: linear-gradient(135deg, #e50914 0%, #ff1744 100%);
+            background: linear-gradient(135deg, #e50914, #ff1744);
             padding: 3px 10px;
             border-radius: 30px;
             font-size: 10px;
             font-weight: 700;
             color: white;
-            text-transform: uppercase;
-            margin-left: 2px;
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
-            animation: livePulse 2s ease-in-out infinite;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: livePulse 2s infinite;
         }
+        @keyframes livePulse { 0%,100% { box-shadow:0 0 15px rgba(229,9,20,0.5); } 50% { box-shadow:0 0 25px rgba(229,9,20,0.8); } }
+        .controls-right { display: flex; gap: 8px; }
+        .hide-controls { opacity: 0; pointer-events: none; transform: translateY(20px); }
 
-        @keyframes livePulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(229, 9, 20, 0.5); transform: scale(1); }
-            50% { box-shadow: 0 0 25px rgba(229, 9, 20, 0.8); transform: scale(1.02); }
-        }
-
-        .controls-right {
-            display: flex;
-            gap: 8px;
-        }
-
-        .hide-controls {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(20px);
-        }
-
-        /* Loading Overlay */
+        /* Loading Overlay (Three Dots) - Original Logic */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -221,258 +173,7 @@
             40% { transform: scale(1); opacity: 1; box-shadow: 0 0 30px rgba(59, 130, 246, 0.9); }
         }
 
-        /* Next Match Bar (below video, above chat) */
-        .next-match-bar {
-            background: linear-gradient(135deg, #0f131f 0%, #1a1f2e 100%);
-            padding: 10px 16px;
-            margin: 0;
-            border-top: 1px solid rgba(255,215,0,0.3);
-            border-bottom: 1px solid rgba(255,215,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-            animation: barGlowPulse 2s ease-in-out infinite, slideIn 0.5s ease-out;
-        }
-        @keyframes barGlowPulse {
-            0%, 100% { box-shadow: 0 0 5px rgba(255,215,0,0.3); border-color: rgba(255,215,0,0.3); }
-            50% { box-shadow: 0 0 15px rgba(255,215,0,0.6); border-color: rgba(255,215,0,0.7); }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .next-match-bar.hidden {
-            display: none;
-        }
-        .bar-teams {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .bar-logo {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1.5px solid #fbbf24;
-            object-fit: cover;
-            background: #000;
-            box-shadow: 0 0 8px rgba(251,191,36,0.4);
-            transition: transform 0.2s ease;
-        }
-        .bar-logo:hover {
-            transform: scale(1.1);
-        }
-        .bar-vs {
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #fbbf24;
-            background: rgba(0,0,0,0.4);
-            padding: 2px 8px;
-            border-radius: 20px;
-        }
-        .bar-countdown {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: white;
-            background: rgba(0,0,0,0.6);
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-family: monospace;
-            letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(59,130,246,0.3);
-        }
-        @media (max-width: 480px) {
-            .bar-logo { width: 30px; height: 30px; }
-            .bar-countdown { font-size: 0.7rem; padding: 4px 10px; }
-            .bar-vs { font-size: 0.7rem; }
-        }
-
-        /* Chat Panel */
-        .chat-panel {
-            padding: 14px 16px 20px;
-            background: rgba(10, 14, 24, 0.8);
-            border-top: 1px solid rgba(59, 130, 246, 0.15);
-            backdrop-filter: blur(10px);
-        }
-
-        .viewer-stats {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #11161f 0%, #1a1f2e 100%);
-            border-radius: 50px;
-            padding: 6px 14px;
-            width: fit-content;
-            margin-bottom: 16px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .viewer-stats:hover {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            border-color: rgba(59, 130, 246, 0.4);
-        }
-
-        .eye-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: #94a3b8;
-            filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.3));
-        }
-
-        .viewer-count {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #e2e8f0;
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-        }
-
-        .live-viewers {
-            font-size: 0.7rem;
-            color: #7e8ba3;
-        }
-
-        .chat-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .chat-header h4 {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #cbd5e6;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .chat-messages {
-            background: linear-gradient(145deg, #0f131f 0%, #151a28 100%);
-            border-radius: 20px;
-            height: 220px;
-            overflow-y: auto;
-            padding: 10px 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .message-bubble {
-            background: linear-gradient(135deg, #1a1f2e 0%, #252b3d 100%);
-            padding: 8px 14px;
-            border-radius: 24px;
-            max-width: 90%;
-            width: fit-content;
-            font-size: 0.8rem;
-            color: #eef2ff;
-            border-left: 3px solid #3b82f6;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: all 0.2s ease;
-            animation: messageSlide 0.3s ease-out;
-        }
-
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .message-bubble:hover {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-            transform: translateX(5px);
-        }
-
-        .message-bubble strong {
-            color: #60a5fa;
-            font-weight: 600;
-            margin-right: 6px;
-            font-size: 0.8rem;
-            text-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            background: linear-gradient(145deg, #0f131f 0%, #151a28 100%);
-            border-radius: 40px;
-            padding: 4px 4px 4px 16px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .chat-input-area:focus-within {
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
-            border-color: rgba(59, 130, 246, 0.5);
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 10px 0;
-            color: white;
-            font-size: 0.85rem;
-            outline: none;
-        }
-
-        .chat-input-area input::placeholder {
-            color: #5b6e8c;
-        }
-
-        .send-btn {
-            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-            border: none;
-            border-radius: 32px;
-            padding: 8px 18px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            box-shadow: 0 2px 12px rgba(37, 99, 235, 0.4);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .send-btn svg {
-            width: 14px;
-            height: 14px;
-            stroke: white;
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
-        }
-
-        .send-btn:hover {
-            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.6);
-            transform: translateY(-1px);
-        }
-
-        .send-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: rgba(59, 130, 246, 0.3);
-            border-radius: 10px;
-        }
-
+        /* Center Play Button */
         .center-play-overlay {
             position: absolute;
             top: 0;
@@ -487,326 +188,140 @@
             cursor: pointer;
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
-
-        .center-play-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
+        .center-play-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .center-play-btn {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: playPulse 2s ease-in-out infinite;
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, rgba(37,99,235,0.9), rgba(59,130,246,0.9));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: playPulse 2s infinite;
         }
+        @keyframes playPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        .center-play-btn svg { width: 32px; height: 32px; fill: white; margin-left: 4px; }
 
-        @keyframes playPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4); }
-            50% { transform: scale(1.08); box-shadow: 0 0 60px rgba(59, 130, 246, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4); }
-        }
-
-        .center-play-btn:hover {
-            transform: scale(1.12);
-            background: linear-gradient(135deg, rgba(29, 78, 216, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .center-play-btn svg {
-            width: 32px;
-            height: 32px;
-            fill: white;
-            margin-left: 4px;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
-        }
-
+        /* Social Bar */
         .social-bar {
-            display: flex;
-            justify-content: center;
+            display: flex; justify-content: center; gap: 12px; padding: 12px;
+            background: linear-gradient(135deg, #0d1117, #161b22);
+            border-bottom: 1px solid rgba(59,130,246,0.15);
+            flex-wrap: wrap;
+        }
+        .social-btn {
+            display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+            border-radius: 40px; text-decoration: none; font-size: 0.7rem; font-weight: 600;
+            color: white; transition: 0.3s; background: rgba(0,0,0,0.5);
+        }
+        .social-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .social-btn:hover { transform: translateY(-1px); }
+        .youtube-btn { background: #ff0000; }
+        .tiktok-btn { background: #161823; }
+        .whatsapp-btn { background: #25d366; }
+
+        /* Horizontal Slider */
+        .upcoming-slider-section {
+            width: 100%;
+            padding: 10px 0;
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,215,0,0.2);
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .slider-container {
+            display: inline-flex;
+            gap: 16px;
+            padding: 4px 12px;
+        }
+        .slider-card {
+            display: inline-flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 12px;
-            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-            position: relative;
-            z-index: 35;
-            flex-wrap: wrap;
-        }
-
-        .social-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .social-btn:hover::before {
-            left: 100%;
-        }
-
-        .social-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-            transition: transform 0.3s ease;
-        }
-
-        .social-btn:hover svg {
-            transform: scale(1.1) rotate(-3deg);
-        }
-
-        .social-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-        }
-
-        .social-btn:active {
-            transform: scale(0.96);
-        }
-
-        .youtube-btn { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); border-color: rgba(255, 0, 0, 0.3); }
-        .tiktok-btn { background: linear-gradient(135deg, #161823 0%, #000000 100%); border-color: rgba(255, 255, 255, 0.15); }
-        .whatsapp-btn { background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-color: rgba(37, 211, 102, 0.3); }
-
-        /* Upcoming Overlay (fullscreen) */
-        .upcoming-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 35;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .upcoming-overlay.active { display: flex; }
-
-        .upcoming-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            filter: blur(3px) brightness(0.35);
-        }
-
-        .upcoming-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            padding: 8px 12px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .live-in-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #fbbf24;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 1px 10px rgba(251, 191, 36, 0.5);
-            animation: labelPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes labelPulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.03); }
-        }
-
-        .countdown-box {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 2px;
-        }
-
-        .countdown-item {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 4px 8px;
-            min-width: 55px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-        
-        .countdown-item.hidden {
-            display: none !important;
-        }
-
-        .countdown-value {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1.1;
-            font-family: 'Inter', system-ui, monospace;
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-        }
-        
-        .countdown-label {
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: #94a3b8;
-            text-transform: uppercase;
-            margin-top: 2px;
-            background: rgba(0,0,0,0.3);
-            display: inline-block;
-            padding: 1px 6px;
-            border-radius: 20px;
-        }
-
-        .teams-vs {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            margin-top: 6px;
-            background: rgba(0,0,0,0.3);
-            padding: 6px 14px;
+            background: linear-gradient(135deg, #0f131f, #1a1f2e);
             border-radius: 50px;
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,215,0,0.3);
-        }
-
-        .team-logo-wrap {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid rgba(255, 215, 0, 0.7);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-            background: rgba(0, 0, 0, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 6px 18px;
+            border: 1px solid rgba(255,215,0,0.4);
+            transition: all 0.2s ease;
+            animation: stableGlow 2s infinite;
+            white-space: nowrap;
             cursor: pointer;
-            animation: logoGlow 2s ease-in-out infinite;
         }
-        
-        @keyframes logoGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); border-color: rgba(255, 215, 0, 0.6); }
-            50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.9); border-color: rgba(255, 215, 0, 0.9); }
+        @keyframes stableGlow {
+            0%,100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); border-color: rgba(255,215,0,0.4); }
+            50% { box-shadow: 0 0 12px rgba(255,215,0,0.6); border-color: rgba(255,215,0,0.7); }
         }
-        
-        .team-logo-wrap:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
-            border-color: #ffd700;
+        .slider-card:hover { transform: translateY(-2px); background: linear-gradient(135deg, #1a1f2e, #252b3d); }
+        .card-logo-small {
+            width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #fbbf24;
+            object-fit: cover; background: #000;
         }
-        
-        .team-logo-wrap:active {
-            transform: scale(0.98);
+        .card-vs-small { font-size: 0.8rem; font-weight: bold; color: #fbbf24; margin: 0 4px; }
+        .card-countdown-small {
+            font-size: 0.8rem; font-weight: 600; color: white; background: rgba(0,0,0,0.5);
+            padding: 3px 10px; border-radius: 30px; font-family: monospace;
         }
-        
-        .team-logo-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .card-match-time-small { font-size: 0.65rem; color: #94a3b8; margin-left: 6px; }
 
-        .vs-text {
-            font-size: 1.2rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #fbbf24, #ff8c00);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
-            letter-spacing: 1px;
-            font-style: italic;
+        /* Chat Panel - Original Glowing */
+        .chat-panel {
+            padding: 14px 16px 20px;
+            background: rgba(10,14,24,0.8);
+            border-top: 1px solid rgba(59,130,246,0.15);
+            backdrop-filter: blur(10px);
         }
-        .vs-text::before {
-            content: "⚡";
-            font-size: 0.8rem;
-            margin-right: 4px;
-            opacity: 0.7;
+        .viewer-stats {
+            display: flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #11161f, #1a1f2e);
+            border-radius: 50px; padding: 6px 14px; width: fit-content;
+            margin-bottom: 16px; border: 1px solid rgba(59,130,246,0.2);
         }
-        .vs-text::after {
-            content: "⚡";
-            font-size: 0.8rem;
-            margin-left: 4px;
-            opacity: 0.7;
+        .eye-icon svg { width:16px; height:16px; stroke:#94a3b8; }
+        .viewer-count { font-weight:700; font-size:0.9rem; color:#e2e8f0; text-shadow:0 0 10px rgba(59,130,246,0.3); }
+        .live-viewers { font-size:0.7rem; color:#7e8ba3; }
+        .chat-header { display:flex; justify-content:space-between; margin-bottom:10px; }
+        .chat-header h4 { font-size:0.85rem; font-weight:600; color:#cbd5e6; text-transform:uppercase; }
+        .chat-messages {
+            background: linear-gradient(145deg, #0f131f, #151a28);
+            border-radius:20px; height:220px; overflow-y:auto;
+            padding:10px; display:flex; flex-direction:column; gap:8px;
+            margin-bottom:10px; border:1px solid rgba(59,130,246,0.1);
         }
-
-        .match-time-text {
-            font-size: 0.75rem;
-            color: #e2e8f0;
-            font-weight: 500;
-            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
-            margin-top: 4px;
-            background: rgba(0,0,0,0.4);
-            padding: 2px 10px;
-            border-radius: 30px;
-            display: inline-block;
+        .message-bubble {
+            background: linear-gradient(135deg, #1a1f2e, #252b3d);
+            padding:8px 14px; border-radius:24px; max-width:90%;
+            font-size:0.8rem; color:#eef2ff; border-left:3px solid #3b82f6;
+            box-shadow:0 2px 8px rgba(0,0,0,0.2);
+            animation:messageSlide 0.3s ease-out;
         }
-
-        @media (max-width: 480px) {
-            .countdown-value { font-size: 1.3rem; }
-            .countdown-item { padding: 3px 6px; min-width: 48px; }
-            .team-logo-wrap { width: 48px; height: 48px; }
-            .vs-text { font-size: 1rem; }
-            .teams-vs { gap: 12px; padding: 4px 12px; }
-            .live-in-label { font-size: 0.7rem; letter-spacing: 1.5px; }
-            .social-btn { padding: 4px 10px; font-size: 0.65rem; }
-            .social-btn svg { width: 16px; height: 16px; }
-            .social-bar { gap: 8px; padding: 8px 8px; }
+        @keyframes messageSlide { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
+        .message-bubble:hover { box-shadow:0 0 15px rgba(59,130,246,0.3); transform:translateX(5px); }
+        .message-bubble strong { color:#60a5fa; margin-right:6px; text-shadow:0 0 8px rgba(96,165,250,0.4); }
+        .chat-input-area {
+            display:flex; gap:8px; align-items:center;
+            background: linear-gradient(145deg, #0f131f, #151a28);
+            border-radius:40px; padding:4px 4px 4px 16px;
+            border:1px solid rgba(59,130,246,0.2);
         }
+        .chat-input-area input { flex:1; background:transparent; border:none; padding:10px 0; color:white; outline:none; }
+        .send-btn {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            border:none; border-radius:32px; padding:8px 18px; color:white;
+            display:flex; align-items:center; gap:6px; cursor:pointer;
+        }
+        .send-btn svg { width:14px; height:14px; stroke:white; }
+        .chat-messages::-webkit-scrollbar { width:6px; }
+        .chat-messages::-webkit-scrollbar-track { background:transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background:rgba(59,130,246,0.3); border-radius:10px; }
     </style>
 </head>
 <body>
 <div class="app-container">
     <div class="social-bar">
-        <a href="https://youtube.com/@yasiriqbal_01?si=jJhGfxyJEmo1jDBX" target="_blank" class="social-btn youtube-btn">
-            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            <span>YouTube</span>
-        </a>
-        <a href="https://vm.tiktok.com/ZS9L9DsymEuah-z2qv4/" target="_blank" class="social-btn tiktok-btn">
-            <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-            <span>TikTok</span>
-        </a>
-        <a href="https://whatsapp.com/channel/0029VbCEdrq0bIdoR2SJiW1S" target="_blank" class="social-btn whatsapp-btn">
-            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            <span>WhatsApp</span>
-        </a>
+        <a href="https://youtube.com/@yasiriqbal_01?si=jJhGfxyJEmo1jDBX" target="_blank" class="social-btn youtube-btn"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span>YouTube</span></a>
+        <a href="https://vm.tiktok.com/ZS9L9DsymEuah-z2qv4/" target="_blank" class="social-btn tiktok-btn"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg><span>TikTok</span></a>
+        <a href="https://whatsapp.com/channel/0029VbCEdrq0bIdoR2SJiW1S" target="_blank" class="social-btn whatsapp-btn"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span>WhatsApp</span></a>
     </div>
 
     <div class="video-stage" id="videoStage">
@@ -828,36 +343,12 @@
             </div>
         </div>
         <div class="loading-overlay initial-loading" id="loadingOverlay"><div class="three-dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-        
-        <div class="upcoming-overlay" id="upcomingOverlay">
-            <div class="upcoming-bg" id="upcomingBg"></div>
-            <div class="upcoming-content">
-                <div class="live-in-label">LIVE IN</div>
-                <div class="countdown-box" id="countdownBox">
-                    <div class="countdown-item" id="dayBox"><div class="countdown-value" id="cdDays">00</div><div class="countdown-label">D</div></div>
-                    <div class="countdown-item" id="hourBox"><div class="countdown-value" id="cdHours">00</div><div class="countdown-label">H</div></div>
-                    <div class="countdown-item" id="minBox"><div class="countdown-value" id="cdMinutes">00</div><div class="countdown-label">M</div></div>
-                    <div class="countdown-item" id="secBox"><div class="countdown-value" id="cdSeconds">00</div><div class="countdown-label">S</div></div>
-                </div>
-                <div class="teams-vs" id="teamsVs">
-                    <div class="team-logo-wrap"><img id="teamAImg" src="" alt="Team A"></div>
-                    <div class="vs-text">V.S</div>
-                    <div class="team-logo-wrap"><img id="teamBImg" src="" alt="Team B"></div>
-                </div>
-                <div class="match-time-text" id="matchTimeText"></div>
-            </div>
-        </div>
         <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
     </div>
 
-    <!-- Next Match Bar (always visible when schedule exists) -->
-    <div id="nextMatchBar" class="next-match-bar hidden">
-        <div class="bar-teams">
-            <img id="barTeamA" class="bar-logo" src="" alt="Team A">
-            <span class="bar-vs">VS</span>
-            <img id="barTeamB" class="bar-logo" src="" alt="Team B">
-        </div>
-        <div class="bar-countdown" id="barCountdown">--:--:--</div>
+    <!-- Horizontal Slider -->
+    <div class="upcoming-slider-section" id="sliderSection">
+        <div class="slider-container" id="sliderContainer"></div>
     </div>
 
     <div class="chat-panel">
@@ -866,10 +357,7 @@
             <span class="viewer-count" id="viewerCountDisplay">0</span>
             <span class="live-viewers">watching now</span>
         </div>
-        <div class="chat-header">
-            <h4>LIVE CHAT</h4>
-            <span style="font-size:9px; color:#5b6e8c;">realtime</span>
-        </div>
+        <div class="chat-header"><h4>LIVE CHAT</h4><span style="font-size:9px; color:#5b6e8c;">realtime</span></div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type your message ..." autocomplete="off"><button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button></div>
     </div>
@@ -880,13 +368,21 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, set, onChildAdded, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = { apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA", authDomain: "chat-283ed.firebaseapp.com", databaseURL: "https://chat-283ed-default-rtdb.firebaseio.com", projectId: "chat-283ed", storageBucket: "chat-283ed.firebasestorage.app", messagingSenderId: "669885432854", appId: "1:669885432854:web:ba6185cdbbcc6f485ba137" };
+    const firebaseConfig = {
+        apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA",
+        authDomain: "chat-283ed.firebaseapp.com",
+        databaseURL: "https://chat-283ed-default-rtdb.firebaseio.com",
+        projectId: "chat-283ed",
+        storageBucket: "chat-283ed.firebasestorage.app",
+        messagingSenderId: "669885432854",
+        appId: "1:669885432854:web:ba6185cdbbcc6f485ba137"
+    };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const streamUrlRef = ref(db, 'liveStream/url');
+    const liveStreamRef = ref(db, 'liveStream/url');
+    const upcomingRef = ref(db, 'upcomingStreams');
+    const forceSwitchRef = ref(db, 'admin/forceSwitch');
     const chatRef = ref(db, 'chat/messages');
-    const nextStreamRef = ref(db, 'nextStream');
-    const forceUpcomingRef = ref(db, 'admin/forceUpcoming');
 
     const video = document.getElementById('videoPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
@@ -901,24 +397,7 @@
     const pauseIcon = document.getElementById('pauseIconSvg');
     const volumeIcon = document.getElementById('volumeIcon');
     const mutedIcon = document.getElementById('mutedIcon');
-    const upcomingOverlay = document.getElementById('upcomingOverlay');
-    const upcomingBg = document.getElementById('upcomingBg');
-    const cdDays = document.getElementById('cdDays');
-    const cdHours = document.getElementById('cdHours');
-    const cdMinutes = document.getElementById('cdMinutes');
-    const cdSeconds = document.getElementById('cdSeconds');
-    const dayBox = document.getElementById('dayBox');
-    const hourBox = document.getElementById('hourBox');
-    const minBox = document.getElementById('minBox');
-    const secBox = document.getElementById('secBox');
-    const teamAImg = document.getElementById('teamAImg');
-    const teamBImg = document.getElementById('teamBImg');
-    const matchTimeText = document.getElementById('matchTimeText');
-    // Bar elements
-    const nextMatchBar = document.getElementById('nextMatchBar');
-    const barTeamA = document.getElementById('barTeamA');
-    const barTeamB = document.getElementById('barTeamB');
-    const barCountdown = document.getElementById('barCountdown');
+    const sliderContainer = document.getElementById('sliderContainer');
 
     let hls = null;
     let isPlaying = true;
@@ -926,10 +405,9 @@
     let controlsTimeout = null;
     let currentStreamUrl = "";
     let isInitialLoad = true;
-    let nextStreamTime = null;
-    let countdownInterval = null;
-    let isWaitingForScheduledStream = false;
-    let nextStreamData = null;
+    let upcomingStreams = [];
+    let autoSlideInterval = null;
+    let sliderIntervals = [];
 
     function showLoading(show) {
         if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); } 
@@ -940,42 +418,10 @@
     function resetControlsTimer() {
         if (controlsTimeout) clearTimeout(controlsTimeout);
         customControls.classList.remove('hide-controls');
-        controlsTimeout = setTimeout(() => {
-            if (!isWaitingForScheduledStream) customControls.classList.add('hide-controls');
-        }, 3500);
+        controlsTimeout = setTimeout(() => customControls.classList.add('hide-controls'), 3500);
     }
     function updatePlayPauseUI() { playIcon.style.display = isPlaying ? 'none' : 'block'; pauseIcon.style.display = isPlaying ? 'block' : 'none'; }
     function updateMuteUI() { volumeIcon.style.display = isMuted ? 'none' : 'block'; mutedIcon.style.display = isMuted ? 'block' : 'none'; }
-    
-    function hideUpcomingOverlay() {
-        upcomingOverlay.classList.remove('active');
-        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-        isWaitingForScheduledStream = false;
-        // Bar will be shown by updateBarAndCountdown if schedule exists
-        updateBarAndCountdown();
-    }
-
-    function showUpcomingOverlayFromData(data) {
-        if (!data || !data.time) return;
-        const streamDate = new Date(data.time).getTime();
-        if (streamDate <= Date.now()) return;
-        nextStreamTime = streamDate;
-        isWaitingForScheduledStream = true;
-        upcomingOverlay.classList.add('active');
-        centerPlayOverlay.classList.add('hidden');
-        customControls.classList.add('hide-controls');
-        // DO NOT hide nextMatchBar - keep it visible
-        if (data.thumbnail) upcomingBg.style.backgroundImage = `url(${data.thumbnail})`;
-        if (data.teamA) teamAImg.src = data.teamA;
-        if (data.teamB) teamBImg.src = data.teamB;
-        if (data.matchTime) matchTimeText.innerText = data.matchTime;
-        if (countdownInterval) clearInterval(countdownInterval);
-        countdownInterval = setInterval(updateCountdown, 1000);
-        updateCountdown();
-        if (hls) { hls.destroy(); hls = null; }
-        video.src = "";
-        currentStreamUrl = "";
-    }
 
     function initHLS(url) {
         if (hls) { hls.destroy(); hls = null; }
@@ -996,219 +442,164 @@
         } else { console.error("HLS not supported"); showLoading(false); }
         currentStreamUrl = url;
     }
-    
+
     function loadStream(url) {
         if (!url || url === currentStreamUrl) return;
-        if (isWaitingForScheduledStream) return;
         showLoading(true);
         initHLS(url);
     }
 
-    function updateBarAndCountdown() {
-        if (!nextStreamData || !nextStreamData.time) {
-            nextMatchBar.classList.add('hidden');
-            return;
-        }
-        const streamDate = new Date(nextStreamData.time).getTime();
-        const now = Date.now();
-        const distance = streamDate - now;
-        
-        if (nextStreamData.teamA) barTeamA.src = nextStreamData.teamA;
-        if (nextStreamData.teamB) barTeamB.src = nextStreamData.teamB;
-        
-        if (distance > 0) {
-            const hours = Math.floor(distance / 3600000);
-            const minutes = Math.floor((distance % 3600000) / 60000);
-            const seconds = Math.floor((distance % 60000) / 1000);
-            barCountdown.innerText = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-        } else {
-            barCountdown.innerText = "LIVE NOW";
-        }
-        
-        // Bar is always visible if schedule exists and is future (or even if live now)
-        // Except when there is no schedule data
-        if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > now) {
-            nextMatchBar.classList.remove('hidden');
-        } else {
-            nextMatchBar.classList.add('hidden');
-        }
-    }
-
-    function updateCountdown() {
-        if (!nextStreamTime) return;
-        const now = Date.now();
-        const distance = nextStreamTime - now;
-        if (distance <= 0) {
-            hideUpcomingOverlay();
-            // After countdown ends, try to load stream again
-            onValue(streamUrlRef, (snap) => {
-                const url = snap.val();
-                if (url && !isWaitingForScheduledStream) loadStream(url);
-            }, { onlyOnce: true });
-            return;
-        }
-        const days = Math.floor(distance / 86400000);
-        const hours = Math.floor((distance % 86400000) / 3600000);
-        const minutes = Math.floor((distance % 3600000) / 60000);
-        const seconds = Math.floor((distance % 60000) / 1000);
-        
-        if (days > 0) { dayBox.classList.remove('hidden'); cdDays.innerText = String(days).padStart(2,'0'); } 
-        else { dayBox.classList.add('hidden'); }
-        
-        if (hours > 0 || days > 0) { hourBox.classList.remove('hidden'); cdHours.innerText = String(hours).padStart(2,'0'); }
-        else { hourBox.classList.add('hidden'); }
-        
-        if (minutes > 0 || hours > 0 || days > 0) { minBox.classList.remove('hidden'); cdMinutes.innerText = String(minutes).padStart(2,'0'); }
-        else { minBox.classList.add('hidden'); }
-        
-        secBox.classList.remove('hidden');
-        cdSeconds.innerText = String(seconds).padStart(2,'0');
-        
-        updateBarAndCountdown();
-    }
-
-    // Force upcoming from admin
-    onValue(forceUpcomingRef, (snapshot) => {
-        const force = snapshot.val();
-        if (force === true && nextStreamData && nextStreamData.time) {
-            showUpcomingOverlayFromData(nextStreamData);
-            set(forceUpcomingRef, false);
-        }
-    });
-
-    // Listen for next stream changes
-    onValue(nextStreamRef, (snapshot) => {
-        const data = snapshot.val();
-        nextStreamData = data;
-        if (data && data.time) {
-            const streamDate = new Date(data.time).getTime();
-            const now = Date.now();
-            if (streamDate > now && !isWaitingForScheduledStream) {
-                if (!currentStreamUrl || video.paused || video.ended) {
-                    showUpcomingOverlayFromData(data);
-                } else {
-                    updateBarAndCountdown();
-                }
-            } else if (streamDate <= now && !isWaitingForScheduledStream) {
-                updateBarAndCountdown(); // still show bar if future? no, past schedule hide bar
-                if (streamDate <= now) nextMatchBar.classList.add('hidden');
-            }
-        } else {
-            nextMatchBar.classList.add('hidden');
-        }
-    });
-
-    // Listen for stream URL
-    onValue(streamUrlRef, (snapshot) => {
-        const url = snapshot.val();
-        if (url && !isWaitingForScheduledStream && url !== currentStreamUrl) {
-            if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
-                if (isWaitingForScheduledStream) hideUpcomingOverlay();
-                loadStream(url);
-            } else {
-                loadStream(url);
-            }
-        } else if (!url && nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now() && !isWaitingForScheduledStream) {
-            showUpcomingOverlayFromData(nextStreamData);
-        }
-    });
-
-    // Video events
-    video.addEventListener('play', () => {
-        isPlaying = true;
-        updatePlayPauseUI();
-        hideCenterPlayButton();
-        showLoading(false);
-        updateBarAndCountdown();
-    });
-    video.addEventListener('pause', () => {
-        isPlaying = false;
-        updatePlayPauseUI();
-    });
-    video.addEventListener('ended', () => {
-        if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
-            showUpcomingOverlayFromData(nextStreamData);
-        } else {
-            nextMatchBar.classList.add('hidden');
-        }
-    });
-    video.addEventListener('error', () => {
-        if (nextStreamData && nextStreamData.time && new Date(nextStreamData.time).getTime() > Date.now()) {
-            showUpcomingOverlayFromData(nextStreamData);
-        }
-    });
-    video.addEventListener('volumechange', () => { isMuted = video.muted; updateMuteUI(); });
+    // Buffering events
     video.addEventListener('waiting', () => showLoading(true));
     video.addEventListener('playing', () => showLoading(false));
     video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
 
-    // CHAT
+    // Get the nearest future stream (for auto-switch)
+    function getNearestFutureStream() {
+        const now = Date.now();
+        const future = upcomingStreams.filter(s => new Date(s.time).getTime() > now);
+        future.sort((a,b) => new Date(a.time) - new Date(b.time));
+        return future[0] || null;
+    }
+
+    // Auto-slide function
+    function startAutoSlide() {
+        if (autoSlideInterval) clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(() => {
+            const slider = document.querySelector('.upcoming-slider-section');
+            if (!slider) return;
+            const scrollLeft = slider.scrollLeft;
+            const cardWidth = document.querySelector('.slider-card')?.offsetWidth + 16 || 200;
+            const nextScroll = scrollLeft + cardWidth;
+            slider.scrollTo({ left: nextScroll, behavior: 'smooth' });
+            if (nextScroll + slider.clientWidth >= slider.scrollWidth) {
+                setTimeout(() => slider.scrollTo({ left: 0, behavior: 'smooth' }), 3000);
+            }
+        }, 5000);
+    }
+
+    // Render slider cards
+    function renderSlider() {
+        sliderContainer.innerHTML = '';
+        sliderIntervals.forEach(clearInterval);
+        sliderIntervals = [];
+        if (!upcomingStreams.length) {
+            sliderContainer.innerHTML = '<div style="color:#7e8ba3; padding:10px; text-align:center;">No upcoming matches scheduled</div>';
+            return;
+        }
+        upcomingStreams.forEach((stream, idx) => {
+            const card = document.createElement('div');
+            card.className = 'slider-card';
+            const streamDate = new Date(stream.time).getTime();
+            card.innerHTML = `
+                <img class="card-logo-small" src="${stream.teamA || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
+                <span class="card-vs-small">VS</span>
+                <img class="card-logo-small" src="${stream.teamB || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
+                <span class="card-countdown-small" id="cardCountdown-${idx}">--:--:--</span>
+                <span class="card-match-time-small">${escapeHtml(stream.matchTime || '')}</span>
+            `;
+            // Click on card -> switch to that stream immediately
+            card.addEventListener('click', () => {
+                if (stream.m3u8Url) loadStream(stream.m3u8Url);
+            });
+            sliderContainer.appendChild(card);
+            const updateCardTimer = () => {
+                const now = Date.now();
+                const dist = streamDate - now;
+                const cdDiv = document.getElementById(`cardCountdown-${idx}`);
+                if (cdDiv) {
+                    if (dist <= 0) cdDiv.innerText = "LIVE NOW";
+                    else {
+                        const hrs = Math.floor(dist / 3600000);
+                        const mins = Math.floor((dist % 3600000) / 60000);
+                        const secs = Math.floor((dist % 60000) / 1000);
+                        cdDiv.innerText = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+                    }
+                }
+            };
+            updateCardTimer();
+            const interval = setInterval(updateCardTimer, 1000);
+            sliderIntervals.push(interval);
+        });
+        startAutoSlide();
+    }
+
+    // Auto-switch to next stream when current ends
+    video.addEventListener('ended', () => {
+        const next = getNearestFutureStream();
+        if (next && next.m3u8Url) {
+            loadStream(next.m3u8Url);
+            // Remove this stream from upcoming list
+            const updated = upcomingStreams.filter(s => s.time !== next.time);
+            set(upcomingRef, updated);
+        }
+    });
+
+    // Force switch from admin
+    onValue(forceSwitchRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.stream && data.stream.m3u8Url) {
+            loadStream(data.stream.m3u8Url);
+            const updated = upcomingStreams.filter(s => s.time !== data.stream.time);
+            set(upcomingRef, updated);
+            set(forceSwitchRef, null);
+        }
+    });
+
+    // Listen for upcoming streams changes
+    onValue(upcomingRef, (snap) => {
+        upcomingStreams = snap.val() || [];
+        renderSlider();
+    });
+
+    // Listen for live stream URL
+    onValue(liveStreamRef, (snap) => {
+        const url = snap.val();
+        if (url) loadStream(url);
+    });
+
+    // Chat functionality (original)
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
     const chatContainer = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendChatBtn');
-    const TWENTY_FOUR_HOURS = 86400000;
     function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
-    function appendMessage(user, text, msgId, timestamp) {
-        const div = document.createElement('div'); div.className = 'message-bubble'; div.setAttribute('data-msg-id', msgId); div.setAttribute('data-timestamp', timestamp);
+    function appendMessage(user, text) {
+        const div = document.createElement('div'); div.className = 'message-bubble';
         div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`;
         chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-    onChildAdded(chatRef, (snapshot) => {
-        const data = snapshot.val(); if (!data) return;
-        if (Date.now() - (data.timestamp || 0) > TWENTY_FOUR_HOURS) { set(ref(db, `chat/messages/${snapshot.key}`), null); return; }
-        appendMessage(data.username, data.text, snapshot.key, data.timestamp || Date.now());
-    });
-    function sendMessage() { const msg = chatInput.value.trim(); if (!msg) return; push(chatRef, { username, text: msg, timestamp: serverTimestamp() }); chatInput.value = ''; }
+    onChildAdded(chatRef, (snapshot) => { const data = snapshot.val(); if(data) appendMessage(data.username, data.text); });
+    function sendMessage() { const msg = chatInput.value.trim(); if(msg) { push(chatRef, { username, text: msg, timestamp: serverTimestamp() }); chatInput.value = ''; } }
     sendBtn.addEventListener('click', sendMessage); chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-    // VIEWER COUNT
+    // Viewer count
     const viewerId = Math.random().toString(36).substring(2) + Date.now();
     const myViewerRef = ref(db, `activeViewers/${viewerId}`);
     onDisconnect(myViewerRef).remove(); set(myViewerRef, { timestamp: serverTimestamp() });
     onValue(ref(db, 'activeViewers'), (snap) => { document.getElementById('viewerCountDisplay').innerText = Object.keys(snap.val() || {}).length; });
 
-    // CONTROLS LOGIC - prevent toggle when upcoming overlay is active
+    // Controls toggle (original)
     let controlsVisible = false;
     function toggleControls(show) {
-        if (isWaitingForScheduledStream) return; // no controls during upcoming overlay
-        if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { if (!controlsVisible) return; customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } 
+        if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } 
         else { customControls.classList.add('hide-controls'); controlsVisible = false; }
     }
-    videoStage.addEventListener('click', (e) => { 
-        if (e.target.closest('.ctrl-btn')) return;
-        if (isWaitingForScheduledStream) return; // do nothing when overlay active
-        toggleControls(!controlsVisible); 
-    });
-    function handleControlClick(e, action) { 
-        e.stopPropagation(); 
-        if (isWaitingForScheduledStream) return; // no action on controls when overlay active
-        if (!controlsVisible) { toggleControls(true); return; } 
-        action(); 
-        resetControlsTimer(); 
-    }
-    playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { if (video.paused) { video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }).catch(e => console.log); } else { video.pause(); isPlaying = false; updatePlayPauseUI(); } }));
+    videoStage.addEventListener('click', (e) => { if (!e.target.closest('.ctrl-btn')) toggleControls(!controlsVisible); });
+    function handleControlClick(e, action) { e.stopPropagation(); if (!controlsVisible) { toggleControls(true); return; } action(); resetControlsTimer(); }
+    playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { if (video.paused) video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }); else { video.pause(); isPlaying = false; updatePlayPauseUI(); } }));
     muteBtn.addEventListener('click', (e) => handleControlClick(e, () => { video.muted = !video.muted; isMuted = video.muted; updateMuteUI(); }));
-    fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { if (!document.fullscreenElement) { await videoStage.requestFullscreen(); try { screen.orientation?.lock('landscape'); } catch(e){} } else { await document.exitFullscreen(); try { screen.orientation?.unlock(); } catch(e){} } }));
-
-    centerPlayBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        if (isWaitingForScheduledStream) return;
-        hideCenterPlayButton();
-        try { await video.play(); isPlaying = true; updatePlayPauseUI(); toggleControls(true); } catch (err) { console.warn("Play failed:", err); showCenterPlayButton(); if (!currentStreamUrl && !isWaitingForScheduledStream) { onValue(streamUrlRef, (snap) => { if (snap.val()) loadStream(snap.val()); }, { onlyOnce: true }); } }
-    });
-    centerPlayOverlay.addEventListener('click', (e) => { if (e.target === centerPlayOverlay || e.target === centerPlayBtn) centerPlayBtn.click(); });
-
+    fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { if (!document.fullscreenElement) await videoStage.requestFullscreen(); else await document.exitFullscreen(); }));
+    centerPlayBtn.addEventListener('click', async () => { hideCenterPlayButton(); try { await video.play(); isPlaying = true; updatePlayPauseUI(); } catch(e) { showCenterPlayButton(); } });
+    video.addEventListener('play', () => { isPlaying = true; updatePlayPauseUI(); hideCenterPlayButton(); });
+    video.addEventListener('pause', () => { isPlaying = false; updatePlayPauseUI(); });
+    video.addEventListener('volumechange', () => { isMuted = video.muted; updateMuteUI(); });
     video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
-    
-    // Update bar every second
-    setInterval(() => {
-        if (nextStreamData && !isWaitingForScheduledStream && currentStreamUrl && !video.paused && video.readyState >= 2) {
-            updateBarAndCountdown();
-        } else if (nextStreamData && nextStreamData.time) {
-            updateBarAndCountdown();
-        }
-    }, 1000);
+
+    // Disable copy
+    document.addEventListener('copy', (e) => e.preventDefault());
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.body.style.webkitTouchCallout = 'none';
 </script>
 </body>
 </html>
