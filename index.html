@@ -69,7 +69,7 @@
             background: #000;
         }
 
-        /* Custom Controls - Original Style */
+        /* Custom Controls - Original Small Size */
         .custom-controls {
             position: absolute;
             bottom: 0;
@@ -86,31 +86,77 @@
             transform: translateY(0);
         }
 
-        .controls-left { display: flex; gap: 10px; }
+        .controls-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .ctrl-btn {
             background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 7px;
             cursor: pointer;
             border-radius: 50%;
-            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .ctrl-btn svg { width: 18px; height: 18px; stroke: #f1f5f9; stroke-width: 1.8; fill: none; }
-        .ctrl-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+
+        .ctrl-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #f1f5f9;
+            stroke-width: 1.8;
+            fill: none;
+            transition: all 0.2s ease;
+            color: #f1f5f9;
+        }
+
+        .ctrl-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .live-badge {
-            background: linear-gradient(135deg, #e50914, #ff1744);
+            background: linear-gradient(135deg, #e50914 0%, #ff1744 100%);
             padding: 3px 10px;
             border-radius: 30px;
             font-size: 10px;
             font-weight: 700;
             color: white;
-            animation: livePulse 2s infinite;
+            text-transform: uppercase;
+            margin-left: 2px;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
+            animation: livePulse 2s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        @keyframes livePulse { 0%,100% { box-shadow:0 0 15px rgba(229,9,20,0.5); } 50% { box-shadow:0 0 25px rgba(229,9,20,0.8); } }
-        .controls-right { display: flex; gap: 8px; }
-        .hide-controls { opacity: 0; pointer-events: none; transform: translateY(20px); }
 
-        /* Loading Overlay (Three Dots) - Original Logic */
+        @keyframes livePulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(229, 9, 20, 0.5); transform: scale(1); }
+            50% { box-shadow: 0 0 25px rgba(229, 9, 20, 0.8); transform: scale(1.02); }
+        }
+
+        .controls-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .hide-controls {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        /* Loading Overlay (Three Dots) - Original */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -217,52 +263,87 @@
         .tiktok-btn { background: #161823; }
         .whatsapp-btn { background: #25d366; }
 
-        /* Horizontal Slider */
+        /* Carousel Slider - Centered, Snap, 10s auto-slide */
         .upcoming-slider-section {
             width: 100%;
-            padding: 10px 0;
+            padding: 12px 0;
             background: rgba(0,0,0,0.3);
             border-top: 1px solid rgba(255,215,0,0.2);
             border-bottom: 1px solid rgba(255,215,0,0.2);
             overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
         }
         .slider-container {
-            display: inline-flex;
-            gap: 16px;
-            padding: 4px 12px;
+            display: flex;
+            gap: 0;
+            padding: 0 5%;
         }
         .slider-card {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
+            flex: 0 0 90%;
+            scroll-snap-align: center;
+            margin: 0 5%;
             background: linear-gradient(135deg, #0f131f, #1a1f2e);
-            border-radius: 50px;
-            padding: 6px 18px;
+            border-radius: 60px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
             border: 1px solid rgba(255,215,0,0.4);
             transition: all 0.2s ease;
             animation: stableGlow 2s infinite;
-            white-space: nowrap;
             cursor: pointer;
         }
         @keyframes stableGlow {
             0%,100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); border-color: rgba(255,215,0,0.4); }
             50% { box-shadow: 0 0 12px rgba(255,215,0,0.6); border-color: rgba(255,215,0,0.7); }
         }
-        .slider-card:hover { transform: translateY(-2px); background: linear-gradient(135deg, #1a1f2e, #252b3d); }
+        .slider-card:hover {
+            transform: scale(1.02);
+            background: linear-gradient(135deg, #1a1f2e, #252b3d);
+        }
+        .card-left, .card-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .card-logo-small {
-            width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #fbbf24;
-            object-fit: cover; background: #000;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1.5px solid #fbbf24;
+            object-fit: cover;
+            background: #000;
         }
-        .card-vs-small { font-size: 0.8rem; font-weight: bold; color: #fbbf24; margin: 0 4px; }
+        .card-vs-small {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin: 0 4px;
+        }
         .card-countdown-small {
-            font-size: 0.8rem; font-weight: 600; color: white; background: rgba(0,0,0,0.5);
-            padding: 3px 10px; border-radius: 30px; font-family: monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-family: monospace;
         }
-        .card-match-time-small { font-size: 0.65rem; color: #94a3b8; margin-left: 6px; }
+        .card-match-time-small {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-left: 8px;
+        }
+        @media (max-width: 480px) {
+            .card-logo-small { width: 30px; height: 30px; }
+            .card-countdown-small { font-size: 0.7rem; padding: 2px 8px; }
+            .card-match-time-small { font-size: 0.6rem; }
+            .slider-card { padding: 6px 12px; }
+        }
 
         /* Chat Panel - Original Glowing */
         .chat-panel {
@@ -346,7 +427,7 @@
         <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
     </div>
 
-    <!-- Horizontal Slider -->
+    <!-- Carousel Slider - One card centered at a time -->
     <div class="upcoming-slider-section" id="sliderSection">
         <div class="slider-container" id="sliderContainer"></div>
     </div>
@@ -449,12 +530,10 @@
         initHLS(url);
     }
 
-    // Buffering events
     video.addEventListener('waiting', () => showLoading(true));
     video.addEventListener('playing', () => showLoading(false));
     video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
 
-    // Get the nearest future stream (for auto-switch)
     function getNearestFutureStream() {
         const now = Date.now();
         const future = upcomingStreams.filter(s => new Date(s.time).getTime() > now);
@@ -462,29 +541,29 @@
         return future[0] || null;
     }
 
-    // Auto-slide function
+    // Auto-slide every 10 seconds (slower)
     function startAutoSlide() {
         if (autoSlideInterval) clearInterval(autoSlideInterval);
         autoSlideInterval = setInterval(() => {
             const slider = document.querySelector('.upcoming-slider-section');
             if (!slider) return;
-            const scrollLeft = slider.scrollLeft;
-            const cardWidth = document.querySelector('.slider-card')?.offsetWidth + 16 || 200;
-            const nextScroll = scrollLeft + cardWidth;
-            slider.scrollTo({ left: nextScroll, behavior: 'smooth' });
-            if (nextScroll + slider.clientWidth >= slider.scrollWidth) {
-                setTimeout(() => slider.scrollTo({ left: 0, behavior: 'smooth' }), 3000);
+            const cardWidth = document.querySelector('.slider-card')?.offsetWidth + (document.querySelector('.slider-card')?.offsetWidth * 0.1) || 300;
+            const scrollAmount = slider.scrollLeft + cardWidth;
+            slider.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+            // Loop to start if at end
+            if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 50) {
+                setTimeout(() => slider.scrollTo({ left: 0, behavior: 'smooth' }), 1000);
             }
-        }, 5000);
+        }, 10000); // 10 seconds
     }
 
-    // Render slider cards
+    // Render carousel (one card centered)
     function renderSlider() {
         sliderContainer.innerHTML = '';
         sliderIntervals.forEach(clearInterval);
         sliderIntervals = [];
         if (!upcomingStreams.length) {
-            sliderContainer.innerHTML = '<div style="color:#7e8ba3; padding:10px; text-align:center;">No upcoming matches scheduled</div>';
+            sliderContainer.innerHTML = '<div style="color:#7e8ba3; text-align:center; width:100%; padding:15px;">No upcoming matches scheduled</div>';
             return;
         }
         upcomingStreams.forEach((stream, idx) => {
@@ -492,13 +571,16 @@
             card.className = 'slider-card';
             const streamDate = new Date(stream.time).getTime();
             card.innerHTML = `
-                <img class="card-logo-small" src="${stream.teamA || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
-                <span class="card-vs-small">VS</span>
-                <img class="card-logo-small" src="${stream.teamB || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
-                <span class="card-countdown-small" id="cardCountdown-${idx}">--:--:--</span>
-                <span class="card-match-time-small">${escapeHtml(stream.matchTime || '')}</span>
+                <div class="card-left">
+                    <img class="card-logo-small" src="${stream.teamA || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
+                    <span class="card-vs-small">VS</span>
+                    <img class="card-logo-small" src="${stream.teamB || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
+                </div>
+                <div class="card-right">
+                    <span class="card-countdown-small" id="cardCountdown-${idx}">--:--:--</span>
+                    <span class="card-match-time-small">${escapeHtml(stream.matchTime || '')}</span>
+                </div>
             `;
-            // Click on card -> switch to that stream immediately
             card.addEventListener('click', () => {
                 if (stream.m3u8Url) loadStream(stream.m3u8Url);
             });
@@ -506,14 +588,14 @@
             const updateCardTimer = () => {
                 const now = Date.now();
                 const dist = streamDate - now;
-                const cdDiv = document.getElementById(`cardCountdown-${idx}`);
-                if (cdDiv) {
-                    if (dist <= 0) cdDiv.innerText = "LIVE NOW";
+                const cdSpan = document.getElementById(`cardCountdown-${idx}`);
+                if (cdSpan) {
+                    if (dist <= 0) cdSpan.innerText = "LIVE NOW";
                     else {
                         const hrs = Math.floor(dist / 3600000);
                         const mins = Math.floor((dist % 3600000) / 60000);
                         const secs = Math.floor((dist % 60000) / 1000);
-                        cdDiv.innerText = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+                        cdSpan.innerText = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
                     }
                 }
             };
@@ -524,18 +606,15 @@
         startAutoSlide();
     }
 
-    // Auto-switch to next stream when current ends
     video.addEventListener('ended', () => {
         const next = getNearestFutureStream();
         if (next && next.m3u8Url) {
             loadStream(next.m3u8Url);
-            // Remove this stream from upcoming list
             const updated = upcomingStreams.filter(s => s.time !== next.time);
             set(upcomingRef, updated);
         }
     });
 
-    // Force switch from admin
     onValue(forceSwitchRef, (snapshot) => {
         const data = snapshot.val();
         if (data && data.stream && data.stream.m3u8Url) {
@@ -546,19 +625,17 @@
         }
     });
 
-    // Listen for upcoming streams changes
     onValue(upcomingRef, (snap) => {
         upcomingStreams = snap.val() || [];
         renderSlider();
     });
 
-    // Listen for live stream URL
     onValue(liveStreamRef, (snap) => {
         const url = snap.val();
         if (url) loadStream(url);
     });
 
-    // Chat functionality (original)
+    // Chat
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
     const chatContainer = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
@@ -579,7 +656,7 @@
     onDisconnect(myViewerRef).remove(); set(myViewerRef, { timestamp: serverTimestamp() });
     onValue(ref(db, 'activeViewers'), (snap) => { document.getElementById('viewerCountDisplay').innerText = Object.keys(snap.val() || {}).length; });
 
-    // Controls toggle (original)
+    // Controls toggle
     let controlsVisible = false;
     function toggleControls(show) {
         if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } 
