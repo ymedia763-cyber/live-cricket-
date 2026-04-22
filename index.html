@@ -263,7 +263,7 @@
         .tiktok-btn { background: #161823; }
         .whatsapp-btn { background: #25d366; }
 
-        /* Upcoming Overlay (Fullscreen) - Fixed */
+        /* Upcoming Overlay - Original Style (Blur Background + Thumbnail) */
         .upcoming-overlay {
             position: absolute;
             top: 0;
@@ -303,14 +303,54 @@
             min-width: 220px;
             text-align: center;
         }
-        .overlay-thumb { width:100px; height:100px; border-radius:20px; object-fit:cover; margin-bottom:10px; border:2px solid gold; }
-        .overlay-teams { display:flex; align-items:center; justify-content:center; gap:16px; margin:12px 0; }
-        .overlay-logo { width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24; object-fit:cover; background:#000; }
-        .overlay-vs { font-size:1.3rem; font-weight:bold; color:#fbbf24; }
-        .overlay-match-time { font-size:0.85rem; color:#cbd5e6; margin:8px 0; }
-        .overlay-countdown { font-size:1.8rem; font-weight:800; color:white; background:rgba(0,0,0,0.7); padding:8px 20px; border-radius:50px; font-family:monospace; margin-top:8px; letter-spacing:2px; }
+        .overlay-thumb {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid gold;
+            box-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+        .overlay-teams {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 12px 0;
+        }
+        .overlay-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid #fbbf24;
+            object-fit: cover;
+            background: #000;
+        }
+        .overlay-vs {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fbbf24;
+            text-shadow: 0 0 8px rgba(251,191,36,0.5);
+        }
+        .overlay-match-time {
+            font-size: 0.85rem;
+            color: #cbd5e6;
+            margin: 8px 0;
+        }
+        .overlay-countdown {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-family: monospace;
+            margin-top: 8px;
+            letter-spacing: 2px;
+        }
 
-        /* Carousel Slider - One card centered */
+        /* Horizontal Slider - Thin & Centered (One card at a time) */
         .upcoming-slider-section {
             width: 100%;
             padding: 12px 0;
@@ -335,7 +375,7 @@
             margin: 0 20px;
             background: linear-gradient(135deg, #0f131f, #1a1f2e);
             border-radius: 60px;
-            padding: 8px 16px;
+            padding: 6px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -361,39 +401,42 @@
             flex-shrink: 0;
         }
         .card-logo-small {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 1.5px solid #fbbf24;
             object-fit: cover;
             background: #000;
         }
         .card-vs-small {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: bold;
             color: #fbbf24;
             margin: 0 4px;
         }
         .card-countdown-small {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: white;
             background: rgba(0,0,0,0.5);
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 40px;
             font-family: monospace;
             white-space: nowrap;
         }
         .card-match-time-small {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #94a3b8;
             white-space: nowrap;
         }
         @media (max-width: 480px) {
-            .card-logo-small { width: 30px; height: 30px; }
+            .card-logo-small { width: 28px; height: 28px; }
             .card-countdown-small { font-size: 0.7rem; padding: 2px 8px; }
             .card-match-time-small { font-size: 0.6rem; }
-            .slider-card { padding: 6px 12px; gap: 8px; }
+            .slider-card { padding: 5px 12px; gap: 8px; }
+            .overlay-logo { width: 45px; height: 45px; }
+            .overlay-countdown { font-size: 1.4rem; padding: 6px 16px; }
+            .overlay-thumb { width: 80px; height: 80px; }
         }
 
         /* Chat Panel - Original Glowing */
@@ -408,8 +451,9 @@
             background: linear-gradient(135deg, #11161f, #1a1f2e);
             border-radius: 50px; padding: 6px 14px; width: fit-content;
             margin-bottom: 16px; border: 1px solid rgba(59,130,246,0.2);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
-        .eye-icon svg { width:16px; height:16px; stroke:#94a3b8; }
+        .eye-icon svg { width:16px; height:16px; stroke:#94a3b8; filter:drop-shadow(0 0 4px rgba(59,130,246,0.3)); }
         .viewer-count { font-weight:700; font-size:0.9rem; color:#e2e8f0; text-shadow:0 0 10px rgba(59,130,246,0.3); }
         .live-viewers { font-size:0.7rem; color:#7e8ba3; }
         .chat-header { display:flex; justify-content:space-between; margin-bottom:10px; }
@@ -477,7 +521,7 @@
         <div class="loading-overlay initial-loading" id="loadingOverlay"><div class="three-dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
         <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
 
-        <!-- Upcoming Overlay (Fullscreen) -->
+        <!-- Upcoming Overlay -->
         <div id="upcomingOverlay" class="upcoming-overlay">
             <div id="overlayBg" class="overlay-bg"></div>
             <div class="overlay-content">
@@ -493,7 +537,7 @@
         </div>
     </div>
 
-    <!-- Carousel Slider -->
+    <!-- Thin Horizontal Slider -->
     <div class="upcoming-slider-section" id="sliderSection">
         <div class="slider-container" id="sliderContainer"></div>
     </div>
@@ -617,7 +661,6 @@
         return future[0] || null;
     }
 
-    // Update overlay display and countdown
     function updateOverlay() {
         let stream = selectedOverlayStream;
         if (!stream || !stream.time) {
@@ -638,15 +681,11 @@
                 const dist = streamDate - now;
                 if (dist <= 0) {
                     overlayCountdown.innerText = "LIVE NOW";
-                    // Auto-switch: load this stream if it has m3u8 and not already playing
                     if (stream.m3u8Url && stream.m3u8Url !== currentStreamUrl) {
                         loadStream(stream.m3u8Url);
-                        // Remove this stream from upcoming list after switching (optional)
-                        // But keep overlay hidden after stream starts
                         upcomingOverlay.classList.remove('active');
                         if (overlayInterval) clearInterval(overlayInterval);
                         overlayInterval = null;
-                        // Also clear selected overlay if it was used
                         if (selectedOverlayStream && selectedOverlayStream.time === stream.time) {
                             set(selectedOverlayRef, null);
                         }
@@ -668,7 +707,6 @@
         }
     }
 
-    // Auto-slide every 10 seconds
     function startAutoSlide() {
         if (autoSlideInterval) clearInterval(autoSlideInterval);
         autoSlideInterval = setInterval(() => {
@@ -731,13 +769,11 @@
         startAutoSlide();
     }
 
-    // When current stream ends, switch to selected overlay stream if available and its time has come
     video.addEventListener('ended', () => {
         let next = selectedOverlayStream;
         if (!next || !next.m3u8Url) next = getNearestFutureStream();
         if (next && next.m3u8Url) {
             loadStream(next.m3u8Url);
-            // Remove from list
             const updated = upcomingStreams.filter(s => s.time !== next.time);
             set(upcomingRef, updated);
             if (selectedOverlayStream && selectedOverlayStream.time === next.time) {
@@ -762,7 +798,7 @@
     onValue(upcomingRef, (snap) => {
         upcomingStreams = snap.val() || [];
         renderSlider();
-        updateOverlay(); // refresh overlay in case selected changed
+        updateOverlay();
     });
 
     onValue(selectedOverlayRef, (snap) => {
@@ -770,17 +806,14 @@
         updateOverlay();
     });
 
-    // When live stream URL changes (including null), update overlay accordingly
     onValue(liveStreamRef, (snap) => {
         const url = snap.val();
         if (url) {
-            // If there is a live URL, load it and hide overlay
             loadStream(url);
             upcomingOverlay.classList.remove('active');
             if (overlayInterval) clearInterval(overlayInterval);
             overlayInterval = null;
         } else {
-            // No live stream, show overlay
             updateOverlay();
         }
     });
@@ -823,7 +856,6 @@
     video.addEventListener('volumechange', () => { isMuted = video.muted; updateMuteUI(); });
     video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
 
-    // Disable copy
     document.addEventListener('copy', (e) => e.preventDefault());
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.body.style.webkitTouchCallout = 'none';
