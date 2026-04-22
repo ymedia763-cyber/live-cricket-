@@ -69,7 +69,7 @@
             background: #000;
         }
 
-        /* Custom Controls - Original Small Size */
+        /* Custom Controls */
         .custom-controls {
             position: absolute;
             bottom: 0;
@@ -156,7 +156,7 @@
             transform: translateY(20px);
         }
 
-        /* Loading Overlay (Three Dots) */
+        /* Loading Overlay */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -234,36 +234,74 @@
             cursor: pointer;
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
-        .center-play-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .center-play-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
         .center-play-btn {
-            width: 80px; height: 80px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, rgba(37,99,235,0.9), rgba(59,130,246,0.9));
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border: 2px solid rgba(255,255,255,0.3);
             animation: playPulse 2s infinite;
         }
-        @keyframes playPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-        .center-play-btn svg { width: 32px; height: 32px; fill: white; margin-left: 4px; }
+
+        @keyframes playPulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .center-play-btn svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+            margin-left: 4px;
+        }
 
         /* Social Bar */
         .social-bar {
-            display: flex; justify-content: center; gap: 12px; padding: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px;
             background: linear-gradient(135deg, #0d1117, #161b22);
             border-bottom: 1px solid rgba(59,130,246,0.15);
             flex-wrap: wrap;
         }
+
         .social-btn {
-            display: flex; align-items: center; gap: 6px; padding: 6px 12px;
-            border-radius: 40px; text-decoration: none; font-size: 0.7rem; font-weight: 600;
-            color: white; transition: 0.3s; background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            transition: 0.3s;
+            background: rgba(0,0,0,0.5);
         }
-        .social-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        .social-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
         .social-btn:hover { transform: translateY(-1px); }
         .youtube-btn { background: #ff0000; }
         .tiktok-btn { background: #161823; }
         .whatsapp-btn { background: #25d366; }
 
-        /* ====== UPCOMING OVERLAY - FIXED FOR MOBILE ====== */
+        /* ====== UPCOMING OVERLAY ====== */
         .upcoming-overlay {
             position: absolute;
             top: 0;
@@ -277,9 +315,12 @@
             align-items: center;
             overflow: hidden;
         }
+
         .upcoming-overlay.active {
             display: flex;
         }
+
+        /* 🔥 Fixed background: covers whole area, blurred but visibly clear, NOT completely black */
         .overlay-bg {
             position: absolute;
             top: 0;
@@ -288,171 +329,180 @@
             height: 100%;
             background-size: cover;
             background-position: center;
-            filter: blur(12px) brightness(0.2);
-            transform: scale(1.2);
+            background-repeat: no-repeat;
+            filter: blur(18px) brightness(0.55);   /* much brighter than before – no more pitch black */
+            transform: scale(1.05);
             z-index: 1;
         }
+
+        /* Removed the heavy dark overlay that caused complete blackout */
+        /* Only a very subtle gradient to improve text readability, but background remains visible */
         .overlay-bg::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            display: none;
         }
+
+        /* Content wrapper with soft glassmorphism */
         .overlay-content {
             position: relative;
             z-index: 2;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 20px 16px;
-            border: 1px solid rgba(255,215,0,0.3);
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            width: 90%;
-            max-width: 320px;
-            text-align: center;
-        }
-        .overlay-thumb {
-            width: 90px;
-            height: 90px;
-            border-radius: 16px;
-            object-fit: cover;
-            margin-bottom: 12px;
-            border: 2px solid gold;
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
-        }
-        .overlay-teams {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin: 10px 0;
-        }
-        .overlay-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid #fbbf24;
-            object-fit: cover;
-            background: #000;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
-        }
-        .overlay-vs {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fbbf24;
-            text-shadow: 0 0 8px rgba(251,191,36,0.5);
-        }
-        .overlay-match-time {
-            font-size: 0.8rem;
-            color: #cbd5e6;
-            margin: 8px 0;
-            line-height: 1.4;
+            width: 100%;
+            height: 100%;
+            padding: 20px 16px;
+            background: rgba(0, 0, 0, 0.25);  /* very light dark layer, doesn't kill the background */
+            backdrop-filter: blur(2px);
         }
 
-        /* ====== SMART COUNTDOWN TIMER BOXES ====== */
+        /* Thumbnail decorative element */
+        .overlay-thumb-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            width: 140px;
+            height: 140px;
+            border-radius: 20px;
+            object-fit: cover;
+            opacity: 0.3;
+            filter: blur(3px);
+            z-index: 1;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        /* Teams row */
+        .overlay-teams {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 0 0 10px 0;
+        }
+
+        .overlay-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 2.5px solid #fbbf24;
+            object-fit: cover;
+            background: #000;
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.6), 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .overlay-vs {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fbbf24;
+            text-shadow: 0 0 12px rgba(251, 191, 36, 0.8);
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(251, 191, 36, 0.4);
+        }
+
+        .overlay-match-time {
+            position: relative;
+            z-index: 3;
+            font-size: 0.85rem;
+            color: #f1f5f9;
+            margin: 6px 0;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.7);
+            font-weight: 600;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Smart Countdown */
         .overlay-countdown {
+            position: relative;
+            z-index: 3;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 6px;
-            margin-top: 10px;
+            gap: 4px;
+            margin-top: 8px;
             flex-wrap: wrap;
         }
+
         .timer-box {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(0,0,0,0.8);
-            border-radius: 12px;
-            padding: 8px 10px;
-            min-width: 48px;
-            border: 1px solid rgba(255,215,0,0.2);
-            transition: all 0.3s ease;
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
+            padding: 6px 10px;
+            min-width: 44px;
+            border: 1px solid rgba(255,215,0,0.4);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
         }
-        .timer-box.hidden {
-            display: none;
-        }
+
+        .timer-box.hidden { display: none !important; }
         .timer-value {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 800;
             color: white;
             font-family: 'Courier New', monospace;
             line-height: 1;
+            text-shadow: 0 0 8px rgba(255,255,255,0.3);
         }
         .timer-label {
-            font-size: 0.6rem;
-            color: #94a3b8;
+            font-size: 0.55rem;
+            color: #cbd5e1;
             text-transform: uppercase;
-            margin-top: 4px;
+            margin-top: 3px;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .timer-separator {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #fbbf24;
             align-self: flex-start;
-            padding-top: 6px;
+            padding-top: 4px;
+            text-shadow: 0 0 5px rgba(251, 191, 36, 0.5);
         }
-        .timer-separator.hidden {
-            display: none;
-        }
+        .timer-separator.hidden { display: none !important; }
+
         .live-now-text {
-            font-size: 1.4rem;
+            position: relative;
+            z-index: 3;
+            font-size: 1.3rem;
             font-weight: 800;
             color: #22c55e;
             text-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
             animation: liveNowPulse 1.5s ease-in-out infinite;
             display: none;
+            margin-top: 10px;
         }
-        .live-now-text.active {
-            display: block;
-        }
+        .live-now-text.active { display: block; }
+
         @keyframes liveNowPulse {
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.05); opacity: 0.8; }
         }
 
         @media (max-width: 480px) {
-            .overlay-content {
-                padding: 16px 12px;
-                width: 92%;
-                border-radius: 20px;
-            }
-            .overlay-thumb {
-                width: 70px;
-                height: 70px;
-                border-radius: 12px;
-            }
-            .overlay-logo {
-                width: 42px;
-                height: 42px;
-            }
-            .overlay-vs {
-                font-size: 1rem;
-            }
-            .timer-value {
-                font-size: 1.1rem;
-            }
-            .timer-box {
-                min-width: 40px;
-                padding: 6px 8px;
-                border-radius: 10px;
-            }
-            .timer-label {
-                font-size: 0.55rem;
-            }
-            .overlay-match-time {
-                font-size: 0.75rem;
-            }
+            .overlay-thumb-bg { width: 110px; height: 110px; }
+            .overlay-logo { width: 44px; height: 44px; }
+            .overlay-vs { font-size: 0.95rem; padding: 3px 8px; }
+            .timer-value { font-size: 1rem; }
+            .timer-box { min-width: 38px; padding: 5px 8px; border-radius: 8px; }
+            .timer-label { font-size: 0.5rem; }
+            .overlay-match-time { font-size: 0.75rem; }
+            .overlay-content { padding: 16px 12px; }
         }
 
-        /* ====== HORIZONTAL SLIDER - FIXED SNAP ====== */
+        /* Horizontal Slider */
         .upcoming-slider-section {
             width: 100%;
-            padding: 12px 0;
+            padding: 0;
             background: rgba(0,0,0,0.3);
             border-top: 1px solid rgba(255,215,0,0.2);
             border-bottom: 1px solid rgba(255,215,0,0.2);
@@ -463,9 +513,7 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .upcoming-slider-section::-webkit-scrollbar {
-            display: none;
-        }
+        .upcoming-slider-section::-webkit-scrollbar { display: none; }
         .slider-container {
             display: flex;
             gap: 0;
@@ -475,9 +523,8 @@
             flex: 0 0 100%;
             scroll-snap-align: start;
             scroll-snap-stop: always;
-            padding: 8px 16px;
+            padding: 10px 16px;
             background: linear-gradient(135deg, #0f131f, #1a1f2e);
-            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -486,14 +533,10 @@
             transition: all 0.2s ease;
             cursor: pointer;
             flex-wrap: nowrap;
-            min-height: 70px;
+            min-height: 65px;
         }
-        .slider-card:last-child {
-            border-right: none;
-        }
-        .slider-card:hover {
-            background: linear-gradient(135deg, #1a1f2e, #252b3d);
-        }
+        .slider-card:last-child { border-right: none; }
+        .slider-card:hover { background: linear-gradient(135deg, #1a1f2e, #252b3d); }
         .card-left, .card-right {
             display: flex;
             align-items: center;
@@ -530,8 +573,6 @@
             color: #94a3b8;
             white-space: nowrap;
         }
-
-        /* Slider dots indicator */
         .slider-dots {
             display: flex;
             justify-content: center;
@@ -552,14 +593,7 @@
             border-radius: 3px;
         }
 
-        @media (max-width: 480px) {
-            .card-logo-small { width: 32px; height: 32px; }
-            .card-countdown-small { font-size: 0.75rem; padding: 3px 10px; }
-            .card-match-time-small { font-size: 0.65rem; }
-            .slider-card { padding: 6px 12px; gap: 8px; min-height: 60px; }
-        }
-
-        /* Chat Panel - Original Glowing */
+        /* Chat Panel */
         .chat-panel {
             padding: 14px 16px 20px;
             background: rgba(10,14,24,0.8);
@@ -567,51 +601,84 @@
             backdrop-filter: blur(10px);
         }
         .viewer-stats {
-            display: flex; align-items: center; gap: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             background: linear-gradient(135deg, #11161f, #1a1f2e);
-            border-radius: 50px; padding: 6px 14px; width: fit-content;
-            margin-bottom: 16px; border: 1px solid rgba(59,130,246,0.2);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+            border-radius: 50px;
+            padding: 6px 14px;
+            width: fit-content;
+            margin-bottom: 16px;
+            border: 1px solid rgba(59,130,246,0.2);
         }
-        .eye-icon svg { width:16px; height:16px; stroke:#94a3b8; filter:drop-shadow(0 0 4px rgba(59,130,246,0.3)); }
-        .viewer-count { font-weight:700; font-size:0.9rem; color:#e2e8f0; text-shadow:0 0 10px rgba(59,130,246,0.3); }
+        .eye-icon svg { width:16px; height:16px; stroke:#94a3b8; }
+        .viewer-count { font-weight:700; font-size:0.9rem; color:#e2e8f0; }
         .live-viewers { font-size:0.7rem; color:#7e8ba3; }
         .chat-header { display:flex; justify-content:space-between; margin-bottom:10px; }
         .chat-header h4 { font-size:0.85rem; font-weight:600; color:#cbd5e6; text-transform:uppercase; }
         .chat-messages {
             background: linear-gradient(145deg, #0f131f, #151a28);
-            border-radius:20px; height:220px; overflow-y:auto;
-            padding:10px; display:flex; flex-direction:column; gap:8px;
-            margin-bottom:10px; border:1px solid rgba(59,130,246,0.1);
+            border-radius:20px;
+            height:220px;
+            overflow-y:auto;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            margin-bottom:10px;
+            border:1px solid rgba(59,130,246,0.1);
         }
         .message-bubble {
             background: linear-gradient(135deg, #1a1f2e, #252b3d);
-            padding:8px 14px; border-radius:24px; max-width:90%;
-            font-size:0.8rem; color:#eef2ff; border-left:3px solid #3b82f6;
+            padding:8px 14px;
+            border-radius:24px;
+            max-width:90%;
+            font-size:0.8rem;
+            color:#eef2ff;
+            border-left:3px solid #3b82f6;
             box-shadow:0 2px 8px rgba(0,0,0,0.2);
             animation:messageSlide 0.3s ease-out;
         }
-        @keyframes messageSlide { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes messageSlide {
+            from { opacity:0; transform:translateX(-20px); }
+            to { opacity:1; transform:translateX(0); }
+        }
         .message-bubble:hover { box-shadow:0 0 15px rgba(59,130,246,0.3); transform:translateX(5px); }
         .message-bubble strong { color:#60a5fa; margin-right:6px; text-shadow:0 0 8px rgba(96,165,250,0.4); }
         .chat-input-area {
-            display:flex; gap:8px; align-items:center;
+            display:flex;
+            gap:8px;
+            align-items:center;
             background: linear-gradient(145deg, #0f131f, #151a28);
-            border-radius:40px; padding:4px 4px 4px 16px;
+            border-radius:40px;
+            padding:4px 4px 4px 16px;
             border:1px solid rgba(59,130,246,0.2);
         }
-        .chat-input-area input { flex:1; background:transparent; border:none; padding:10px 0; color:white; outline:none; }
+        .chat-input-area input {
+            flex:1;
+            background:transparent;
+            border:none;
+            padding:10px 0;
+            color:white;
+            outline:none;
+        }
         .send-btn {
             background: linear-gradient(135deg, #2563eb, #3b82f6);
-            border:none; border-radius:32px; padding:8px 18px; color:white;
-            display:flex; align-items:center; gap:6px; cursor:pointer;
+            border:none;
+            border-radius:32px;
+            padding:8px 18px;
+            color:white;
+            display:flex;
+            align-items:center;
+            gap:6px;
+            cursor:pointer;
         }
         .send-btn svg { width:14px; height:14px; stroke:white; }
         .chat-messages::-webkit-scrollbar { width:6px; }
         .chat-messages::-webkit-scrollbar-track { background:transparent; }
         .chat-messages::-webkit-scrollbar-thumb { background:rgba(59,130,246,0.3); border-radius:10px; }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
 <body>
 <div class="app-container">
@@ -620,7 +687,6 @@
         <a href="https://vm.tiktok.com/ZS9L9DsymEuah-z2qv4/" target="_blank" class="social-btn tiktok-btn"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg><span>TikTok</span></a>
         <a href="https://whatsapp.com/channel/0029VbCEdrq0bIdoR2SJiW1S" target="_blank" class="social-btn whatsapp-btn"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span>WhatsApp</span></a>
     </div>
-
     <div class="video-stage" id="videoStage">
         <video id="videoPlayer" playsinline preload="auto"></video>
         <div class="custom-controls hide-controls" id="customControls">
@@ -641,69 +707,43 @@
         </div>
         <div class="loading-overlay initial-loading" id="loadingOverlay"><div class="three-dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
         <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
-
-        <!-- Upcoming Overlay -->
+        <!-- Upcoming Overlay: background now covers full area and is clearly visible, not black -->
         <div id="upcomingOverlay" class="upcoming-overlay">
             <div id="overlayBg" class="overlay-bg"></div>
             <div class="overlay-content">
-                <img id="overlayThumb" class="overlay-thumb" src="" alt="Thumbnail">
+                <img id="overlayThumb" class="overlay-thumb-bg" src="" alt="">
                 <div class="overlay-teams">
                     <img id="overlayTeamA" class="overlay-logo" src="" alt="Team A">
                     <span class="overlay-vs">VS</span>
                     <img id="overlayTeamB" class="overlay-logo" src="" alt="Team B">
                 </div>
                 <div id="overlayMatchTime" class="overlay-match-time"></div>
-
-                <!-- Smart Countdown with separate boxes -->
                 <div id="overlayCountdown" class="overlay-countdown">
-                    <div class="timer-box" id="daysBox">
-                        <span class="timer-value" id="daysValue">00</span>
-                        <span class="timer-label">Days</span>
-                    </div>
+                    <div class="timer-box" id="daysBox"><span class="timer-value" id="daysValue">00</span><span class="timer-label">Days</span></div>
                     <span class="timer-separator" id="daysSep">:</span>
-                    <div class="timer-box" id="hoursBox">
-                        <span class="timer-value" id="hoursValue">00</span>
-                        <span class="timer-label">Hrs</span>
-                    </div>
+                    <div class="timer-box" id="hoursBox"><span class="timer-value" id="hoursValue">00</span><span class="timer-label">Hrs</span></div>
                     <span class="timer-separator" id="hoursSep">:</span>
-                    <div class="timer-box" id="minsBox">
-                        <span class="timer-value" id="minsValue">00</span>
-                        <span class="timer-label">Min</span>
-                    </div>
+                    <div class="timer-box" id="minsBox"><span class="timer-value" id="minsValue">00</span><span class="timer-label">Min</span></div>
                     <span class="timer-separator" id="minsSep">:</span>
-                    <div class="timer-box" id="secsBox">
-                        <span class="timer-value" id="secsValue">00</span>
-                        <span class="timer-label">Sec</span>
-                    </div>
+                    <div class="timer-box" id="secsBox"><span class="timer-value" id="secsValue">00</span><span class="timer-label">Sec</span></div>
                 </div>
                 <div class="live-now-text" id="liveNowText">LIVE NOW</div>
             </div>
         </div>
     </div>
-
-    <!-- Horizontal Slider with Dots -->
-    <div class="upcoming-slider-section" id="sliderSection">
-        <div class="slider-container" id="sliderContainer"></div>
-    </div>
+    <div class="upcoming-slider-section" id="sliderSection"><div class="slider-container" id="sliderContainer"></div></div>
     <div class="slider-dots" id="sliderDots"></div>
-
     <div class="chat-panel">
-        <div class="viewer-stats">
-            <span class="eye-icon"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
-            <span class="viewer-count" id="viewerCountDisplay">0</span>
-            <span class="live-viewers">watching now</span>
-        </div>
+        <div class="viewer-stats"><span class="eye-icon"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="viewer-count" id="viewerCountDisplay">0</span><span class="live-viewers">watching now</span></div>
         <div class="chat-header"><h4>LIVE CHAT</h4><span style="font-size:9px; color:#5b6e8c;">realtime</span></div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type your message ..." autocomplete="off"><button class="send-btn" id="sendChatBtn"><svg viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send</span></button></div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, set, onChildAdded, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
     const firebaseConfig = {
         apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA",
         authDomain: "chat-283ed.firebaseapp.com",
@@ -720,7 +760,6 @@
     const selectedOverlayRef = ref(db, 'admin/selectedOverlayStream');
     const forceSwitchRef = ref(db, 'admin/forceSwitch');
     const chatRef = ref(db, 'chat/messages');
-
     const video = document.getElementById('videoPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
@@ -743,7 +782,6 @@
     const overlayTeamB = document.getElementById('overlayTeamB');
     const overlayMatchTime = document.getElementById('overlayMatchTime');
     const liveNowText = document.getElementById('liveNowText');
-
     let hls = null;
     let isPlaying = true;
     let isMuted = false;
@@ -758,375 +796,118 @@
     let currentSlideIndex = 0;
 
     function showLoading(show) {
-        if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); } 
+        if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); }
         else { loadingOverlay.style.display = 'none'; if (isInitialLoad) isInitialLoad = false; }
     }
     function showCenterPlayButton() { centerPlayOverlay.classList.remove('hidden'); }
     function hideCenterPlayButton() { centerPlayOverlay.classList.add('hidden'); }
-    function resetControlsTimer() {
-        if (controlsTimeout) clearTimeout(controlsTimeout);
-        customControls.classList.remove('hide-controls');
-        controlsTimeout = setTimeout(() => customControls.classList.add('hide-controls'), 3500);
-    }
+    function resetControlsTimer() { if (controlsTimeout) clearTimeout(controlsTimeout); customControls.classList.remove('hide-controls'); controlsTimeout = setTimeout(() => customControls.classList.add('hide-controls'), 3500); }
     function updatePlayPauseUI() { playIcon.style.display = isPlaying ? 'none' : 'block'; pauseIcon.style.display = isPlaying ? 'block' : 'none'; }
     function updateMuteUI() { volumeIcon.style.display = isMuted ? 'none' : 'block'; mutedIcon.style.display = isMuted ? 'block' : 'none'; }
-
     function initHLS(url) {
         if (hls) { hls.destroy(); hls = null; }
         video.muted = false; video.autoplay = true;
-        if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = url; video.load();
-            showLoading(false); 
-            video.play().catch(e => showCenterPlayButton());
-        } else if (Hls.isSupported()) {
+        if (video.canPlayType('application/vnd.apple.mpegurl')) { video.src = url; video.load(); showLoading(false); video.play().catch(e => showCenterPlayButton()); }
+        else if (Hls.isSupported()) {
             hls = new Hls({ maxBufferLength: 30, backBufferLength: 5, lowLatencyMode: true, enableWorker: true, startLevel: 0 });
             hls.attachMedia(video);
             hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
-            hls.on(Hls.Events.MANIFEST_PARSED, () => { 
-                showLoading(false); 
-                video.play().then(() => hideCenterPlayButton()).catch(() => showCenterPlayButton());
-            });
+            hls.on(Hls.Events.MANIFEST_PARSED, () => { showLoading(false); video.play().then(() => hideCenterPlayButton()).catch(() => showCenterPlayButton()); });
             hls.on(Hls.Events.ERROR, (event, data) => { if (data.fatal) { if (data.type === Hls.ErrorTypes.NETWORK_ERROR) { showLoading(true); hls.startLoad(); } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) { hls.recoverMediaError(); } else { initHLS(url); } } });
         } else { console.error("HLS not supported"); showLoading(false); }
         currentStreamUrl = url;
     }
-
-    function loadStream(url) {
-        if (!url || url === currentStreamUrl) return;
-        showLoading(true);
-        initHLS(url);
-    }
-
+    function loadStream(url) { if (!url || url === currentStreamUrl) return; showLoading(true); initHLS(url); }
     video.addEventListener('waiting', () => showLoading(true));
     video.addEventListener('playing', () => showLoading(false));
     video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
-
-    function getNearestFutureStream() {
-        const now = Date.now();
-        const future = upcomingStreams.filter(s => new Date(s.time).getTime() > now);
-        future.sort((a,b) => new Date(a.time) - new Date(b.time));
-        return future[0] || null;
-    }
-
-    // ====== SMART COUNTDOWN WITH DISAPPEARING BOXES ======
+    function getNearestFutureStream() { const now = Date.now(); const future = upcomingStreams.filter(s => new Date(s.time).getTime() > now); future.sort((a,b) => new Date(a.time) - new Date(b.time)); return future[0] || null; }
     function updateOverlay() {
         let stream = selectedOverlayStream;
-        if (!stream || !stream.time) {
-            stream = getNearestFutureStream();
-        }
+        if (!stream || !stream.time) stream = getNearestFutureStream();
         if (stream && stream.time) {
             upcomingOverlay.classList.add('active');
             const streamDate = new Date(stream.time).getTime();
-            if (stream.thumbnail) {
-                overlayBg.style.backgroundImage = `url(${stream.thumbnail})`;
-            } else {
-                overlayBg.style.backgroundImage = 'none';
-            }
-            overlayThumb.src = stream.thumbnail || '';
-            overlayTeamA.src = stream.teamA || '';
-            overlayTeamB.src = stream.teamB || '';
+            if (stream.thumbnail) { overlayBg.style.backgroundImage = `url(${stream.thumbnail})`; overlayThumb.src = stream.thumbnail; }
+            else { overlayBg.style.backgroundImage = 'none'; overlayThumb.src = ''; }
+            overlayTeamA.src = stream.teamA || ''; overlayTeamB.src = stream.teamB || '';
             overlayMatchTime.innerText = stream.matchTime || '';
-
             const updateTimer = () => {
-                const now = Date.now();
-                const dist = streamDate - now;
-
+                const now = Date.now(); const dist = streamDate - now;
                 if (dist <= 0) {
-                    // Show LIVE NOW, hide timer boxes
-                    document.getElementById('daysBox').classList.add('hidden');
-                    document.getElementById('hoursBox').classList.add('hidden');
-                    document.getElementById('minsBox').classList.add('hidden');
-                    document.getElementById('secsBox').classList.add('hidden');
-                    document.getElementById('daysSep').classList.add('hidden');
-                    document.getElementById('hoursSep').classList.add('hidden');
-                    document.getElementById('minsSep').classList.add('hidden');
-                    liveNowText.classList.add('active');
-
+                    document.getElementById('daysBox').classList.add('hidden'); document.getElementById('hoursBox').classList.add('hidden');
+                    document.getElementById('minsBox').classList.add('hidden'); document.getElementById('secsBox').classList.add('hidden');
+                    document.getElementById('daysSep').classList.add('hidden'); document.getElementById('hoursSep').classList.add('hidden');
+                    document.getElementById('minsSep').classList.add('hidden'); liveNowText.classList.add('active');
                     if (stream.m3u8Url && stream.m3u8Url !== currentStreamUrl) {
-                        loadStream(stream.m3u8Url);
-                        upcomingOverlay.classList.remove('active');
-                        if (overlayInterval) clearInterval(overlayInterval);
-                        overlayInterval = null;
-                        if (selectedOverlayStream && selectedOverlayStream.time === stream.time) {
-                            set(selectedOverlayRef, null);
-                        }
+                        loadStream(stream.m3u8Url); upcomingOverlay.classList.remove('active');
+                        if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null;
+                        if (selectedOverlayStream && selectedOverlayStream.time === stream.time) set(selectedOverlayRef, null);
                     }
                 } else {
-                    // Calculate time units
-                    const days = Math.floor(dist / 86400000);
-                    const hours = Math.floor((dist % 86400000) / 3600000);
-                    const mins = Math.floor((dist % 3600000) / 60000);
-                    const secs = Math.floor((dist % 60000) / 1000);
-
-                    // Show/hide boxes based on remaining time
-                    const daysBox = document.getElementById('daysBox');
-                    const daysSep = document.getElementById('daysSep');
-                    const hoursBox = document.getElementById('hoursBox');
-                    const hoursSep = document.getElementById('hoursSep');
-                    const minsBox = document.getElementById('minsBox');
-                    const minsSep = document.getElementById('minsSep');
-                    const secsBox = document.getElementById('secsBox');
-
-                    liveNowText.classList.remove('active');
-
-                    // Days
-                    if (days > 0) {
-                        daysBox.classList.remove('hidden');
-                        daysSep.classList.remove('hidden');
-                        document.getElementById('daysValue').innerText = days.toString().padStart(2, '0');
-                    } else {
-                        daysBox.classList.add('hidden');
-                        daysSep.classList.add('hidden');
-                    }
-
-                    // Hours
-                    if (days > 0 || hours > 0) {
-                        hoursBox.classList.remove('hidden');
-                        hoursSep.classList.remove('hidden');
-                        document.getElementById('hoursValue').innerText = hours.toString().padStart(2, '0');
-                    } else {
-                        hoursBox.classList.add('hidden');
-                        hoursSep.classList.add('hidden');
-                    }
-
-                    // Minutes
-                    if (days > 0 || hours > 0 || mins > 0) {
-                        minsBox.classList.remove('hidden');
-                        minsSep.classList.remove('hidden');
-                        document.getElementById('minsValue').innerText = mins.toString().padStart(2, '0');
-                    } else {
-                        minsBox.classList.add('hidden');
-                        minsSep.classList.add('hidden');
-                    }
-
-                    // Seconds (always show if not live)
-                    secsBox.classList.remove('hidden');
-                    document.getElementById('secsValue').innerText = secs.toString().padStart(2, '0');
+                    const days = Math.floor(dist / 86400000); const hours = Math.floor((dist % 86400000) / 3600000);
+                    const mins = Math.floor((dist % 3600000) / 60000); const secs = Math.floor((dist % 60000) / 1000);
+                    const daysBox = document.getElementById('daysBox'); const daysSep = document.getElementById('daysSep');
+                    const hoursBox = document.getElementById('hoursBox'); const hoursSep = document.getElementById('hoursSep');
+                    const minsBox = document.getElementById('minsBox'); const minsSep = document.getElementById('minsSep');
+                    const secsBox = document.getElementById('secsBox'); liveNowText.classList.remove('active');
+                    if (days > 0) { daysBox.classList.remove('hidden'); daysSep.classList.remove('hidden'); document.getElementById('daysValue').innerText = days.toString().padStart(2,'0'); }
+                    else { daysBox.classList.add('hidden'); daysSep.classList.add('hidden'); }
+                    if (days > 0 || hours > 0) { hoursBox.classList.remove('hidden'); hoursSep.classList.remove('hidden'); document.getElementById('hoursValue').innerText = hours.toString().padStart(2,'0'); }
+                    else { hoursBox.classList.add('hidden'); hoursSep.classList.add('hidden'); }
+                    if (days > 0 || hours > 0 || mins > 0) { minsBox.classList.remove('hidden'); minsSep.classList.remove('hidden'); document.getElementById('minsValue').innerText = mins.toString().padStart(2,'0'); }
+                    else { minsBox.classList.add('hidden'); minsSep.classList.add('hidden'); }
+                    secsBox.classList.remove('hidden'); document.getElementById('secsValue').innerText = secs.toString().padStart(2,'0');
                 }
             };
-            updateTimer();
-            if (overlayInterval) clearInterval(overlayInterval);
-            overlayInterval = setInterval(updateTimer, 1000);
-        } else {
-            upcomingOverlay.classList.remove('active');
-            if (overlayInterval) clearInterval(overlayInterval);
-            overlayInterval = null;
-        }
+            updateTimer(); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = setInterval(updateTimer, 1000);
+        } else { upcomingOverlay.classList.remove('active'); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null; }
     }
-
-    // ====== SLIDER DOTS UPDATE ======
-    function updateSliderDots() {
-        const cards = document.querySelectorAll('.slider-card');
-        const dots = document.querySelectorAll('.slider-dot');
-        dots.forEach((dot, idx) => {
-            if (idx === currentSlideIndex) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
-            }
-        });
-    }
-
-    function startAutoSlide() {
-        if (autoSlideInterval) clearInterval(autoSlideInterval);
-        autoSlideInterval = setInterval(() => {
-            const slider = document.querySelector('.upcoming-slider-section');
-            if (!slider) return;
-            const cards = document.querySelectorAll('.slider-card');
-            if (cards.length === 0) return;
-
-            currentSlideIndex = (currentSlideIndex + 1) % cards.length;
-            const cardWidth = slider.offsetWidth;
-            slider.scrollTo({ left: currentSlideIndex * cardWidth, behavior: 'smooth' });
-            updateSliderDots();
-        }, 5000);
-    }
-
+    function updateSliderDots() { const dots = document.querySelectorAll('.slider-dot'); dots.forEach((dot, idx) => { if (idx === currentSlideIndex) dot.classList.add('active'); else dot.classList.remove('active'); }); }
+    function startAutoSlide() { if (autoSlideInterval) clearInterval(autoSlideInterval); autoSlideInterval = setInterval(() => { const slider = document.querySelector('.upcoming-slider-section'); if (!slider) return; const cards = document.querySelectorAll('.slider-card'); if (cards.length === 0) return; currentSlideIndex = (currentSlideIndex + 1) % cards.length; const cardWidth = slider.offsetWidth; slider.scrollTo({ left: currentSlideIndex * cardWidth, behavior: 'smooth' }); updateSliderDots(); }, 5000); }
     function renderSlider() {
-        sliderContainer.innerHTML = '';
-        sliderDots.innerHTML = '';
-        sliderIntervals.forEach(clearInterval);
-        sliderIntervals = [];
-        currentSlideIndex = 0;
-
-        if (!upcomingStreams.length) {
-            sliderContainer.innerHTML = '<div style="color:#7e8ba3; text-align:center; width:100%; padding:15px;">No upcoming matches scheduled</div>';
-            return;
-        }
-
+        sliderContainer.innerHTML = ''; sliderDots.innerHTML = ''; sliderIntervals.forEach(clearInterval); sliderIntervals = []; currentSlideIndex = 0;
+        if (!upcomingStreams.length) { sliderContainer.innerHTML = '<div style="color:#7e8ba3; text-align:center; width:100%; padding:15px;">No upcoming matches scheduled</div>'; return; }
         upcomingStreams.forEach((stream, idx) => {
-            const card = document.createElement('div');
-            card.className = 'slider-card';
-            const streamDate = new Date(stream.time).getTime();
-            card.innerHTML = `
-                <div class="card-left">
-                    <img class="card-logo-small" src="${stream.teamA || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
-                    <span class="card-vs-small">VS</span>
-                    <img class="card-logo-small" src="${stream.teamB || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'">
-                </div>
-                <div class="card-right">
-                    <span class="card-countdown-small" id="cardCountdown-${idx}">--:--:--</span>
-                    <span class="card-match-time-small">${escapeHtml(stream.matchTime || '')}</span>
-                </div>
-            `;
-            card.addEventListener('click', () => {
-                if (stream.m3u8Url) loadStream(stream.m3u8Url);
-            });
+            const card = document.createElement('div'); card.className = 'slider-card'; const streamDate = new Date(stream.time).getTime();
+            card.innerHTML = `<div class="card-left"><img class="card-logo-small" src="${stream.teamA || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'"><span class="card-vs-small">VS</span><img class="card-logo-small" src="${stream.teamB || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'"></div><div class="card-right"><span class="card-countdown-small" id="cardCountdown-${idx}">--:--:--</span><span class="card-match-time-small">${escapeHtml(stream.matchTime || '')}</span></div>`;
+            card.addEventListener('click', () => { if (stream.m3u8Url) loadStream(stream.m3u8Url); });
             sliderContainer.appendChild(card);
-
-            // Create dot
-            const dot = document.createElement('div');
-            dot.className = 'slider-dot' + (idx === 0 ? ' active' : '');
-            dot.addEventListener('click', () => {
-                const slider = document.querySelector('.upcoming-slider-section');
-                currentSlideIndex = idx;
-                slider.scrollTo({ left: idx * slider.offsetWidth, behavior: 'smooth' });
-                updateSliderDots();
-            });
+            const dot = document.createElement('div'); dot.className = 'slider-dot' + (idx === 0 ? ' active' : '');
+            dot.addEventListener('click', () => { const slider = document.querySelector('.upcoming-slider-section'); currentSlideIndex = idx; slider.scrollTo({ left: idx * slider.offsetWidth, behavior: 'smooth' }); updateSliderDots(); });
             sliderDots.appendChild(dot);
-
-            const updateCardTimer = () => {
-                const now = Date.now();
-                const dist = streamDate - now;
-                const cdSpan = document.getElementById(`cardCountdown-${idx}`);
-                if (cdSpan) {
-                    if (dist <= 0) cdSpan.innerText = "LIVE NOW";
-                    else {
-                        const days = Math.floor(dist / 86400000);
-                        const hrs = Math.floor((dist % 86400000) / 3600000);
-                        const mins = Math.floor((dist % 3600000) / 60000);
-                        const secs = Math.floor((dist % 60000) / 1000);
-
-                        let timeStr = "";
-                        if (days > 0) timeStr += days + "d ";
-                        if (hrs > 0 || days > 0) timeStr += hrs.toString().padStart(2, '0') + ":";
-                        timeStr += mins.toString().padStart(2, '0') + ":" + secs.toString().padStart(2, '0');
-                        cdSpan.innerText = timeStr;
-                    }
-                }
-            };
-            updateCardTimer();
-            const interval = setInterval(updateCardTimer, 1000);
-            sliderIntervals.push(interval);
+            const updateCardTimer = () => { const now = Date.now(); const dist = streamDate - now; const cdSpan = document.getElementById(`cardCountdown-${idx}`); if (cdSpan) { if (dist <= 0) cdSpan.innerText = "LIVE NOW"; else { const days = Math.floor(dist / 86400000); const hrs = Math.floor((dist % 86400000) / 3600000); const mins = Math.floor((dist % 3600000) / 60000); const secs = Math.floor((dist % 60000) / 1000); let timeStr = ""; if (days > 0) timeStr += days + "d "; if (hrs > 0 || days > 0) timeStr += hrs.toString().padStart(2,'0') + ":"; timeStr += mins.toString().padStart(2,'0') + ":" + secs.toString().padStart(2,'0'); cdSpan.innerText = timeStr; } } };
+            updateCardTimer(); const interval = setInterval(updateCardTimer, 1000); sliderIntervals.push(interval);
         });
         startAutoSlide();
     }
-
-    // Detect scroll to update dots
-    document.getElementById('sliderSection').addEventListener('scroll', () => {
-        const slider = document.getElementById('sliderSection');
-        const cardWidth = slider.offsetWidth;
-        const newIndex = Math.round(slider.scrollLeft / cardWidth);
-        if (newIndex !== currentSlideIndex) {
-            currentSlideIndex = newIndex;
-            updateSliderDots();
-        }
-    });
-
-    video.addEventListener('ended', () => {
-        let next = selectedOverlayStream;
-        if (!next || !next.m3u8Url) next = getNearestFutureStream();
-        if (next && next.m3u8Url) {
-            loadStream(next.m3u8Url);
-            const updated = upcomingStreams.filter(s => s.time !== next.time);
-            set(upcomingRef, updated);
-            if (selectedOverlayStream && selectedOverlayStream.time === next.time) {
-                set(selectedOverlayRef, null);
-            }
-        }
-    });
-
-    onValue(forceSwitchRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data && data.stream && data.stream.m3u8Url) {
-            loadStream(data.stream.m3u8Url);
-            const updated = upcomingStreams.filter(s => s.time !== data.stream.time);
-            set(upcomingRef, updated);
-            if (selectedOverlayStream && selectedOverlayStream.time === data.stream.time) {
-                set(selectedOverlayRef, null);
-            }
-            set(forceSwitchRef, null);
-        }
-    });
-
-    onValue(upcomingRef, (snap) => {
-        upcomingStreams = snap.val() || [];
-        renderSlider();
-        updateOverlay();
-    });
-
-    onValue(selectedOverlayRef, (snap) => {
-        selectedOverlayStream = snap.val();
-        updateOverlay();
-    });
-
-    onValue(liveStreamRef, (snap) => {
-        const url = snap.val();
-        if (url) {
-            loadStream(url);
-            upcomingOverlay.classList.remove('active');
-            if (overlayInterval) clearInterval(overlayInterval);
-            overlayInterval = null;
-        } else {
-            updateOverlay();
-        }
-    });
-
-    // Chat
+    document.getElementById('sliderSection').addEventListener('scroll', () => { const slider = document.getElementById('sliderSection'); const cardWidth = slider.offsetWidth; const newIndex = Math.round(slider.scrollLeft / cardWidth); if (newIndex !== currentSlideIndex) { currentSlideIndex = newIndex; updateSliderDots(); } });
+    video.addEventListener('ended', () => { let next = selectedOverlayStream; if (!next || !next.m3u8Url) next = getNearestFutureStream(); if (next && next.m3u8Url) { loadStream(next.m3u8Url); const updated = upcomingStreams.filter(s => s.time !== next.time); set(upcomingRef, updated); if (selectedOverlayStream && selectedOverlayStream.time === next.time) set(selectedOverlayRef, null); } });
+    onValue(forceSwitchRef, (snapshot) => { const data = snapshot.val(); if (data && data.stream && data.stream.m3u8Url) { loadStream(data.stream.m3u8Url); const updated = upcomingStreams.filter(s => s.time !== data.stream.time); set(upcomingRef, updated); if (selectedOverlayStream && selectedOverlayStream.time === data.stream.time) set(selectedOverlayRef, null); set(forceSwitchRef, null); } });
+    onValue(upcomingRef, (snap) => { upcomingStreams = snap.val() || []; renderSlider(); updateOverlay(); });
+    onValue(selectedOverlayRef, (snap) => { selectedOverlayStream = snap.val(); updateOverlay(); });
+    onValue(liveStreamRef, (snap) => { const url = snap.val(); if (url) { loadStream(url); upcomingOverlay.classList.remove('active'); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null; } else { updateOverlay(); } });
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
-    const chatContainer = document.getElementById('chatMessages');
-    const chatInput = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendChatBtn');
+    const chatContainer = document.getElementById('chatMessages'); const chatInput = document.getElementById('chatInput'); const sendBtn = document.getElementById('sendChatBtn');
     function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
-    function appendMessage(user, text) {
-        const div = document.createElement('div'); div.className = 'message-bubble';
-        div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`;
-        chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
+    function appendMessage(user, text) { const div = document.createElement('div'); div.className = 'message-bubble'; div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`; chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight; }
     onChildAdded(chatRef, (snapshot) => { const data = snapshot.val(); if(data) appendMessage(data.username, data.text); });
     function sendMessage() { const msg = chatInput.value.trim(); if(msg) { push(chatRef, { username, text: msg, timestamp: serverTimestamp() }); chatInput.value = ''; } }
     sendBtn.addEventListener('click', sendMessage); chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-
-    // Viewer count
-    const viewerId = Math.random().toString(36).substring(2) + Date.now();
-    const myViewerRef = ref(db, `activeViewers/${viewerId}`);
-    set(myViewerRef, { timestamp: serverTimestamp() });
-    onDisconnect(myViewerRef).remove();
-    onValue(ref(db, 'activeViewers'), (snap) => {
-        const count = snap.val() ? Object.keys(snap.val()).length : 0;
-        document.getElementById('viewerCountDisplay').innerText = count;
-    });
-
-    // Controls toggle
+    const viewerId = Math.random().toString(36).substring(2) + Date.now(); const myViewerRef = ref(db, `activeViewers/${viewerId}`); set(myViewerRef, { timestamp: serverTimestamp() }); onDisconnect(myViewerRef).remove();
+    onValue(ref(db, 'activeViewers'), (snap) => { const count = snap.val() ? Object.keys(snap.val()).length : 0; document.getElementById('viewerCountDisplay').innerText = count; });
     let controlsVisible = false;
-    function toggleControls(show) {
-        if (show) { 
-            customControls.classList.remove('hide-controls'); 
-            controlsVisible = true; 
-            if (controlsTimeout) clearTimeout(controlsTimeout);
-            controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); 
-        } else { 
-            customControls.classList.add('hide-controls'); 
-            controlsVisible = false; 
-        }
-    }
+    function toggleControls(show) { if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } else { customControls.classList.add('hide-controls'); controlsVisible = false; } }
     videoStage.addEventListener('click', (e) => { if (!e.target.closest('.ctrl-btn')) toggleControls(!controlsVisible); });
     function handleControlClick(e, action) { e.stopPropagation(); if (!controlsVisible) { toggleControls(true); return; } action(); }
     playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { if (video.paused) video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }); else { video.pause(); isPlaying = false; updatePlayPauseUI(); } }));
     muteBtn.addEventListener('click', (e) => handleControlClick(e, () => { video.muted = !video.muted; isMuted = video.muted; updateMuteUI(); }));
     fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { if (!document.fullscreenElement) await videoStage.requestFullscreen(); else await document.exitFullscreen(); }));
-    centerPlayBtn.addEventListener('click', async () => { 
-        hideCenterPlayButton(); 
-        try { await video.play(); isPlaying = true; updatePlayPauseUI(); } catch(e) { showCenterPlayButton(); }
-    });
+    centerPlayBtn.addEventListener('click', async () => { hideCenterPlayButton(); try { await video.play(); isPlaying = true; updatePlayPauseUI(); } catch(e) { showCenterPlayButton(); } });
     video.addEventListener('play', () => { isPlaying = true; updatePlayPauseUI(); hideCenterPlayButton(); });
     video.addEventListener('pause', () => { isPlaying = false; updatePlayPauseUI(); });
-
     video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
-
-    document.addEventListener('copy', (e) => e.preventDefault());
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.body.style.webkitTouchCallout = 'none';
+    document.addEventListener('copy', (e) => e.preventDefault()); document.addEventListener('contextmenu', (e) => e.preventDefault()); document.body.style.webkitTouchCallout = 'none';
 </script>
 </body>
 </html>
