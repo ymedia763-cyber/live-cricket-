@@ -69,7 +69,6 @@
             background: #000;
         }
 
-        /* Custom Controls */
         .custom-controls {
             position: absolute;
             bottom: 0;
@@ -156,7 +155,6 @@
             transform: translateY(20px);
         }
 
-        /* Loading Overlay */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -219,7 +217,6 @@
             40% { transform: scale(1); opacity: 1; box-shadow: 0 0 30px rgba(59, 130, 246, 0.9); }
         }
 
-        /* Center Play Button */
         .center-play-overlay {
             position: absolute;
             top: 0;
@@ -265,7 +262,6 @@
             margin-left: 4px;
         }
 
-        /* Social Bar */
         .social-bar {
             display: flex;
             justify-content: center;
@@ -301,7 +297,6 @@
         .tiktok-btn { background: #161823; }
         .whatsapp-btn { background: #25d366; }
 
-        /* ====== UPCOMING OVERLAY ====== */
         .upcoming-overlay {
             position: absolute;
             top: 0;
@@ -506,7 +501,6 @@
             .overlay-content { padding: 16px 12px; }
         }
 
-        /* Horizontal Slider */
         .upcoming-slider-section {
             width: 100%;
             padding: 0;
@@ -545,7 +539,6 @@
         }
         .slider-card:last-child { border-right: none; }
         .slider-card:hover { background: linear-gradient(135deg, #1a1f2e, #252b3d); }
-        /* Active live match card glowing */
         .slider-card.live-active {
             background: linear-gradient(135deg, #1e2a3a, #2a3a4a);
             border-left: 3px solid #fbbf24;
@@ -613,7 +606,6 @@
             border-radius: 3px;
         }
 
-        /* Chat Panel */
         .chat-panel {
             padding: 14px 16px 20px;
             background: rgba(10,14,24,0.8);
@@ -763,6 +755,8 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, set, onChildAdded, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    
+    console.log("Firebase loading...");
     const firebaseConfig = {
         apiKey: "AIzaSyBABN4TUkE2z5hfJHIBH1wT51yubP16FZA",
         authDomain: "chat-283ed.firebaseapp.com",
@@ -774,11 +768,14 @@
     };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    console.log("Firebase connected");
+
     const liveStreamRef = ref(db, 'liveStream/url');
     const upcomingRef = ref(db, 'upcomingStreams');
     const selectedOverlayRef = ref(db, 'admin/selectedOverlayStream');
     const forceSwitchRef = ref(db, 'admin/forceSwitch');
     const chatRef = ref(db, 'chat/messages');
+
     const video = document.getElementById('videoPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
@@ -801,6 +798,7 @@
     const overlayTeamB = document.getElementById('overlayTeamB');
     const overlayMatchTime = document.getElementById('overlayMatchTime');
     const liveNowText = document.getElementById('liveNowText');
+
     let hls = null;
     let isPlaying = true;
     let isMuted = false;
@@ -813,7 +811,8 @@
     let sliderIntervals = [];
     let overlayInterval = null;
     let currentSlideIndex = 0;
-    let currentlyPlayingStreamId = null; // track which stream is playing
+    let currentlyPlayingStreamId = null;
+    let adminLiveUrl = null;
 
     function clearVideoSource() {
         if (hls) { hls.destroy(); hls = null; }
@@ -847,27 +846,40 @@
     function initHLS(url) {
         if (hls) { hls.destroy(); hls = null; }
         video.muted = false; video.autoplay = true;
-        if (video.canPlayType('application/vnd.apple.mpegurl')) { video.src = url; video.load(); showLoading(false); video.play().catch(e => showCenterPlayButton()); }
-        else if (Hls.isSupported()) {
+        if (video.canPlayType('application/vnd.apple.mpegurl')) { 
+            video.src = url; 
+            video.load(); 
+            showLoading(false); 
+            video.play().catch(e => showCenterPlayButton()); 
+        } else if (Hls.isSupported()) {
             hls = new Hls({ maxBufferLength: 30, backBufferLength: 5, lowLatencyMode: true, enableWorker: true, startLevel: 0 });
             hls.attachMedia(video);
             hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
             hls.on(Hls.Events.MANIFEST_PARSED, () => { showLoading(false); video.play().then(() => hideCenterPlayButton()).catch(() => showCenterPlayButton()); });
-            hls.on(Hls.Events.ERROR, (event, data) => { if (data.fatal) { if (data.type === Hls.ErrorTypes.NETWORK_ERROR) { showLoading(true); hls.startLoad(); } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) { hls.recoverMediaError(); } else { initHLS(url); } } });
+            hls.on(Hls.Events.ERROR, (event, data) => { 
+                if (data.fatal) { 
+                    if (data.type === Hls.ErrorTypes.NETWORK_ERROR) { showLoading(true); hls.startLoad(); } 
+                    else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) { hls.recoverMediaError(); } 
+                    else { initHLS(url); } 
+                } 
+            });
         } else { console.error("HLS not supported"); showLoading(false); }
         currentStreamUrl = url;
     }
     
     function loadStream(url, streamId = null) {
         if (!url || url === currentStreamUrl) return;
+        console.log("Loading stream:", url, streamId);
         showLoading(true);
         initHLS(url);
         currentlyPlayingStreamId = streamId;
         updateSliderActiveHighlight();
+        upcomingOverlay.classList.remove('active');
+        if (overlayInterval) clearInterval(overlayInterval);
+        overlayInterval = null;
     }
     
     function updateSliderActiveHighlight() {
-        // Remove active class from all slider cards
         document.querySelectorAll('.slider-card').forEach(card => card.classList.remove('live-active'));
         if (currentlyPlayingStreamId) {
             const activeCard = document.querySelector(`.slider-card[data-stream-id="${currentlyPlayingStreamId}"]`);
@@ -879,12 +891,17 @@
     video.addEventListener('playing', () => showLoading(false));
     video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
     
-    function getNearestFutureStream() { const now = Date.now(); const future = upcomingStreams.filter(s => new Date(s.time).getTime() > now); future.sort((a,b) => new Date(a.time) - new Date(b.time)); return future[0] || null; }
+    function getNearestFutureStream() { 
+        const now = Date.now(); 
+        const future = upcomingStreams.filter(s => new Date(s.time).getTime() > now); 
+        future.sort((a,b) => new Date(a.time) - new Date(b.time)); 
+        return future[0] || null; 
+    }
     
     function updateOverlay() {
         let stream = selectedOverlayStream;
         if (!stream || !stream.time) stream = getNearestFutureStream();
-        if (stream && stream.time) {
+        if (stream && stream.time && new Date(stream.time).getTime() > Date.now()) {
             upcomingOverlay.classList.add('active');
             const streamDate = new Date(stream.time).getTime();
             if (stream.thumbnail) { overlayBg.style.backgroundImage = `url(${stream.thumbnail})`; overlayThumb.src = stream.thumbnail; }
@@ -894,12 +911,10 @@
             const updateTimer = () => {
                 const now = Date.now(); const dist = streamDate - now;
                 if (dist <= 0) {
-                    // Timer ended: remove overlay, play stream
                     upcomingOverlay.classList.remove('active');
                     if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null;
-                    if (stream.m3u8Url) {
+                    if (stream.m3u8Url && !adminLiveUrl) {
                         loadStream(stream.m3u8Url, stream.id || stream.time);
-                        // Optionally remove this stream from upcoming list? Usually keep but mark as live.
                     }
                     if (selectedOverlayStream && selectedOverlayStream.time === stream.time) set(selectedOverlayRef, null);
                 } else {
@@ -918,14 +933,19 @@
                     secsBox.classList.remove('hidden'); document.getElementById('secsValue').innerText = secs.toString().padStart(2,'0');
                 }
             };
-            updateTimer(); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = setInterval(updateTimer, 1000);
+            updateTimer(); 
+            if (overlayInterval) clearInterval(overlayInterval); 
+            overlayInterval = setInterval(updateTimer, 1000);
         } else { 
             upcomingOverlay.classList.remove('active'); 
             if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null;
         }
     }
     
-    function updateSliderDots() { const dots = document.querySelectorAll('.slider-dot'); dots.forEach((dot, idx) => { if (idx === currentSlideIndex) dot.classList.add('active'); else dot.classList.remove('active'); }); }
+    function updateSliderDots() { 
+        const dots = document.querySelectorAll('.slider-dot'); 
+        dots.forEach((dot, idx) => { if (idx === currentSlideIndex) dot.classList.add('active'); else dot.classList.remove('active'); }); 
+    }
     
     function startAutoSlide() {
         if (autoSlideInterval) clearInterval(autoSlideInterval);
@@ -952,10 +972,18 @@
     }
     
     function renderSlider() {
-        sliderContainer.innerHTML = ''; sliderDots.innerHTML = ''; sliderIntervals.forEach(clearInterval); sliderIntervals = []; currentSlideIndex = 0;
-        if (!upcomingStreams.length) { sliderContainer.innerHTML = '<div style="color:#7e8ba3; text-align:center; width:100%; padding:15px;">No upcoming matches scheduled</div>'; return; }
+        sliderContainer.innerHTML = ''; 
+        sliderDots.innerHTML = ''; 
+        sliderIntervals.forEach(clearInterval); 
+        sliderIntervals = []; 
+        currentSlideIndex = 0;
+        if (!upcomingStreams.length) { 
+            sliderContainer.innerHTML = '<div style="color:#7e8ba3; text-align:center; width:100%; padding:15px;">No upcoming matches scheduled</div>'; 
+            return; 
+        }
         upcomingStreams.forEach((stream, idx) => {
-            const card = document.createElement('div'); card.className = 'slider-card'; 
+            const card = document.createElement('div'); 
+            card.className = 'slider-card'; 
             const streamDate = new Date(stream.time).getTime();
             const isLiveNow = streamDate <= Date.now();
             const streamId = stream.id || stream.time;
@@ -969,8 +997,14 @@
                 }
             });
             sliderContainer.appendChild(card);
-            const dot = document.createElement('div'); dot.className = 'slider-dot' + (idx === 0 ? ' active' : '');
-            dot.addEventListener('click', () => { const slider = document.querySelector('.upcoming-slider-section'); currentSlideIndex = idx; slider.scrollTo({ left: idx * slider.offsetWidth, behavior: 'smooth' }); updateSliderDots(); });
+            const dot = document.createElement('div'); 
+            dot.className = 'slider-dot' + (idx === 0 ? ' active' : '');
+            dot.addEventListener('click', () => { 
+                const slider = document.querySelector('.upcoming-slider-section'); 
+                currentSlideIndex = idx; 
+                slider.scrollTo({ left: idx * slider.offsetWidth, behavior: 'smooth' }); 
+                updateSliderDots(); 
+            });
             sliderDots.appendChild(dot);
             const updateCardTimer = () => { 
                 const now = Date.now(); const dist = streamDate - now; 
@@ -980,51 +1014,205 @@
                         cdSpan.innerText = "LIVE NOW"; 
                         if (currentlyPlayingStreamId === streamId) card.classList.add('live-active');
                         else card.classList.remove('live-active');
+                        if (!adminLiveUrl && !currentlyPlayingStreamId && stream.m3u8Url) {
+                            loadStream(stream.m3u8Url, streamId);
+                        }
                     } else { 
                         card.classList.remove('live-active');
                         const days = Math.floor(dist / 86400000); const hrs = Math.floor((dist % 86400000) / 3600000);
                         const mins = Math.floor((dist % 3600000) / 60000); const secs = Math.floor((dist % 60000) / 1000);
-                        let timeStr = ""; if (days > 0) timeStr += days + "d "; if (hrs > 0 || days > 0) timeStr += hrs.toString().padStart(2,'0') + ":"; timeStr += mins.toString().padStart(2,'0') + ":" + secs.toString().padStart(2,'0'); 
+                        let timeStr = ""; 
+                        if (days > 0) timeStr += days + "d "; 
+                        if (hrs > 0 || days > 0) timeStr += hrs.toString().padStart(2,'0') + ":"; 
+                        timeStr += mins.toString().padStart(2,'0') + ":" + secs.toString().padStart(2,'0'); 
                         cdSpan.innerText = timeStr; 
                     } 
                 } 
             };
-            updateCardTimer(); const interval = setInterval(updateCardTimer, 1000); sliderIntervals.push(interval);
+            updateCardTimer(); 
+            const interval = setInterval(updateCardTimer, 1000); 
+            sliderIntervals.push(interval);
         });
         startAutoSlide();
     }
     
-    document.getElementById('sliderSection').addEventListener('scroll', () => { const slider = document.getElementById('sliderSection'); const cardWidth = slider.offsetWidth; const newIndex = Math.round(slider.scrollLeft / cardWidth); if (newIndex !== currentSlideIndex) { currentSlideIndex = newIndex; updateSliderDots(); } });
+    document.getElementById('sliderSection').addEventListener('scroll', () => { 
+        const slider = document.getElementById('sliderSection'); 
+        const cardWidth = slider.offsetWidth; 
+        const newIndex = Math.round(slider.scrollLeft / cardWidth); 
+        if (newIndex !== currentSlideIndex) { 
+            currentSlideIndex = newIndex; 
+            updateSliderDots(); 
+        } 
+    });
     
-    video.addEventListener('ended', () => { let next = selectedOverlayStream; if (!next || !next.m3u8Url) next = getNearestFutureStream(); if (next && next.m3u8Url && new Date(next.time).getTime() <= Date.now()) { loadStream(next.m3u8Url, next.id || next.time); } });
+    video.addEventListener('ended', () => {
+        if (!adminLiveUrl) {
+            const now = Date.now();
+            const otherLive = upcomingStreams.filter(s => new Date(s.time).getTime() <= now && (s.id || s.time) !== currentlyPlayingStreamId);
+            if (otherLive.length > 0) {
+                loadStream(otherLive[0].m3u8Url, otherLive[0].id || otherLive[0].time);
+            } else {
+                currentlyPlayingStreamId = null;
+                updateSliderActiveHighlight();
+                updateOverlay();
+            }
+        }
+    });
     
-    onValue(forceSwitchRef, (snapshot) => { const data = snapshot.val(); if (data && data.stream && data.stream.m3u8Url) { loadStream(data.stream.m3u8Url, data.stream.id || data.stream.time); set(forceSwitchRef, null); } });
-    onValue(upcomingRef, (snap) => { upcomingStreams = snap.val() || []; renderSlider(); updateOverlay(); });
-    onValue(selectedOverlayRef, (snap) => { selectedOverlayStream = snap.val(); updateOverlay(); });
-    onValue(liveStreamRef, (snap) => { const url = snap.val(); if (url) { loadStream(url, "admin_stream"); upcomingOverlay.classList.remove('active'); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null; } else { updateOverlay(); } });
+    onValue(forceSwitchRef, (snapshot) => { 
+        const data = snapshot.val(); 
+        if (data && data.stream && data.stream.m3u8Url) { 
+            loadStream(data.stream.m3u8Url, data.stream.id || data.stream.time); 
+            set(forceSwitchRef, null); 
+        } 
+    });
     
+    onValue(upcomingRef, (snap) => { 
+        upcomingStreams = snap.val() || []; 
+        renderSlider(); 
+        if (!adminLiveUrl) {
+            const now = Date.now();
+            const liveNow = upcomingStreams.filter(s => new Date(s.time).getTime() <= now);
+            if (liveNow.length > 0 && (!currentlyPlayingStreamId || !liveNow.some(s => (s.id || s.time) === currentlyPlayingStreamId))) {
+                loadStream(liveNow[0].m3u8Url, liveNow[0].id || liveNow[0].time);
+            }
+        }
+        updateOverlay();
+    });
+    
+    onValue(selectedOverlayRef, (snap) => { 
+        selectedOverlayStream = snap.val(); 
+        updateOverlay(); 
+    });
+    
+    onValue(liveStreamRef, (snap) => {
+        adminLiveUrl = snap.val();
+        if (adminLiveUrl && adminLiveUrl.trim() !== "") {
+            loadStream(adminLiveUrl, "admin");
+            upcomingOverlay.classList.remove('active');
+            if (overlayInterval) clearInterval(overlayInterval);
+            overlayInterval = null;
+        } else {
+            if (currentlyPlayingStreamId === "admin") {
+                clearVideoSource();
+                currentlyPlayingStreamId = null;
+                updateSliderActiveHighlight();
+            }
+            const now = Date.now();
+            const liveNow = upcomingStreams.filter(s => new Date(s.time).getTime() <= now);
+            if (liveNow.length > 0 && !currentlyPlayingStreamId) {
+                loadStream(liveNow[0].m3u8Url, liveNow[0].id || liveNow[0].time);
+            } else if (liveNow.length === 0 && !currentlyPlayingStreamId) {
+                updateOverlay();
+            }
+        }
+    });
+    
+    // Chat system
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
-    const chatContainer = document.getElementById('chatMessages'); const chatInput = document.getElementById('chatInput'); const sendBtn = document.getElementById('sendChatBtn');
-    function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
-    function appendMessage(user, text) { const div = document.createElement('div'); div.className = 'message-bubble'; div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`; chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight; }
-    onChildAdded(chatRef, (snapshot) => { const data = snapshot.val(); if(data) appendMessage(data.username, data.text); });
-    function sendMessage() { const msg = chatInput.value.trim(); if(msg) { push(chatRef, { username, text: msg, timestamp: serverTimestamp() }); chatInput.value = ''; } }
-    sendBtn.addEventListener('click', sendMessage); chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-    const viewerId = Math.random().toString(36).substring(2) + Date.now(); const myViewerRef = ref(db, `activeViewers/${viewerId}`); set(myViewerRef, { timestamp: serverTimestamp() }); onDisconnect(myViewerRef).remove();
-    onValue(ref(db, 'activeViewers'), (snap) => { const count = snap.val() ? Object.keys(snap.val()).length : 0; document.getElementById('viewerCountDisplay').innerText = count; });
+    const chatContainerMsg = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendChatBtn = document.getElementById('sendChatBtn');
+    
+    function escapeHtml(str) { 
+        return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); 
+    }
+    
+    function appendMessage(user, text) { 
+        const div = document.createElement('div'); 
+        div.className = 'message-bubble'; 
+        div.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`; 
+        chatContainerMsg.appendChild(div); 
+        chatContainerMsg.scrollTop = chatContainerMsg.scrollHeight; 
+    }
+    
+    onChildAdded(chatRef, (snapshot) => { 
+        const data = snapshot.val(); 
+        if(data) appendMessage(data.username, data.text); 
+    });
+    
+    function sendMessage() { 
+        const msg = chatInput.value.trim(); 
+        if(msg) { 
+            push(chatRef, { username, text: msg, timestamp: serverTimestamp() }); 
+            chatInput.value = ''; 
+        } 
+    }
+    
+    sendChatBtn.addEventListener('click', sendMessage); 
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+    
+    const viewerId = Math.random().toString(36).substring(2) + Date.now(); 
+    const myViewerRef = ref(db, `activeViewers/${viewerId}`); 
+    set(myViewerRef, { timestamp: serverTimestamp() }); 
+    onDisconnect(myViewerRef).remove();
+    
+    onValue(ref(db, 'activeViewers'), (snap) => { 
+        const count = snap.val() ? Object.keys(snap.val()).length : 0; 
+        document.getElementById('viewerCountDisplay').innerText = count; 
+    });
     
     let controlsVisible = false;
-    function toggleControls(show) { if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } else { customControls.classList.add('hide-controls'); controlsVisible = false; } }
-    videoStage.addEventListener('click', (e) => { if (!e.target.closest('.ctrl-btn')) toggleControls(!controlsVisible); });
-    function handleControlClick(e, action) { e.stopPropagation(); if (!controlsVisible) { toggleControls(true); return; } action(); }
-    playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { if (video.paused) video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }); else { video.pause(); isPlaying = false; updatePlayPauseUI(); } }));
-    muteBtn.addEventListener('click', (e) => handleControlClick(e, () => { video.muted = !video.muted; isMuted = video.muted; updateMuteUI(); }));
-    fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { if (!document.fullscreenElement) await videoStage.requestFullscreen(); else await document.exitFullscreen(); }));
-    centerPlayBtn.addEventListener('click', async () => { hideCenterPlayButton(); try { await video.play(); isPlaying = true; updatePlayPauseUI(); } catch(e) { showCenterPlayButton(); } });
+    function toggleControls(show) { 
+        if (show) { 
+            customControls.classList.remove('hide-controls'); 
+            controlsVisible = true; 
+            if (controlsTimeout) clearTimeout(controlsTimeout); 
+            controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); 
+        } else { 
+            customControls.classList.add('hide-controls'); 
+            controlsVisible = false; 
+        } 
+    }
+    
+    videoStage.addEventListener('click', (e) => { 
+        if (!e.target.closest('.ctrl-btn')) toggleControls(!controlsVisible); 
+    });
+    
+    function handleControlClick(e, action) { 
+        e.stopPropagation(); 
+        if (!controlsVisible) { toggleControls(true); return; } 
+        action(); 
+    }
+    
+    playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { 
+        if (video.paused) video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }); 
+        else { video.pause(); isPlaying = false; updatePlayPauseUI(); } 
+    }));
+    
+    muteBtn.addEventListener('click', (e) => handleControlClick(e, () => { 
+        video.muted = !video.muted; 
+        isMuted = video.muted; 
+        updateMuteUI(); 
+    }));
+    
+    fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { 
+        if (!document.fullscreenElement) await videoStage.requestFullscreen(); 
+        else await document.exitFullscreen(); 
+    }));
+    
+    centerPlayBtn.addEventListener('click', async () => { 
+        hideCenterPlayButton(); 
+        try { await video.play(); isPlaying = true; updatePlayPauseUI(); } 
+        catch(e) { showCenterPlayButton(); } 
+    });
+    
     video.addEventListener('play', () => { isPlaying = true; updatePlayPauseUI(); hideCenterPlayButton(); });
     video.addEventListener('pause', () => { isPlaying = false; updatePlayPauseUI(); });
-    video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
-    document.addEventListener('copy', (e) => e.preventDefault()); document.addEventListener('contextmenu', (e) => e.preventDefault()); document.body.style.webkitTouchCallout = 'none';
+    
+    video.muted = false; 
+    isMuted = false; 
+    customControls.classList.add('hide-controls'); 
+    updateMuteUI(); 
+    updatePlayPauseUI(); 
+    showLoading(true);
+    
+    document.addEventListener('copy', (e) => e.preventDefault()); 
+    document.addEventListener('contextmenu', (e) => e.preventDefault()); 
+    document.body.style.webkitTouchCallout = 'none';
+    
+    console.log("Viewer script ready");
 </script>
 </body>
 </html>
