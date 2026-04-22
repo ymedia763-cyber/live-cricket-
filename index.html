@@ -263,7 +263,7 @@
         .tiktok-btn { background: #161823; }
         .whatsapp-btn { background: #25d366; }
 
-        /* Upcoming Overlay - Original Style (Blur Background + Thumbnail) */
+        /* ====== UPCOMING OVERLAY - FIXED FOR MOBILE ====== */
         .upcoming-overlay {
             position: absolute;
             top: 0;
@@ -288,27 +288,38 @@
             height: 100%;
             background-size: cover;
             background-position: center;
-            filter: blur(8px) brightness(0.35);
-            transform: scale(1.1);
+            filter: blur(12px) brightness(0.2);
+            transform: scale(1.2);
+            z-index: 1;
+        }
+        .overlay-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
         }
         .overlay-content {
             position: relative;
             z-index: 2;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
-            border-radius: 32px;
-            padding: 20px 24px;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 20px 16px;
             border: 1px solid rgba(255,215,0,0.3);
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            min-width: 220px;
+            width: 90%;
+            max-width: 320px;
             text-align: center;
         }
         .overlay-thumb {
-            width: 100px;
-            height: 100px;
-            border-radius: 20px;
+            width: 90px;
+            height: 90px;
+            border-radius: 16px;
             object-fit: cover;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border: 2px solid gold;
             box-shadow: 0 0 20px rgba(255,215,0,0.5);
         }
@@ -316,41 +327,129 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
-            margin: 12px 0;
+            gap: 12px;
+            margin: 10px 0;
         }
         .overlay-logo {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 2px solid #fbbf24;
             object-fit: cover;
             background: #000;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
         }
         .overlay-vs {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #fbbf24;
             text-shadow: 0 0 8px rgba(251,191,36,0.5);
         }
         .overlay-match-time {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #cbd5e6;
             margin: 8px 0;
-        }
-        .overlay-countdown {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: white;
-            background: rgba(0,0,0,0.7);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-family: monospace;
-            margin-top: 8px;
-            letter-spacing: 2px;
+            line-height: 1.4;
         }
 
-        /* Horizontal Slider - Thin & Centered (One card at a time) */
+        /* ====== SMART COUNTDOWN TIMER BOXES ====== */
+        .overlay-countdown {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .timer-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0,0,0,0.8);
+            border-radius: 12px;
+            padding: 8px 10px;
+            min-width: 48px;
+            border: 1px solid rgba(255,215,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .timer-box.hidden {
+            display: none;
+        }
+        .timer-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: white;
+            font-family: 'Courier New', monospace;
+            line-height: 1;
+        }
+        .timer-label {
+            font-size: 0.6rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .timer-separator {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fbbf24;
+            align-self: flex-start;
+            padding-top: 6px;
+        }
+        .timer-separator.hidden {
+            display: none;
+        }
+        .live-now-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #22c55e;
+            text-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
+            animation: liveNowPulse 1.5s ease-in-out infinite;
+            display: none;
+        }
+        .live-now-text.active {
+            display: block;
+        }
+        @keyframes liveNowPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @media (max-width: 480px) {
+            .overlay-content {
+                padding: 16px 12px;
+                width: 92%;
+                border-radius: 20px;
+            }
+            .overlay-thumb {
+                width: 70px;
+                height: 70px;
+                border-radius: 12px;
+            }
+            .overlay-logo {
+                width: 42px;
+                height: 42px;
+            }
+            .overlay-vs {
+                font-size: 1rem;
+            }
+            .timer-value {
+                font-size: 1.1rem;
+            }
+            .timer-box {
+                min-width: 40px;
+                padding: 6px 8px;
+                border-radius: 10px;
+            }
+            .timer-label {
+                font-size: 0.55rem;
+            }
+            .overlay-match-time {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ====== HORIZONTAL SLIDER - FIXED SNAP ====== */
         .upcoming-slider-section {
             width: 100%;
             padding: 12px 0;
@@ -361,37 +460,38 @@
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scroll-snap-stop: always;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .upcoming-slider-section::-webkit-scrollbar {
+            display: none;
         }
         .slider-container {
             display: flex;
             gap: 0;
-            padding: 0 20px;
+            padding: 0;
         }
         .slider-card {
-            flex: 0 0 calc(100% - 40px);
-            scroll-snap-align: center;
-            margin: 0 20px;
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            padding: 8px 16px;
             background: linear-gradient(135deg, #0f131f, #1a1f2e);
-            border-radius: 60px;
-            padding: 6px 16px;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            border: 1px solid rgba(255,215,0,0.4);
+            border-right: 1px solid rgba(255,215,0,0.15);
             transition: all 0.2s ease;
-            animation: stableGlow 2s infinite;
             cursor: pointer;
             flex-wrap: nowrap;
+            min-height: 70px;
         }
-        @keyframes stableGlow {
-            0%,100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); border-color: rgba(255,215,0,0.4); }
-            50% { box-shadow: 0 0 12px rgba(255,215,0,0.6); border-color: rgba(255,215,0,0.7); }
+        .slider-card:last-child {
+            border-right: none;
         }
         .slider-card:hover {
-            transform: scale(1.02);
             background: linear-gradient(135deg, #1a1f2e, #252b3d);
         }
         .card-left, .card-right {
@@ -401,42 +501,62 @@
             flex-shrink: 0;
         }
         .card-logo-small {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: 1.5px solid #fbbf24;
             object-fit: cover;
             background: #000;
         }
         .card-vs-small {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: bold;
             color: #fbbf24;
             margin: 0 4px;
         }
         .card-countdown-small {
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 700;
             color: white;
-            background: rgba(0,0,0,0.5);
-            padding: 3px 10px;
+            background: rgba(0,0,0,0.6);
+            padding: 4px 12px;
             border-radius: 40px;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             white-space: nowrap;
+            border: 1px solid rgba(255,215,0,0.2);
         }
         .card-match-time-small {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #94a3b8;
             white-space: nowrap;
         }
+
+        /* Slider dots indicator */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 0 4px;
+            background: rgba(0,0,0,0.3);
+        }
+        .slider-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        .slider-dot.active {
+            background: #fbbf24;
+            width: 18px;
+            border-radius: 3px;
+        }
+
         @media (max-width: 480px) {
-            .card-logo-small { width: 28px; height: 28px; }
-            .card-countdown-small { font-size: 0.7rem; padding: 2px 8px; }
-            .card-match-time-small { font-size: 0.6rem; }
-            .slider-card { padding: 5px 12px; gap: 8px; }
-            .overlay-logo { width: 45px; height: 45px; }
-            .overlay-countdown { font-size: 1.4rem; padding: 6px 16px; }
-            .overlay-thumb { width: 80px; height: 80px; }
+            .card-logo-small { width: 32px; height: 32px; }
+            .card-countdown-small { font-size: 0.75rem; padding: 3px 10px; }
+            .card-match-time-small { font-size: 0.65rem; }
+            .slider-card { padding: 6px 12px; gap: 8px; min-height: 60px; }
         }
 
         /* Chat Panel - Original Glowing */
@@ -491,6 +611,7 @@
         .chat-messages::-webkit-scrollbar-track { background:transparent; }
         .chat-messages::-webkit-scrollbar-thumb { background:rgba(59,130,246,0.3); border-radius:10px; }
     </style>
+<base target="_blank">
 </head>
 <body>
 <div class="app-container">
@@ -532,15 +653,39 @@
                     <img id="overlayTeamB" class="overlay-logo" src="" alt="Team B">
                 </div>
                 <div id="overlayMatchTime" class="overlay-match-time"></div>
-                <div id="overlayCountdown" class="overlay-countdown">--:--:--</div>
+
+                <!-- Smart Countdown with separate boxes -->
+                <div id="overlayCountdown" class="overlay-countdown">
+                    <div class="timer-box" id="daysBox">
+                        <span class="timer-value" id="daysValue">00</span>
+                        <span class="timer-label">Days</span>
+                    </div>
+                    <span class="timer-separator" id="daysSep">:</span>
+                    <div class="timer-box" id="hoursBox">
+                        <span class="timer-value" id="hoursValue">00</span>
+                        <span class="timer-label">Hrs</span>
+                    </div>
+                    <span class="timer-separator" id="hoursSep">:</span>
+                    <div class="timer-box" id="minsBox">
+                        <span class="timer-value" id="minsValue">00</span>
+                        <span class="timer-label">Min</span>
+                    </div>
+                    <span class="timer-separator" id="minsSep">:</span>
+                    <div class="timer-box" id="secsBox">
+                        <span class="timer-value" id="secsValue">00</span>
+                        <span class="timer-label">Sec</span>
+                    </div>
+                </div>
+                <div class="live-now-text" id="liveNowText">LIVE NOW</div>
             </div>
         </div>
     </div>
 
-    <!-- Thin Horizontal Slider -->
+    <!-- Horizontal Slider with Dots -->
     <div class="upcoming-slider-section" id="sliderSection">
         <div class="slider-container" id="sliderContainer"></div>
     </div>
+    <div class="slider-dots" id="sliderDots"></div>
 
     <div class="chat-panel">
         <div class="viewer-stats">
@@ -590,13 +735,14 @@
     const volumeIcon = document.getElementById('volumeIcon');
     const mutedIcon = document.getElementById('mutedIcon');
     const sliderContainer = document.getElementById('sliderContainer');
+    const sliderDots = document.getElementById('sliderDots');
     const upcomingOverlay = document.getElementById('upcomingOverlay');
     const overlayBg = document.getElementById('overlayBg');
     const overlayThumb = document.getElementById('overlayThumb');
     const overlayTeamA = document.getElementById('overlayTeamA');
     const overlayTeamB = document.getElementById('overlayTeamB');
     const overlayMatchTime = document.getElementById('overlayMatchTime');
-    const overlayCountdown = document.getElementById('overlayCountdown');
+    const liveNowText = document.getElementById('liveNowText');
 
     let hls = null;
     let isPlaying = true;
@@ -609,6 +755,7 @@
     let autoSlideInterval = null;
     let sliderIntervals = [];
     let overlayInterval = null;
+    let currentSlideIndex = 0;
 
     function showLoading(show) {
         if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); } 
@@ -661,6 +808,7 @@
         return future[0] || null;
     }
 
+    // ====== SMART COUNTDOWN WITH DISAPPEARING BOXES ======
     function updateOverlay() {
         let stream = selectedOverlayStream;
         if (!stream || !stream.time) {
@@ -669,18 +817,31 @@
         if (stream && stream.time) {
             upcomingOverlay.classList.add('active');
             const streamDate = new Date(stream.time).getTime();
-            if (stream.thumbnail) overlayBg.style.backgroundImage = `url(${stream.thumbnail})`;
-            else overlayBg.style.backgroundImage = 'none';
+            if (stream.thumbnail) {
+                overlayBg.style.backgroundImage = `url(${stream.thumbnail})`;
+            } else {
+                overlayBg.style.backgroundImage = 'none';
+            }
             overlayThumb.src = stream.thumbnail || '';
             overlayTeamA.src = stream.teamA || '';
             overlayTeamB.src = stream.teamB || '';
             overlayMatchTime.innerText = stream.matchTime || '';
-            
+
             const updateTimer = () => {
                 const now = Date.now();
                 const dist = streamDate - now;
+
                 if (dist <= 0) {
-                    overlayCountdown.innerText = "LIVE NOW";
+                    // Show LIVE NOW, hide timer boxes
+                    document.getElementById('daysBox').classList.add('hidden');
+                    document.getElementById('hoursBox').classList.add('hidden');
+                    document.getElementById('minsBox').classList.add('hidden');
+                    document.getElementById('secsBox').classList.add('hidden');
+                    document.getElementById('daysSep').classList.add('hidden');
+                    document.getElementById('hoursSep').classList.add('hidden');
+                    document.getElementById('minsSep').classList.add('hidden');
+                    liveNowText.classList.add('active');
+
                     if (stream.m3u8Url && stream.m3u8Url !== currentStreamUrl) {
                         loadStream(stream.m3u8Url);
                         upcomingOverlay.classList.remove('active');
@@ -691,10 +852,56 @@
                         }
                     }
                 } else {
-                    const hours = Math.floor(dist / 3600000);
+                    // Calculate time units
+                    const days = Math.floor(dist / 86400000);
+                    const hours = Math.floor((dist % 86400000) / 3600000);
                     const mins = Math.floor((dist % 3600000) / 60000);
                     const secs = Math.floor((dist % 60000) / 1000);
-                    overlayCountdown.innerText = `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+
+                    // Show/hide boxes based on remaining time
+                    const daysBox = document.getElementById('daysBox');
+                    const daysSep = document.getElementById('daysSep');
+                    const hoursBox = document.getElementById('hoursBox');
+                    const hoursSep = document.getElementById('hoursSep');
+                    const minsBox = document.getElementById('minsBox');
+                    const minsSep = document.getElementById('minsSep');
+                    const secsBox = document.getElementById('secsBox');
+
+                    liveNowText.classList.remove('active');
+
+                    // Days
+                    if (days > 0) {
+                        daysBox.classList.remove('hidden');
+                        daysSep.classList.remove('hidden');
+                        document.getElementById('daysValue').innerText = days.toString().padStart(2, '0');
+                    } else {
+                        daysBox.classList.add('hidden');
+                        daysSep.classList.add('hidden');
+                    }
+
+                    // Hours
+                    if (days > 0 || hours > 0) {
+                        hoursBox.classList.remove('hidden');
+                        hoursSep.classList.remove('hidden');
+                        document.getElementById('hoursValue').innerText = hours.toString().padStart(2, '0');
+                    } else {
+                        hoursBox.classList.add('hidden');
+                        hoursSep.classList.add('hidden');
+                    }
+
+                    // Minutes
+                    if (days > 0 || hours > 0 || mins > 0) {
+                        minsBox.classList.remove('hidden');
+                        minsSep.classList.remove('hidden');
+                        document.getElementById('minsValue').innerText = mins.toString().padStart(2, '0');
+                    } else {
+                        minsBox.classList.add('hidden');
+                        minsSep.classList.add('hidden');
+                    }
+
+                    // Seconds (always show if not live)
+                    secsBox.classList.remove('hidden');
+                    document.getElementById('secsValue').innerText = secs.toString().padStart(2, '0');
                 }
             };
             updateTimer();
@@ -707,28 +914,46 @@
         }
     }
 
+    // ====== SLIDER DOTS UPDATE ======
+    function updateSliderDots() {
+        const cards = document.querySelectorAll('.slider-card');
+        const dots = document.querySelectorAll('.slider-dot');
+        dots.forEach((dot, idx) => {
+            if (idx === currentSlideIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
     function startAutoSlide() {
         if (autoSlideInterval) clearInterval(autoSlideInterval);
         autoSlideInterval = setInterval(() => {
             const slider = document.querySelector('.upcoming-slider-section');
             if (!slider) return;
-            const cardWidth = document.querySelector('.slider-card')?.offsetWidth + (document.querySelector('.slider-card')?.offsetWidth * 0.1) || 300;
-            const scrollAmount = slider.scrollLeft + cardWidth;
-            slider.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-            if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 50) {
-                setTimeout(() => slider.scrollTo({ left: 0, behavior: 'smooth' }), 1000);
-            }
-        }, 10000);
+            const cards = document.querySelectorAll('.slider-card');
+            if (cards.length === 0) return;
+
+            currentSlideIndex = (currentSlideIndex + 1) % cards.length;
+            const cardWidth = slider.offsetWidth;
+            slider.scrollTo({ left: currentSlideIndex * cardWidth, behavior: 'smooth' });
+            updateSliderDots();
+        }, 5000);
     }
 
     function renderSlider() {
         sliderContainer.innerHTML = '';
+        sliderDots.innerHTML = '';
         sliderIntervals.forEach(clearInterval);
         sliderIntervals = [];
+        currentSlideIndex = 0;
+
         if (!upcomingStreams.length) {
             sliderContainer.innerHTML = '<div style="color:#7e8ba3; text-align:center; width:100%; padding:15px;">No upcoming matches scheduled</div>';
             return;
         }
+
         upcomingStreams.forEach((stream, idx) => {
             const card = document.createElement('div');
             card.className = 'slider-card';
@@ -748,6 +973,18 @@
                 if (stream.m3u8Url) loadStream(stream.m3u8Url);
             });
             sliderContainer.appendChild(card);
+
+            // Create dot
+            const dot = document.createElement('div');
+            dot.className = 'slider-dot' + (idx === 0 ? ' active' : '');
+            dot.addEventListener('click', () => {
+                const slider = document.querySelector('.upcoming-slider-section');
+                currentSlideIndex = idx;
+                slider.scrollTo({ left: idx * slider.offsetWidth, behavior: 'smooth' });
+                updateSliderDots();
+            });
+            sliderDots.appendChild(dot);
+
             const updateCardTimer = () => {
                 const now = Date.now();
                 const dist = streamDate - now;
@@ -755,10 +992,16 @@
                 if (cdSpan) {
                     if (dist <= 0) cdSpan.innerText = "LIVE NOW";
                     else {
-                        const hrs = Math.floor(dist / 3600000);
+                        const days = Math.floor(dist / 86400000);
+                        const hrs = Math.floor((dist % 86400000) / 3600000);
                         const mins = Math.floor((dist % 3600000) / 60000);
                         const secs = Math.floor((dist % 60000) / 1000);
-                        cdSpan.innerText = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+
+                        let timeStr = "";
+                        if (days > 0) timeStr += days + "d ";
+                        if (hrs > 0 || days > 0) timeStr += hrs.toString().padStart(2, '0') + ":";
+                        timeStr += mins.toString().padStart(2, '0') + ":" + secs.toString().padStart(2, '0');
+                        cdSpan.innerText = timeStr;
                     }
                 }
             };
@@ -768,6 +1011,17 @@
         });
         startAutoSlide();
     }
+
+    // Detect scroll to update dots
+    document.getElementById('sliderSection').addEventListener('scroll', () => {
+        const slider = document.getElementById('sliderSection');
+        const cardWidth = slider.offsetWidth;
+        const newIndex = Math.round(slider.scrollLeft / cardWidth);
+        if (newIndex !== currentSlideIndex) {
+            currentSlideIndex = newIndex;
+            updateSliderDots();
+        }
+    });
 
     video.addEventListener('ended', () => {
         let next = selectedOverlayStream;
@@ -836,24 +1090,38 @@
     // Viewer count
     const viewerId = Math.random().toString(36).substring(2) + Date.now();
     const myViewerRef = ref(db, `activeViewers/${viewerId}`);
-    onDisconnect(myViewerRef).remove(); set(myViewerRef, { timestamp: serverTimestamp() });
-    onValue(ref(db, 'activeViewers'), (snap) => { document.getElementById('viewerCountDisplay').innerText = Object.keys(snap.val() || {}).length; });
+    set(myViewerRef, { timestamp: serverTimestamp() });
+    onDisconnect(myViewerRef).remove();
+    onValue(ref(db, 'activeViewers'), (snap) => {
+        const count = snap.val() ? Object.keys(snap.val()).length : 0;
+        document.getElementById('viewerCountDisplay').innerText = count;
+    });
 
     // Controls toggle
     let controlsVisible = false;
     function toggleControls(show) {
-        if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } 
-        else { customControls.classList.add('hide-controls'); controlsVisible = false; }
+        if (show) { 
+            customControls.classList.remove('hide-controls'); 
+            controlsVisible = true; 
+            if (controlsTimeout) clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); 
+        } else { 
+            customControls.classList.add('hide-controls'); 
+            controlsVisible = false; 
+        }
     }
     videoStage.addEventListener('click', (e) => { if (!e.target.closest('.ctrl-btn')) toggleControls(!controlsVisible); });
-    function handleControlClick(e, action) { e.stopPropagation(); if (!controlsVisible) { toggleControls(true); return; } action(); resetControlsTimer(); }
+    function handleControlClick(e, action) { e.stopPropagation(); if (!controlsVisible) { toggleControls(true); return; } action(); }
     playPauseBtn.addEventListener('click', (e) => handleControlClick(e, () => { if (video.paused) video.play().then(() => { isPlaying = true; updatePlayPauseUI(); }); else { video.pause(); isPlaying = false; updatePlayPauseUI(); } }));
     muteBtn.addEventListener('click', (e) => handleControlClick(e, () => { video.muted = !video.muted; isMuted = video.muted; updateMuteUI(); }));
     fullscreenBtn.addEventListener('click', (e) => handleControlClick(e, async () => { if (!document.fullscreenElement) await videoStage.requestFullscreen(); else await document.exitFullscreen(); }));
-    centerPlayBtn.addEventListener('click', async () => { hideCenterPlayButton(); try { await video.play(); isPlaying = true; updatePlayPauseUI(); } catch(e) { showCenterPlayButton(); } });
+    centerPlayBtn.addEventListener('click', async () => { 
+        hideCenterPlayButton(); 
+        try { await video.play(); isPlaying = true; updatePlayPauseUI(); } catch(e) { showCenterPlayButton(); }
+    });
     video.addEventListener('play', () => { isPlaying = true; updatePlayPauseUI(); hideCenterPlayButton(); });
     video.addEventListener('pause', () => { isPlaying = false; updatePlayPauseUI(); });
-    video.addEventListener('volumechange', () => { isMuted = video.muted; updateMuteUI(); });
+
     video.muted = false; isMuted = false; customControls.classList.add('hide-controls'); updateMuteUI(); updatePlayPauseUI(); showLoading(true);
 
     document.addEventListener('copy', (e) => e.preventDefault());
