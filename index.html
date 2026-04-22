@@ -320,7 +320,6 @@
             display: flex;
         }
 
-        /* 🔥 Fixed background: covers whole area, blurred but visibly clear, NOT completely black */
         .overlay-bg {
             position: absolute;
             top: 0;
@@ -330,18 +329,11 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            filter: blur(18px) brightness(0.55);   /* much brighter than before – no more pitch black */
+            filter: blur(18px) brightness(0.55);
             transform: scale(1.05);
             z-index: 1;
         }
 
-        /* Removed the heavy dark overlay that caused complete blackout */
-        /* Only a very subtle gradient to improve text readability, but background remains visible */
-        .overlay-bg::after {
-            display: none;
-        }
-
-        /* Content wrapper with soft glassmorphism */
         .overlay-content {
             position: relative;
             z-index: 2;
@@ -352,11 +344,10 @@
             width: 100%;
             height: 100%;
             padding: 20px 16px;
-            background: rgba(0, 0, 0, 0.25);  /* very light dark layer, doesn't kill the background */
+            background: rgba(0, 0, 0, 0.25);
             backdrop-filter: blur(2px);
         }
 
-        /* Thumbnail decorative element */
         .overlay-thumb-bg {
             position: absolute;
             top: 50%;
@@ -372,36 +363,52 @@
             border: 2px solid rgba(255, 215, 0, 0.3);
         }
 
-        /* Teams row */
         .overlay-teams {
             position: relative;
             z-index: 3;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 24px;
             margin: 0 0 10px 0;
         }
 
         .overlay-logo {
-            width: 52px;
-            height: 52px;
+            width: 74px;
+            height: 74px;
             border-radius: 50%;
-            border: 2.5px solid #fbbf24;
+            border: 3px solid #fbbf24;
             object-fit: cover;
-            background: #000;
-            box-shadow: 0 0 25px rgba(251, 191, 36, 0.6), 0 4px 15px rgba(0,0,0,0.6);
+            background: #0a0c12;
+            box-shadow: 0 0 18px rgba(251, 191, 36, 0.7), 0 0 30px rgba(251, 191, 36, 0.3);
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            animation: gentleGlow 2.2s infinite ease-in-out;
+        }
+        
+        @keyframes gentleGlow {
+            0% { box-shadow: 0 0 12px rgba(251, 191, 36, 0.6), 0 0 20px rgba(251, 191, 36, 0.2); border-color: #fbbf24; }
+            50% { box-shadow: 0 0 28px rgba(251, 191, 36, 0.9), 0 0 45px rgba(251, 191, 36, 0.5); border-color: #ffd966; }
+            100% { box-shadow: 0 0 12px rgba(251, 191, 36, 0.6), 0 0 20px rgba(251, 191, 36, 0.2); border-color: #fbbf24; }
+        }
+        
+        .overlay-logo.logo-click-effect {
+            transform: scale(1.22);
+            box-shadow: 0 0 40px #ffaa33, 0 0 70px #ffcc55;
+            transition: transform 0.12s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.1s ease;
+            border-color: #ffdf80;
         }
 
         .overlay-vs {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 800;
             color: #fbbf24;
-            text-shadow: 0 0 12px rgba(251, 191, 36, 0.8);
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
             background: rgba(0,0,0,0.5);
-            padding: 4px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(251, 191, 36, 0.4);
+            padding: 6px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            letter-spacing: 1px;
         }
 
         .overlay-match-time {
@@ -419,7 +426,6 @@
             backdrop-filter: blur(4px);
         }
 
-        /* Smart Countdown */
         .overlay-countdown {
             position: relative;
             z-index: 3;
@@ -490,8 +496,9 @@
 
         @media (max-width: 480px) {
             .overlay-thumb-bg { width: 110px; height: 110px; }
-            .overlay-logo { width: 44px; height: 44px; }
-            .overlay-vs { font-size: 0.95rem; padding: 3px 8px; }
+            .overlay-logo { width: 60px; height: 60px; border-width: 2.5px; }
+            .overlay-teams { gap: 16px; }
+            .overlay-vs { font-size: 0.95rem; padding: 3px 10px; }
             .timer-value { font-size: 1rem; }
             .timer-box { min-width: 38px; padding: 5px 8px; border-radius: 8px; }
             .timer-label { font-size: 0.5rem; }
@@ -534,9 +541,22 @@
             cursor: pointer;
             flex-wrap: nowrap;
             min-height: 65px;
+            border-left: 3px solid transparent;
         }
         .slider-card:last-child { border-right: none; }
         .slider-card:hover { background: linear-gradient(135deg, #1a1f2e, #252b3d); }
+        /* Active live match card glowing */
+        .slider-card.live-active {
+            background: linear-gradient(135deg, #1e2a3a, #2a3a4a);
+            border-left: 3px solid #fbbf24;
+            box-shadow: 0 0 12px rgba(251,191,36,0.4);
+            animation: cardPulse 1.5s infinite;
+        }
+        @keyframes cardPulse {
+            0% { border-left-color: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.3); }
+            50% { border-left-color: #ffdf80; box-shadow: 0 0 18px rgba(251,191,36,0.8); }
+            100% { border-left-color: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.3); }
+        }
         .card-left, .card-right {
             display: flex;
             align-items: center;
@@ -707,7 +727,6 @@
         </div>
         <div class="loading-overlay initial-loading" id="loadingOverlay"><div class="three-dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
         <div class="center-play-overlay hidden" id="centerPlayOverlay"><div class="center-play-btn" id="centerPlayBtn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
-        <!-- Upcoming Overlay: background now covers full area and is clearly visible, not black -->
         <div id="upcomingOverlay" class="upcoming-overlay">
             <div id="overlayBg" class="overlay-bg"></div>
             <div class="overlay-content">
@@ -794,6 +813,26 @@
     let sliderIntervals = [];
     let overlayInterval = null;
     let currentSlideIndex = 0;
+    let currentlyPlayingStreamId = null; // track which stream is playing
+
+    function clearVideoSource() {
+        if (hls) { hls.destroy(); hls = null; }
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        currentStreamUrl = "";
+        showLoading(false);
+    }
+
+    function addLogoClickEffect(imgElement) {
+        if (!imgElement) return;
+        imgElement.classList.add('logo-click-effect');
+        setTimeout(() => imgElement.classList.remove('logo-click-effect'), 220);
+    }
+    document.addEventListener('click', (e) => {
+        const targetLogo = e.target.closest('.overlay-logo');
+        if (targetLogo) { e.stopPropagation(); addLogoClickEffect(targetLogo); }
+    });
 
     function showLoading(show) {
         if (show) { loadingOverlay.style.display = 'flex'; if (!isInitialLoad) loadingOverlay.classList.remove('initial-loading'); }
@@ -804,6 +843,7 @@
     function resetControlsTimer() { if (controlsTimeout) clearTimeout(controlsTimeout); customControls.classList.remove('hide-controls'); controlsTimeout = setTimeout(() => customControls.classList.add('hide-controls'), 3500); }
     function updatePlayPauseUI() { playIcon.style.display = isPlaying ? 'none' : 'block'; pauseIcon.style.display = isPlaying ? 'block' : 'none'; }
     function updateMuteUI() { volumeIcon.style.display = isMuted ? 'none' : 'block'; mutedIcon.style.display = isMuted ? 'block' : 'none'; }
+    
     function initHLS(url) {
         if (hls) { hls.destroy(); hls = null; }
         video.muted = false; video.autoplay = true;
@@ -817,11 +857,30 @@
         } else { console.error("HLS not supported"); showLoading(false); }
         currentStreamUrl = url;
     }
-    function loadStream(url) { if (!url || url === currentStreamUrl) return; showLoading(true); initHLS(url); }
+    
+    function loadStream(url, streamId = null) {
+        if (!url || url === currentStreamUrl) return;
+        showLoading(true);
+        initHLS(url);
+        currentlyPlayingStreamId = streamId;
+        updateSliderActiveHighlight();
+    }
+    
+    function updateSliderActiveHighlight() {
+        // Remove active class from all slider cards
+        document.querySelectorAll('.slider-card').forEach(card => card.classList.remove('live-active'));
+        if (currentlyPlayingStreamId) {
+            const activeCard = document.querySelector(`.slider-card[data-stream-id="${currentlyPlayingStreamId}"]`);
+            if (activeCard) activeCard.classList.add('live-active');
+        }
+    }
+    
     video.addEventListener('waiting', () => showLoading(true));
     video.addEventListener('playing', () => showLoading(false));
     video.addEventListener('canplay', () => { if (video.readyState >= 3) showLoading(false); });
+    
     function getNearestFutureStream() { const now = Date.now(); const future = upcomingStreams.filter(s => new Date(s.time).getTime() > now); future.sort((a,b) => new Date(a.time) - new Date(b.time)); return future[0] || null; }
+    
     function updateOverlay() {
         let stream = selectedOverlayStream;
         if (!stream || !stream.time) stream = getNearestFutureStream();
@@ -835,15 +894,14 @@
             const updateTimer = () => {
                 const now = Date.now(); const dist = streamDate - now;
                 if (dist <= 0) {
-                    document.getElementById('daysBox').classList.add('hidden'); document.getElementById('hoursBox').classList.add('hidden');
-                    document.getElementById('minsBox').classList.add('hidden'); document.getElementById('secsBox').classList.add('hidden');
-                    document.getElementById('daysSep').classList.add('hidden'); document.getElementById('hoursSep').classList.add('hidden');
-                    document.getElementById('minsSep').classList.add('hidden'); liveNowText.classList.add('active');
-                    if (stream.m3u8Url && stream.m3u8Url !== currentStreamUrl) {
-                        loadStream(stream.m3u8Url); upcomingOverlay.classList.remove('active');
-                        if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null;
-                        if (selectedOverlayStream && selectedOverlayStream.time === stream.time) set(selectedOverlayRef, null);
+                    // Timer ended: remove overlay, play stream
+                    upcomingOverlay.classList.remove('active');
+                    if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null;
+                    if (stream.m3u8Url) {
+                        loadStream(stream.m3u8Url, stream.id || stream.time);
+                        // Optionally remove this stream from upcoming list? Usually keep but mark as live.
                     }
+                    if (selectedOverlayStream && selectedOverlayStream.time === stream.time) set(selectedOverlayRef, null);
                 } else {
                     const days = Math.floor(dist / 86400000); const hours = Math.floor((dist % 86400000) / 3600000);
                     const mins = Math.floor((dist % 3600000) / 60000); const secs = Math.floor((dist % 60000) / 1000);
@@ -861,32 +919,90 @@
                 }
             };
             updateTimer(); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = setInterval(updateTimer, 1000);
-        } else { upcomingOverlay.classList.remove('active'); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null; }
+        } else { 
+            upcomingOverlay.classList.remove('active'); 
+            if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null;
+        }
     }
+    
     function updateSliderDots() { const dots = document.querySelectorAll('.slider-dot'); dots.forEach((dot, idx) => { if (idx === currentSlideIndex) dot.classList.add('active'); else dot.classList.remove('active'); }); }
-    function startAutoSlide() { if (autoSlideInterval) clearInterval(autoSlideInterval); autoSlideInterval = setInterval(() => { const slider = document.querySelector('.upcoming-slider-section'); if (!slider) return; const cards = document.querySelectorAll('.slider-card'); if (cards.length === 0) return; currentSlideIndex = (currentSlideIndex + 1) % cards.length; const cardWidth = slider.offsetWidth; slider.scrollTo({ left: currentSlideIndex * cardWidth, behavior: 'smooth' }); updateSliderDots(); }, 5000); }
+    
+    function startAutoSlide() {
+        if (autoSlideInterval) clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(() => {
+            const slider = document.querySelector('.upcoming-slider-section');
+            if (!slider) return;
+            const cards = document.querySelectorAll('.slider-card');
+            if (cards.length === 0) return;
+            const cardWidth = slider.offsetWidth;
+            let nextIndex = currentSlideIndex + 1;
+            if (nextIndex >= cards.length) {
+                const originalBehavior = slider.style.scrollBehavior;
+                slider.style.scrollBehavior = 'auto';
+                slider.scrollLeft = 0;
+                slider.style.scrollBehavior = originalBehavior;
+                currentSlideIndex = 0;
+                updateSliderDots();
+                return;
+            }
+            slider.scrollTo({ left: nextIndex * cardWidth, behavior: 'smooth' });
+            currentSlideIndex = nextIndex;
+            updateSliderDots();
+        }, 5000);
+    }
+    
     function renderSlider() {
         sliderContainer.innerHTML = ''; sliderDots.innerHTML = ''; sliderIntervals.forEach(clearInterval); sliderIntervals = []; currentSlideIndex = 0;
         if (!upcomingStreams.length) { sliderContainer.innerHTML = '<div style="color:#7e8ba3; text-align:center; width:100%; padding:15px;">No upcoming matches scheduled</div>'; return; }
         upcomingStreams.forEach((stream, idx) => {
-            const card = document.createElement('div'); card.className = 'slider-card'; const streamDate = new Date(stream.time).getTime();
-            card.innerHTML = `<div class="card-left"><img class="card-logo-small" src="${stream.teamA || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'"><span class="card-vs-small">VS</span><img class="card-logo-small" src="${stream.teamB || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'"></div><div class="card-right"><span class="card-countdown-small" id="cardCountdown-${idx}">--:--:--</span><span class="card-match-time-small">${escapeHtml(stream.matchTime || '')}</span></div>`;
-            card.addEventListener('click', () => { if (stream.m3u8Url) loadStream(stream.m3u8Url); });
+            const card = document.createElement('div'); card.className = 'slider-card'; 
+            const streamDate = new Date(stream.time).getTime();
+            const isLiveNow = streamDate <= Date.now();
+            const streamId = stream.id || stream.time;
+            card.setAttribute('data-stream-id', streamId);
+            if (isLiveNow && currentlyPlayingStreamId === streamId) card.classList.add('live-active');
+            card.innerHTML = `<div class="card-left"><img class="card-logo-small" src="${stream.teamA || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'"><span class="card-vs-small">VS</span><img class="card-logo-small" src="${stream.teamB || ''}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3C/svg%3E'"></div><div class="card-right"><span class="card-countdown-small" id="cardCountdown-${idx}">${isLiveNow ? 'LIVE NOW' : '--:--:--'}</span><span class="card-match-time-small">${escapeHtml(stream.matchTime || '')}</span></div>`;
+            card.addEventListener('click', () => { 
+                const now = Date.now();
+                if (streamDate <= now && stream.m3u8Url) {
+                    loadStream(stream.m3u8Url, streamId);
+                }
+            });
             sliderContainer.appendChild(card);
             const dot = document.createElement('div'); dot.className = 'slider-dot' + (idx === 0 ? ' active' : '');
             dot.addEventListener('click', () => { const slider = document.querySelector('.upcoming-slider-section'); currentSlideIndex = idx; slider.scrollTo({ left: idx * slider.offsetWidth, behavior: 'smooth' }); updateSliderDots(); });
             sliderDots.appendChild(dot);
-            const updateCardTimer = () => { const now = Date.now(); const dist = streamDate - now; const cdSpan = document.getElementById(`cardCountdown-${idx}`); if (cdSpan) { if (dist <= 0) cdSpan.innerText = "LIVE NOW"; else { const days = Math.floor(dist / 86400000); const hrs = Math.floor((dist % 86400000) / 3600000); const mins = Math.floor((dist % 3600000) / 60000); const secs = Math.floor((dist % 60000) / 1000); let timeStr = ""; if (days > 0) timeStr += days + "d "; if (hrs > 0 || days > 0) timeStr += hrs.toString().padStart(2,'0') + ":"; timeStr += mins.toString().padStart(2,'0') + ":" + secs.toString().padStart(2,'0'); cdSpan.innerText = timeStr; } } };
+            const updateCardTimer = () => { 
+                const now = Date.now(); const dist = streamDate - now; 
+                const cdSpan = document.getElementById(`cardCountdown-${idx}`); 
+                if (cdSpan) { 
+                    if (dist <= 0) { 
+                        cdSpan.innerText = "LIVE NOW"; 
+                        if (currentlyPlayingStreamId === streamId) card.classList.add('live-active');
+                        else card.classList.remove('live-active');
+                    } else { 
+                        card.classList.remove('live-active');
+                        const days = Math.floor(dist / 86400000); const hrs = Math.floor((dist % 86400000) / 3600000);
+                        const mins = Math.floor((dist % 3600000) / 60000); const secs = Math.floor((dist % 60000) / 1000);
+                        let timeStr = ""; if (days > 0) timeStr += days + "d "; if (hrs > 0 || days > 0) timeStr += hrs.toString().padStart(2,'0') + ":"; timeStr += mins.toString().padStart(2,'0') + ":" + secs.toString().padStart(2,'0'); 
+                        cdSpan.innerText = timeStr; 
+                    } 
+                } 
+            };
             updateCardTimer(); const interval = setInterval(updateCardTimer, 1000); sliderIntervals.push(interval);
         });
         startAutoSlide();
     }
+    
     document.getElementById('sliderSection').addEventListener('scroll', () => { const slider = document.getElementById('sliderSection'); const cardWidth = slider.offsetWidth; const newIndex = Math.round(slider.scrollLeft / cardWidth); if (newIndex !== currentSlideIndex) { currentSlideIndex = newIndex; updateSliderDots(); } });
-    video.addEventListener('ended', () => { let next = selectedOverlayStream; if (!next || !next.m3u8Url) next = getNearestFutureStream(); if (next && next.m3u8Url) { loadStream(next.m3u8Url); const updated = upcomingStreams.filter(s => s.time !== next.time); set(upcomingRef, updated); if (selectedOverlayStream && selectedOverlayStream.time === next.time) set(selectedOverlayRef, null); } });
-    onValue(forceSwitchRef, (snapshot) => { const data = snapshot.val(); if (data && data.stream && data.stream.m3u8Url) { loadStream(data.stream.m3u8Url); const updated = upcomingStreams.filter(s => s.time !== data.stream.time); set(upcomingRef, updated); if (selectedOverlayStream && selectedOverlayStream.time === data.stream.time) set(selectedOverlayRef, null); set(forceSwitchRef, null); } });
+    
+    video.addEventListener('ended', () => { let next = selectedOverlayStream; if (!next || !next.m3u8Url) next = getNearestFutureStream(); if (next && next.m3u8Url && new Date(next.time).getTime() <= Date.now()) { loadStream(next.m3u8Url, next.id || next.time); } });
+    
+    onValue(forceSwitchRef, (snapshot) => { const data = snapshot.val(); if (data && data.stream && data.stream.m3u8Url) { loadStream(data.stream.m3u8Url, data.stream.id || data.stream.time); set(forceSwitchRef, null); } });
     onValue(upcomingRef, (snap) => { upcomingStreams = snap.val() || []; renderSlider(); updateOverlay(); });
     onValue(selectedOverlayRef, (snap) => { selectedOverlayStream = snap.val(); updateOverlay(); });
-    onValue(liveStreamRef, (snap) => { const url = snap.val(); if (url) { loadStream(url); upcomingOverlay.classList.remove('active'); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null; } else { updateOverlay(); } });
+    onValue(liveStreamRef, (snap) => { const url = snap.val(); if (url) { loadStream(url, "admin_stream"); upcomingOverlay.classList.remove('active'); if (overlayInterval) clearInterval(overlayInterval); overlayInterval = null; } else { updateOverlay(); } });
+    
     const username = "Viewer_" + Math.floor(Math.random() * 900 + 100);
     const chatContainer = document.getElementById('chatMessages'); const chatInput = document.getElementById('chatInput'); const sendBtn = document.getElementById('sendChatBtn');
     function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
@@ -896,6 +1012,7 @@
     sendBtn.addEventListener('click', sendMessage); chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     const viewerId = Math.random().toString(36).substring(2) + Date.now(); const myViewerRef = ref(db, `activeViewers/${viewerId}`); set(myViewerRef, { timestamp: serverTimestamp() }); onDisconnect(myViewerRef).remove();
     onValue(ref(db, 'activeViewers'), (snap) => { const count = snap.val() ? Object.keys(snap.val()).length : 0; document.getElementById('viewerCountDisplay').innerText = count; });
+    
     let controlsVisible = false;
     function toggleControls(show) { if (show) { customControls.classList.remove('hide-controls'); controlsVisible = true; if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(() => { customControls.classList.add('hide-controls'); controlsVisible = false; }, 4000); } else { customControls.classList.add('hide-controls'); controlsVisible = false; } }
     videoStage.addEventListener('click', (e) => { if (!e.target.closest('.ctrl-btn')) toggleControls(!controlsVisible); });
